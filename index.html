@@ -125,11 +125,14 @@ function viewHome(){
   return `<div class="card" style="display:flex;justify-content:space-between;align-items:center">
     <div><h1 style="font-size:17px">USDT Exchange AF</h1>
     <div style="font-size:12px;color:#94a3b8">${S.user.email}</div></div>
-    <button class="btn btn-ghost" style="width:auto;margin:0" onclick="logout()">Logout</button></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-blue" style="width:auto;margin:0;padding:8px 12px" onclick="viewMyOrdersList()">My Orders</button>
+      <button class="btn btn-ghost" style="width:auto;margin:0" onclick="logout()">Logout</button>
+    </div>
+  </div>
     <div class="rate-box"><div style="font-size:12px;color:#dbeafe">Current Rate</div>
     <div class="n">1 USDT = ${s.rate} AFN</div>
     <div style="font-size:12px;color:#dbeafe;margin-top:6px">Fee: ${s.fee_percent}%</div></div>
-    <button class="btn btn-ghost" style="width:auto;margin:0" onclick="viewMyOrders()">My Orders</button>
     <button class="btn btn-primary" onclick="start('BUY_USDT')">BUY USDT</button>
     <button class="btn btn-blue" onclick="start('BUY_AFN')">BUY AFN</button>
     <button class="btn btn-orange" onclick="start('TOPUP')">MOBILE TOPUP</button>`;
@@ -193,6 +196,40 @@ function viewSuccess(){
 // ═══════════════ ACTIONS ═══════════════
 function setAuth(m){ S.authMode=m; render(); }
 function goHome(){ S.view='home'; render(); }
+ async function viewMyOrdersList() {
+  const a=$('app');
+  a.innerHTML = '<div class="card">Loading Orders...</div>';
+  
+  const { data, error } = await db.from('orders').select('*').eq('user_id', S.user.id).order('created_at', { ascending: false });
+  
+  if (error) {
+    a.innerHTML = `<div class="card"><div class="msg error">Error: ${error.message}</div></div>`;
+    return;
+  }
+  
+  let html = `<button class="btn btn-ghost" onclick="goHome()">← Back to Home</button>
+  <div class="card"><h1>My Orders</h1></div>`;
+  
+  if (!data || data.length === 0) {
+    html += `<div class="card"><p style="text-align:center;color:#94a3b8">No orders found.</p></div>`;
+  } else {
+    data.forEach(o => {
+      let statusColor = '#f59e0b'; // pending
+      if (o.status === 'Completed') statusColor = '#10b981';
+      if (o.status === 'Rejected') statusColor = '#ef4444';
+      
+      html += `<div class="card" style="padding:14px;margin-bottom:10px">
+        <div class="row"><span style="font-weight:bold;color:#fff">${o.order_type}</span> 
+        <span style="color:${statusColor};font-weight:bold">${o.status}</span></div>
+        <div class="row"><span>Amount</span> <span>${o.amount_input} ${o.currency_input}</span></div>
+        <div class="row"><span>Total</span> <span>${o.total_amount} ${o.order_type==='BUY_USDT'?'AFN':'USDT'}</span></div>
+        <div class="row"><span>Date</span> <span>${new Date(o.created_at).toLocaleString()}</span></div>
+        ${o.admin_note ? `<div class="row"><span>Admin Note</span> <span style="color:#fca5a5">${o.admin_note}</span></div>` : ''}
+      </div>`;
+    });
+  }
+  a.innerHTML = html;
+}
 function backToForm(){ S.view='form'; render(); }
 function start(type){ S.form={type,amount:'',network:'TRC20',wallet:'',payment:'HESABPAY',mobile:''}; S.view='form'; render(); }
 
