@@ -6,10 +6,30 @@
 <title>USDT Exchange Afghanistan</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
-  body{background: #B0C4DE ;color:#1e293b;min-height:100vh;padding-bottom:90px;}
+  body{background:#f4fbf7;color:#1e293b;min-height:100vh;padding-bottom:90px; transition: font-family 0.3s;}
+  
+  /* د پښتو او دري ژبو لپاره د لیکنې بڼه (RTL - ښي لاس ته) */
+  [dir="rtl"] body { font-family: 'Tahoma', system-ui, sans-serif; }
+  [dir="rtl"] .header { flex-direction: row-reverse; }
+  [dir="rtl"] .header-actions { flex-direction: row-reverse; }
+  [dir="rtl"] .bottom-nav { flex-direction: row-reverse; }
+  [dir="rtl"] .card-btn .arrow { right: auto; left: 18px; transform: rotate(180deg); }
+  [dir="rtl"] .wallet-banner { flex-direction: row-reverse; }
+  [dir="rtl"] .wallet-banner .arrow { transform: rotate(180deg); }
+  [dir="rtl"] .info-row .left { flex-direction: row-reverse; }
+  [dir="rtl"] .info-row .right { text-align: left; }
+  [dir="rtl"] .profile-info-row { flex-direction: row-reverse; }
+  [dir="rtl"] .order-card { flex-direction: row-reverse; }
+  [dir="rtl"] .order-details { text-align: right; }
+  [dir="rtl"] .btn-ghost { text-align: right; }
+  [dir="rtl"] .field label { text-align: right; }
+  [dir="rtl"] .row { flex-direction: row-reverse; }
+  [dir="rtl"] .welcome-banner .flag-bg { right: auto; left: -10px; transform: rotate(-15deg); }
+  [dir="rtl"] .rate-card .coin-bg { right: auto; left: -10px; transform: rotate(15deg); }
+  [dir="rtl"] .camera-btn { right: auto; left: 0; }
+
   .wrap{max-width:480px;margin:0 auto;padding:16px}
   
-  /* Header & Logo */
   .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
   .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:22px;color:#0f172a}
   .logo-icon{width:42px;height:42px;background:#10b981;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow: 0 4px 10px rgba(16,185,129,0.3)}
@@ -19,14 +39,12 @@
   .bell-dot { position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; background: #ef4444; border-radius: 50%; display: none; }
   .bell-dot.show { display: block; }
 
-  /* Welcome Banner */
   .welcome-banner { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-radius: 20px; padding: 20px; position: relative; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(16,185,129,0.1); }
   .welcome-banner h1 { font-size: 26px; font-weight: 800; color: #064e3b; margin-bottom: 4px; }
   .welcome-banner h1 span { color: #10b981; }
   .welcome-banner p { font-size: 13px; color: #047857; width: 70%; }
   .welcome-banner .flag-bg { position: absolute; right: -10px; top: -10px; font-size: 80px; opacity: 0.9; transform: rotate(15deg); }
   
-  /* Grid Cards */
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
   .card-btn{border-radius:20px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;min-height:130px;cursor:pointer;transition:transform 0.1s;position:relative; box-shadow: 0 4px 12px rgba(0,0,0,0.03);}
   .card-btn:active{transform:scale(0.97)}
@@ -39,7 +57,6 @@
   .bg-blue{background:linear-gradient(135deg, #eff6ff, #dbeafe);} .bg-blue .arrow{background:#3b82f6;}
   .bg-purple{background:linear-gradient(135deg, #f5f3ff, #ede9fe);} .bg-purple .arrow{background:#8b5cf6;}
 
-  /* Wallet Banner */
   .wallet-banner { background: linear-gradient(135deg, #059669, #064e3b); border-radius: 20px; padding: 20px; color: #fff; display: flex; align-items: center; justify-content: space-between; cursor: pointer; box-shadow: 0 8px 20px rgba(5,150,105,0.3); position: relative; overflow: hidden;}
   .wallet-banner .wallet-icon { font-size: 50px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); z-index: 2;}
   .wallet-text { z-index: 2; }
@@ -47,13 +64,11 @@
   .wallet-text p { font-size: 12px; opacity: 0.9;}
   .wallet-banner .arrow { width: 35px; height: 35px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; z-index: 2;}
 
-  /* Rate Card */
   .rate-card { background: linear-gradient(135deg, #064e3b, #047857); border-radius: 20px; padding: 24px 20px; color: white; margin-bottom: 20px; position: relative; overflow: hidden; box-shadow: 0 8px 20px rgba(4,120,87,0.2); }
   .rate-card h2 { font-size: 28px; font-weight: 800; color: #fff; margin: 6px 0; }
   .rate-card h2 span { color: #34d399; }
   .rate-card .coin-bg { position: absolute; right: -10px; bottom: -10px; font-size: 100px; opacity: 0.2; transform: rotate(-15deg); }
 
-  /* Orders List */
   .orders-list { display: flex; flex-direction: column; gap: 12px; }
   .order-card { background: #fff; border-radius: 16px; padding: 16px; display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); position: relative; }
   .order-icon { font-size: 40px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
@@ -64,32 +79,28 @@
   .st-Pending { background: #fef3c7; color: #b45309; }
   .st-Rejected { background: #fee2e2; color: #b91c1c; }
 
-  /* Profile Header */
   .profile-header-bg { background: linear-gradient(135deg, #10b981, #047857); height: 130px; border-radius: 0 0 30px 30px; position: absolute; top: 0; left: 0; right: 0; z-index: -1; }
   
-  /* Profile Card */
   .profile-card { background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%); border-radius: 24px; padding: 24px; margin-top: 50px; text-align: center; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #d1fae5;}
   .avatar-wrapper { position: relative; display: inline-block; margin-bottom: 10px;}
   .avatar { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid #10b981; background: #e2e8f0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
   .camera-btn { position: absolute; bottom: 0; right: 0; background: #10b981; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; border: 3px solid #fff; cursor: pointer; }
   .user-id-badge { display: inline-flex; align-items: center; gap: 6px; background: #0f172a; color: #10b981; padding: 6px 16px; border-radius: 20px; font-weight: 800; font-size: 16px; margin-top: 6px; letter-spacing: 1px; }
 
-  /* Info Rows */
   .profile-info-box { background: #fff; border-radius: 20px; padding: 10px 20px; margin-top: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
   .info-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #f1f5f9; }
   .info-row:last-child { border-bottom: none; }
   .info-row .left { display: flex; align-items: center; gap: 10px; color: #64748b; font-weight: 600; font-size: 14px;}
   .info-row .right { font-weight: 800; color: #0f172a; font-size: 14px;}
   
-  /* Bottom Nav */
   .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #ffffff; display: flex; justify-content: space-around; padding: 10px 0 20px; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 1000; border-top-left-radius: 24px; border-top-right-radius: 24px; max-width: 480px; margin: 0 auto; }
   .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #94a3b8; font-size: 12px; font-weight: 700; cursor: pointer; width: 80px; transition: all 0.2s; padding: 6px 0; position: relative;}
   .nav-item.active { color: #10b981; }
   .nav-item.active::after { content: ''; position: absolute; bottom: -5px; width: 30px; height: 4px; background: #10b981; border-radius: 4px; }
   .nav-item .icon { font-size: 24px; margin-bottom: 2px; }
 
-  /* General Inputs & Buttons */
   .field{margin-bottom:12px; text-align: left;}
+  [dir="rtl"] .field { text-align: right; }
   .field label{display:block;font-size:12px;color:#64748b;margin-bottom:6px;font-weight:700}
   .field input,.field select{width:100%;padding:14px;border-radius:12px;border:1px solid #e2e8f0;background:#f8fafc;color:#0f172a;font-size:15px;outline:none;}
   .field input:focus,.field select:focus{border-color:#10b981;background:#fff}
@@ -116,11 +127,103 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.js"></script>
 <script>
 const db = supabase.createClient(window.APP_CONFIG.SUPABASE_URL, window.APP_CONFIG.SUPABASE_ANON_KEY);
-const S = { user:null, profile:null, settings:{}, view:'loading', tab:'home', form:{}, calc:null, authMode:'login', lastOrderId:'', hasUnread: false, notifications: [], inviteCount: 0 };
+
+// ✅ د درو ژبو لپاره بشپړ او ساده ژباړې
+const L = {
+  en: {
+    welcome: "Welcome", welcomeSub: "Trade smarter. A more open financial world awaits.",
+    buyUsdt: "Buy USDT", buyUsdtSub: "Quick & Secure", buyAfn: "Buy AFN", buyAfnSub: "Fast & Reliable",
+    topup: "Mobile Topup", topupSub: "Top Up Easily", history: "Exchange History", historySub: "View Your Records",
+    wallet: "Wallet", walletSub: "Manage Your Balance Securely",
+    home: "Home", price: "Price", profile: "Profile",
+    market: "Market & History", marketSub: "Track your trades and check market rate",
+    currentRate: "Current Rate", serviceFee: "Service Fee", yourOrders: "Your Orders",
+    amount: "Amount", total: "Total", date: "Date", completed: "Completed", rejected: "Rejected", pending: "Pending",
+    noOrders: "No orders found.",
+    myProfile: "My Profile", logout: "Logout", changePhoto: "Change Photo",
+    email: "Email", userId: "User ID", invitedFriends: "Invited Friends", updateName: "Update Full Name",
+    saveChanges: "Save Changes", inviteFriends: "Invite Friends", earn: "Earn", earnSub: "of the trade fee from your friends!",
+    copyLink: "Copy Link", needHelp: "Need help? Contact Support.", help: "Help & Support",
+    contactUs: "Contact us directly for any issue:", officialChannel: "Official Channel", whatsapp: "WhatsApp Support", telegram: "Telegram Support",
+    login: "Login", register: "Register", fullName: "Full Name", phone: "Phone Number", password: "Password", emailLabel: "Email", createAccount: "Create Account",
+    back: "Back", usdtAmount: "USDT Amount", afnAmount: "AFN Amount", network: "USDT Network",
+    walletAddr: "USDT Wallet Address", payMethod: "Payment Method", receiveAfn: "Receive AFN via",
+    yourPhone: "Your Phone Number", mobNetwork: "Mobile Network", mobNumber: "Mobile Number", next: "Next",
+    payment: "Payment", rate: "Rate", base: "Base Amount", fee: "Fee", sendTo: "Send to this address/number:",
+    txid: "Transaction ID (TXID)", screenshot: "Payment Screenshot", confirmOrder: "Confirm Order",
+    orderSubmitted: "Order Submitted!", orderId: "Order ID", backHome: "Back to Home",
+    notifications: "Notifications", clear: "Clear", noMessages: "No messages found.",
+    langSelect: "Language / ژبه / زبان", copied: "Copied!", enterDetails: "Please fill all fields"
+  },
+  ps: {
+    welcome: "ښه راغلاست", welcomeSub: "هوښیارانه تجارت وکړئ. یوه پراخه مالي نړۍ ستاسو په تمه ده.",
+    buyUsdt: "USDT پیرودل", buyUsdtSub: "ژر او خوندي", buyAfn: "AFN پیرودل", buyAfnSub: "ژر او باوري",
+    topup: "د موبایل کریدت", topupSub: "په اسانۍ سره کریدت واخلئ", history: "د تبادلې تاریخچه", historySub: "خپل ریکارډونه وګورئ",
+    wallet: "والټ (Wallet)", walletSub: "خپل بیلانس په امن ډول اداره کړئ",
+    home: "کور", price: "بیه", profile: "پروفایل",
+    market: "بازار او تاریخچه", marketSub: "خپلې سوداګرۍ تعقیب کړئ او د بازار بیه وګورئ",
+    currentRate: "اوسنی نرخ", serviceFee: "د خدمت فیس", yourOrders: "ستاسو فرمایشونه",
+    amount: "مقدار", total: "ټولټال", date: "نیټه", completed: "بشپړ شوی", rejected: "رد شوی", pending: "په تمه",
+    noOrders: "هیڅ فرمایش ونه موندل شو.",
+    myProfile: "زما پروفایل", logout: "وتل", changePhoto: "عکس بدل کړئ",
+    email: "ایمیل", userId: "د کارن آی‌ډي", invitedFriends: "بلل شوي ملګري", updateName: "بشپړ نوم تازه کړئ",
+    saveChanges: "بدلونونه خوندي کړئ", inviteFriends: "ملګري بلنه", earn: "ترلاسه کړئ", earnSub: "د خپلو ملګرو له هرې سوداګرۍ فیس څخه!",
+    copyLink: "لینک کاپي کړئ", needHelp: "مرستې ته اړتیا لرئ؟ زموږ سره اړیکه ونیسئ.", help: "مرسته او ملاتړ",
+    contactUs: "د هرې ستونزې لپاره مستقیم زموږ سره اړیکه ونیسئ:", officialChannel: "رسمي چینل", whatsapp: "د وټساپ ملاتړ", telegram: "د ټیلیګرام ملاتړ",
+    login: "ننوتل", register: "راجستر", fullName: "بشپړ نوم", phone: "د ټیلیفون شمیره", password: "پاسورډ", emailLabel: "ایمیل", createAccount: "حساب جوړ کړئ",
+    back: "بیرته", usdtAmount: "د USDT مقدار", afnAmount: "د AFN مقدار", network: "د USDT شبکه",
+    walletAddr: "د USDT والټ پته", payMethod: "د تادیې طریقه", receiveAfn: "AFN دې لارې ترلاسه کړئ",
+    yourPhone: "ستاسو د ټیلیفون شمیره", mobNetwork: "د موبایل شبکه", mobNumber: "د موبایل شمیره", next: "بل ګام",
+    payment: "تادیه", rate: "نرخ", base: "بنسټیز مقدار", fee: "فیس", sendTo: "دې پتې/شمیرې ته واستوئ:",
+    txid: "د تراکنش آی‌ډي (TXID)", screenshot: "د تادیې سکرین شاټ", confirmOrder: "فرمایش تایید کړئ",
+    orderSubmitted: "فرمایش وسپارل شو!", orderId: "د فرمایش آی‌ډي", backHome: "کور ته بیرته",
+    notifications: "خبرتیاوې", clear: "پاکول", noMessages: "هیڅ پیغام ونه موندل شو.",
+    langSelect: "Language / ژبه / زبان", copied: "کاپي شو!", enterDetails: "مهرباني وکړئ ټول معلومات ډک کړئ"
+  },
+  fa: {
+    welcome: "خوش آمدید", welcomeSub: "هوشمندانه معامله کنید. دنیای مالی بازتر در انتظار شماست.",
+    buyUsdt: "خرید USDT", buyUsdtSub: "سریع و امن", buyAfn: "خرید AFN", buyAfnSub: "سریع و قابل اعتماد",
+    topup: "شارژ موبایل", topupSub: "شارژ آسان", history: "تاریخچه تبادلات", historySub: "مشاهده سوابق شما",
+    wallet: "کیف پول", walletSub: "مدیریت امن موجودی",
+    home: "خانه", price: "قیمت", profile: "پروفایل",
+    market: "بازار و تاریخچه", marketSub: "معاملات خود را دنبال کنید و نرخ بازار را ببینید",
+    currentRate: "نرخ فعلی", serviceFee: "کمیشن خدمات", yourOrders: "سفارشات شما",
+    amount: "مقدار", total: "مجموع", date: "تاریخ", completed: "تکمیل شده", rejected: "رد شده", pending: "در انتظار",
+    noOrders: "هیچ سفارشی یافت نشد.",
+    myProfile: "پروفایل من", logout: "خروج", changePhoto: "تغییر عکس",
+    email: "ایمیل", userId: "شناسه کاربر", invitedFriends: "دوستان دعوت شده", updateName: "به‌روزرسانی نام کامل",
+    saveChanges: "ذخیره تغییرات", inviteFriends: "دعوت از دوستان", earn: "کسب کنید", earnSub: "از هر معامله دوستان خود!",
+    copyLink: "کپی لینک", needHelp: "نیاز به کمک دارید؟ با پشتیبانی در تماس باشید.", help: "کمک و پشتیبانی",
+    contactUs: "برای هر مشکلی مستقیماً با ما در تماس شوید:", officialChannel: "کانال رسمی", whatsapp: "پشتیبانی واتساپ", telegram: "پشتیبانی تلگرام",
+    login: "ورود", register: "ثبت نام", fullName: "نام کامل", phone: "شماره تماس", password: "رمز عبور", emailLabel: "ایمیل", createAccount: "ایجاد حساب",
+    back: "بازگشت", usdtAmount: "مقدار USDT", afnAmount: "مقدار AFN", network: "شبکه USDT",
+    walletAddr: "آدرس کیف پول USDT", payMethod: "روش پرداخت", receiveAfn: "دریافت AFN از طریق",
+    yourPhone: "شماره تماس شما", mobNetwork: "شبکه مخابراتی", mobNumber: "شماره موبایل", next: "مرحله بعد",
+    payment: "پرداخت", rate: "نرخ", base: "مبلغ پایه", fee: "کمیشن", sendTo: "به این آدرس/شماره ارسال کنید:",
+    txid: "شناسه تراکنش (TXID)", screenshot: "اسکرین شات پرداخت", confirmOrder: "تایید سفارش",
+    orderSubmitted: "سفارش ثبت شد!", orderId: "شناسه سفارش", backHome: "بازگشت به خانه",
+    notifications: "اعلانات", clear: "پاک کردن", noMessages: "هیچ پیامی یافت نشد.",
+    langSelect: "Language / ژبه / زبان", copied: "کپی شد!", enterDetails: "لطفاً تمام اطلاعات را وارد کنید"
+  }
+};
+
+const S = { user:null, profile:null, settings:{}, view:'loading', tab:'home', form:{}, calc:null, authMode:'login', lastOrderId:'', hasUnread: false, notifications: [], inviteCount: 0, lang: 'en' };
 const $ = id => document.getElementById(id);
 const showMsg = (id, text, isErr) => { const el=$(id); if(el) el.innerHTML = `<div class="msg ${isErr?'error':'ok'}">${text}</div>`; };
 
+function changeLang(lang) {
+  S.lang = lang;
+  localStorage.setItem('app_lang', lang);
+  document.documentElement.dir = (lang === 'en') ? 'ltr' : 'rtl';
+  document.documentElement.lang = lang;
+  goHome(); 
+}
+
 async function boot(){
+  S.lang = localStorage.getItem('app_lang') || 'en';
+  document.documentElement.dir = (S.lang === 'en') ? 'ltr' : 'rtl';
+  document.documentElement.lang = S.lang;
+
   const { data:{ session } } = await db.auth.getSession();
   if(session){ 
     S.user=session.user; 
@@ -180,65 +283,75 @@ function navTo(tab) { S.tab = tab; S.view = 'main'; render(); }
 
 function render(){
   const a=$('app');
+  const t = L[S.lang]; 
   
-  if(S.view==='loading') a.innerHTML='<div class="loader">⏳ Loading App...</div>';
-  else if(S.view==='auth') a.innerHTML=viewAuth();
-  else if(S.view==='notifications') a.innerHTML=viewNotificationsPage();
+  if(S.view==='loading') a.innerHTML='<div class="loader">⏳ Loading...</div>';
+  else if(S.view==='auth') a.innerHTML=viewAuth(t);
+  else if(S.view==='notifications') a.innerHTML=viewNotificationsPage(t);
+  else if(S.view==='lang') a.innerHTML=viewLang(t);
   else if(S.view==='main') {
     let content = '';
-    if(S.tab==='home') content = viewHome();
-    else if(S.tab==='price') content = viewPriceHistory();
-    else if(S.tab==='profile') content = viewProfile();
+    if(S.tab==='home') content = viewHome(t);
+    else if(S.tab==='price') content = viewPriceHistory(t);
+    else if(S.tab==='profile') content = viewProfile(t);
     
     content += `
     <div class="bottom-nav">
-      <div class="nav-item ${S.tab==='home'?'active':''}" onclick="navTo('home')"><div class="icon">🏠</div> Home</div>
-      <div class="nav-item ${S.tab==='price'?'active':''}" onclick="navTo('price')"><div class="icon">↕️</div> Price</div>
-      <div class="nav-item ${S.tab==='profile'?'active':''}" onclick="navTo('profile')"><div class="icon">👤</div> Profile</div>
+      <div class="nav-item ${S.tab==='home'?'active':''}" onclick="navTo('home')"><div class="icon">🏠</div> ${t.home}</div>
+      <div class="nav-item ${S.tab==='price'?'active':''}" onclick="navTo('price')"><div class="icon">↕️</div> ${t.price}</div>
+      <div class="nav-item ${S.tab==='profile'?'active':''}" onclick="navTo('profile')"><div class="icon">👤</div> ${t.profile}</div>
     </div>`;
     a.innerHTML = content;
   }
-  else if(S.view==='form') a.innerHTML=viewForm();
-  else if(S.view==='pay') a.innerHTML=viewPay();
-  else if(S.view==='success') a.innerHTML=viewSuccess();
-  else if(S.view==='wallet') a.innerHTML=viewWallet();
-  else if(S.view==='help') a.innerHTML=viewHelp();
+  else if(S.view==='form') a.innerHTML=viewForm(t);
+  else if(S.view==='pay') a.innerHTML=viewPay(t);
+  else if(S.view==='success') a.innerHTML=viewSuccess(t);
+  else if(S.view==='wallet') a.innerHTML=viewWallet(t);
+  else if(S.view==='help') a.innerHTML=viewHelp(t);
 }
 
-function viewAuth(){
+function viewLang(t) {
+  return `<div class="header"><h1 style="font-size:20px">${t.langSelect}</h1></div>
+  <div class="card">
+    <button class="btn ${S.lang==='en'?'btn-primary':'btn-ghost'}" style="border:1px solid #cbd5e1; margin-bottom:10px; text-align:left; padding:16px; color:${S.lang==='en'?'#fff':'#0f172a'}" onclick="changeLang('en')">🇬🇧 English</button>
+    <button class="btn ${S.lang==='ps'?'btn-primary':'btn-ghost'}" style="border:1px solid #cbd5e1; margin-bottom:10px; text-align:right; padding:16px; color:${S.lang==='ps'?'#fff':'#0f172a'}" onclick="changeLang('ps')">🇦🇫 پښتو (Pashto)</button>
+    <button class="btn ${S.lang==='fa'?'btn-primary':'btn-ghost'}" style="border:1px solid #cbd5e1; margin-bottom:10px; text-align:right; padding:16px; color:${S.lang==='fa'?'#fff':'#0f172a'}" onclick="changeLang('fa')">🇦🇫 دری (Dari)</button>
+  </div>`;
+}
+
+function viewAuth(t){
   const isLogin = S.authMode==='login';
   return `<div style="text-align:center;margin-bottom:20px;margin-top:20px">
     <div style="font-size:48px;margin-bottom:10px">💱</div>
     <h1 style="font-size:24px;color:#0f172a">USDT Exchange AF</h1>
-    <p style="color:#64748b;font-size:14px">Trade smarter. A more open financial world.</p>
   </div>
   <div class="card">
     <div style="display:flex;gap:10px;margin-bottom:16px">
-      <button class="btn ${isLogin?'btn-primary':'btn-ghost'}" style="margin:0;padding:10px;border-radius:12px" onclick="S.authMode='login'; render()">🔑 Login</button>
-      <button class="btn ${!isLogin?'btn-primary':'btn-ghost'}" style="margin:0;padding:10px;border-radius:12px" onclick="S.authMode='register'; render()">📝 Register</button>
+      <button class="btn ${isLogin?'btn-primary':'btn-ghost'}" style="margin:0;padding:10px;border-radius:12px" onclick="S.authMode='login'; render()">🔑 ${t.login}</button>
+      <button class="btn ${!isLogin?'btn-primary':'btn-ghost'}" style="margin:0;padding:10px;border-radius:12px" onclick="S.authMode='register'; render()">📝 ${t.register}</button>
     </div>
     <div id="authMsg"></div>
-    ${!isLogin?`<div class="field"><label>Full Name</label><input id="f_name" placeholder="Your Name"></div><div class="field"><label>Phone</label><input id="f_phone" type="tel" placeholder="07XXXXXXXX"></div>`:''}
-    <div class="field"><label>Email</label><input id="f_email" type="email" placeholder="you@email.com"></div>
-    <div class="field"><label>Password</label><input id="f_pass" type="password" placeholder="min 6 chars"></div>
-    <button class="btn btn-primary" onclick="submitAuth()">${isLogin?'🔓 Login':'✅ Create Account'}</button>
+    ${!isLogin?`<div class="field"><label>${t.fullName}</label><input id="f_name" placeholder="${t.fullName}"></div><div class="field"><label>${t.phone}</label><input id="f_phone" type="tel" placeholder="07XXXXXXXX"></div>`:''}
+    <div class="field"><label>${t.emailLabel}</label><input id="f_email" type="email" placeholder="you@email.com"></div>
+    <div class="field"><label>${t.password}</label><input id="f_pass" type="password" placeholder="••••••••"></div>
+    <button class="btn btn-primary" onclick="submitAuth()">${isLogin?'🔓 '+t.login:'✅ '+t.createAccount}</button>
   </div>`;
 }
 
-function viewHome(){
+function viewHome(t){
   return `<div class="header">
     <div class="logo"><div class="logo-icon">₮</div> USDT-Exchange</div>
     <div class="header-actions">
+      <div class="icon-btn" onclick="S.view='lang'; render()" title="Change Language" style="font-size: 16px;">🌐</div>
       <div class="icon-btn" onclick="openNotifications()">
         🔔<div class="bell-dot ${S.hasUnread ? 'show' : ''}"></div>
       </div>
-      <div class="icon-btn">⋮</div>
     </div>
   </div>
   
   <div class="welcome-banner">
-    <h1>Welcome <span>back</span></h1>
-    <p>Trade smarter. A more open financial world awaits.</p>
+    <h1><span>${t.welcome.split(' ')[0]}</span> ${t.welcome.split(' ').slice(1).join(' ')}</h1>
+    <p>${t.welcomeSub}</p>
     <div class="flag-bg">🇦🇫</div>
   </div>
 
@@ -246,32 +359,32 @@ function viewHome(){
     <div class="card-btn bg-green" onclick="start('BUY_USDT')">
       <div class="icon">🛒</div>
       <div>
-        <div class="title">BUY USDT</div>
-        <div class="subtitle">Quick & Secure</div>
+        <div class="title">${t.buyUsdt}</div>
+        <div class="subtitle">${t.buyUsdtSub}</div>
       </div>
       <div class="arrow">›</div>
     </div>
     <div class="card-btn bg-orange" onclick="start('BUY_AFN')">
       <div class="icon">💵</div>
       <div>
-        <div class="title">BUY AFN</div>
-        <div class="subtitle">Fast & Reliable</div>
+        <div class="title">${t.buyAfn}</div>
+        <div class="subtitle">${t.buyAfnSub}</div>
       </div>
       <div class="arrow">›</div>
     </div>
     <div class="card-btn bg-blue" onclick="start('TOPUP')">
       <div class="icon">📱</div>
       <div>
-        <div class="title">Mobile Topup</div>
-        <div class="subtitle">Top Up Easily</div>
+        <div class="title">${t.topup}</div>
+        <div class="subtitle">${t.topupSub}</div>
       </div>
       <div class="arrow">›</div>
     </div>
     <div class="card-btn bg-purple" onclick="navTo('price')">
       <div class="icon">🔄</div>
       <div>
-        <div class="title">Exchange History</div>
-        <div class="subtitle">View Your Records</div>
+        <div class="title">${t.history}</div>
+        <div class="subtitle">${t.historySub}</div>
       </div>
       <div class="arrow">›</div>
     </div>
@@ -280,23 +393,23 @@ function viewHome(){
   <div class="wallet-banner" onclick="S.view='wallet'; render()">
     <div class="wallet-icon">👛</div>
     <div class="wallet-text">
-      <h2>Wallet | واليت</h2>
-      <p>Manage Your Balance Securely</p>
+      <h2>${t.wallet}</h2>
+      <p>${t.walletSub}</p>
     </div>
     <div class="arrow">›</div>
   </div>`;
 }
 
-function viewNotificationsPage() {
+function viewNotificationsPage(t) {
   let html = `
   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
     <div style="display:flex; align-items:center; gap:10px">
       <button onclick="goHome()" style="background:#e8f5ec; border:none; width:40px; height:40px; border-radius:50%; font-size:18px; cursor:pointer; color:#10b981">⬅️</button>
-      <h1 style="font-size:20px; margin:0; color:#0f172a">🔔 Notifications</h1>
+      <h1 style="font-size:20px; margin:0; color:#0f172a">🔔 ${t.notifications}</h1>
     </div>
     ${S.notifications.length > 0 ? `
     <button onclick="clearAllNotifications()" style="background:#fee2e2; color:#ef4444; border:none; padding:8px 14px; border-radius:20px; font-weight:700; font-size:13px; cursor:pointer; display:flex; align-items:center; gap:4px">
-      🗑️ Clear
+      🗑️ ${t.clear}
     </button>
     ` : ''}
   </div>`;
@@ -304,7 +417,7 @@ function viewNotificationsPage() {
   if(S.notifications.length === 0) {
     html += `<div class="card" style="text-align:center; color:#64748b; padding:40px 20px">
       <div style="font-size:40px; margin-bottom:10px">📭</div>
-      No messages found.
+      ${t.noMessages}
     </div>`;
   } else {
     S.notifications.forEach(n => {
@@ -320,11 +433,11 @@ function viewNotificationsPage() {
 }
 
 async function clearAllNotifications() {
-  if (!confirm('ایا تاسو ډاډه یاست چې غواړئ خپل پیغامونه حذف کړئ؟')) return;
+  if (!confirm('Are you sure you want to delete your messages?')) return;
   const idsToDelete = S.notifications.map(n => n.id);
   if (idsToDelete.length > 0) {
     const { error } = await db.from('notifications').delete().in('id', idsToDelete);
-    if (error) { alert('د پیغامونو حذفولو کې ستونزه: ' + error.message); return; }
+    if (error) { alert('Error: ' + error.message); return; }
   }
   S.notifications = [];
   S.hasUnread = false;
@@ -332,7 +445,7 @@ async function clearAllNotifications() {
   render();
 }
 
-function viewPriceHistory(){
+function viewPriceHistory(t){
   const s = S.settings;
   setTimeout(async () => {
     const { data } = await db.from('orders').select('*').eq('user_id', S.user.id).order('created_at', { ascending: false });
@@ -340,7 +453,7 @@ function viewPriceHistory(){
     if(!container) return;
     
     if (!data || data.length === 0) {
-      container.innerHTML = `<div class="card" style="text-align:center;color:#64748b">📭 No orders found.</div>`;
+      container.innerHTML = `<div class="card" style="text-align:center;color:#64748b">📭 ${t.noOrders}</div>`;
     } else {
       let html = '';
       data.forEach(o => {
@@ -353,16 +466,20 @@ function viewPriceHistory(){
         else if(o.order_type === 'BUY_AFN') icon = '💵';
         else if(o.order_type === 'TOPUP') icon = '📱';
 
+        let statusText = t.pending;
+        if(o.status === 'Completed') statusText = t.completed;
+        if(o.status === 'Rejected') statusText = t.rejected;
+
         html += `<div class="order-card">
           <div class="order-icon">${icon}</div>
           <div class="order-details">
             <h3>${o.order_type}</h3>
-            <p>Amount: <strong>${o.amount_input} ${o.currency_input}</strong></p>
-            <p>Total: <strong>${o.total_amount} ${o.order_type==='BUY_USDT'?'AFN':'USDT'}</strong></p>
+            <p>${t.amount}: <strong>${o.amount_input} ${o.currency_input}</strong></p>
+            <p>${t.total}: <strong>${o.total_amount} ${o.order_type==='BUY_USDT'?'AFN':'USDT'}</strong></p>
             <p style="font-size:11px; margin-top:6px; color:#94a3b8;">📅 ${new Date(o.created_at).toLocaleDateString()}</p>
           </div>
           <div>
-             <div class="order-status ${statusClass}">${statusEmoji} ${o.status}</div>
+             <div class="order-status ${statusClass}">${statusEmoji} ${statusText}</div>
           </div>
         </div>`;
       });
@@ -372,35 +489,35 @@ function viewPriceHistory(){
   
   return `<div class="header" style="margin-bottom: 15px;">
     <div>
-      <h1 style="font-size:24px; margin:0; color:#0f172a; display:flex; align-items:center; gap:8px;">📈 Market & History</h1>
-      <p style="font-size:13px; color:#64748b; margin-top:4px;">Track your trades and check market rate</p>
+      <h1 style="font-size:24px; margin:0; color:#0f172a; display:flex; align-items:center; gap:8px;">📈 ${t.market}</h1>
+      <p style="font-size:13px; color:#64748b; margin-top:4px;">${t.marketSub}</p>
     </div>
   </div>
 
   <div class="rate-card">
-    <div style="font-size:13px; font-weight:700; color:#a7f3d0; display:flex; align-items:center; gap:6px;">📈 Current Rate</div>
+    <div style="font-size:13px; font-weight:700; color:#a7f3d0; display:flex; align-items:center; gap:6px;">📈 ${t.currentRate}</div>
     <h2>1 USDT = <span>${s.rate} AFN</span></h2>
-    <div style="font-size:13px; font-weight:600; color:#a7f3d0;">⚙️ Service Fee: ${s.fee_percent}%</div>
+    <div style="font-size:13px; font-weight:600; color:#a7f3d0;">⚙️ ${t.serviceFee}: ${s.fee_percent}%</div>
     <div class="coin-bg">🪙</div>
   </div>
 
   <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
     <div style="background:#e8f5ec; color:#10b981; padding:8px 16px; border-radius:20px; font-weight:800; font-size:16px; display:inline-flex; align-items:center; gap:8px;">
-      📋 Your Orders
+      📋 ${t.yourOrders}
     </div>
   </div>
   
-  <div id="ordersContainer" class="orders-list"><div class="loader">⏳ Loading Orders...</div></div>`;
+  <div id="ordersContainer" class="orders-list"><div class="loader">⏳ Loading...</div></div>`;
 }
 
-function viewProfile(){
+function viewProfile(t){
   const p = S.profile;
   const refLink = `https://lahsadiq93.workers.dev/?ref=${p.user_code || p.referral_code || 'none'}`;
   
   return `<div class="profile-header-bg"></div>
   <div class="header" style="margin-bottom:0;">
     <div class="logo" style="color:#fff;"><div class="logo-icon" style="background:#fff; color:#10b981;">₮</div> USDT-Exchange</div>
-    <button class="btn btn-ghost" style="margin:0; color:#fff; width:auto; background: rgba(255,255,255,0.2); padding:8px 14px; border-radius:20px;" onclick="logout()">🚪 Logout</button>
+    <button class="btn btn-ghost" style="margin:0; color:#fff; width:auto; background: rgba(255,255,255,0.2); padding:8px 14px; border-radius:20px;" onclick="logout()">🚪 ${t.logout}</button>
   </div>
   
   <div class="card profile-card">
@@ -410,51 +527,51 @@ function viewProfile(){
       <input type="file" id="avatarFile" accept="image/*" style="display:none" onchange="uploadAvatar()">
     </div>
     
-    <button class="btn btn-ghost" style="text-align:center;color:#10b981; margin-top:10px; font-size:13px;" onclick="document.getElementById('avatarFile').click()">📸 Change Photo</button>
+    <button class="btn btn-ghost" style="text-align:center;color:#10b981; margin-top:10px; font-size:13px;" onclick="document.getElementById('avatarFile').click()">📸 ${t.changePhoto}</button>
     
     <h1 style="margin-top:10px;color:#0f172a; font-size:24px;">${p.full_name || 'User'}</h1>
     <div class="user-id-badge">🆔 ${p.user_code || 'Pending'}</div>
     
     <div class="profile-info-box">
       <div class="info-row">
-        <div class="left">✉️ Email:</div>
+        <div class="left">✉️ ${t.email}:</div>
         <div class="right">${S.user.email}</div>
       </div>
       <div class="info-row">
-        <div class="left">👤 User ID:</div>
+        <div class="left">👤 ${t.userId}:</div>
         <div class="right" style="color:#10b981">${p.user_code || 'Pending'}</div>
       </div>
       <div class="info-row">
-        <div class="left">👥 Invited Friends:</div>
+        <div class="left">👥 ${t.invitedFriends}:</div>
         <div class="right" style="color:#3b82f6">${S.inviteCount} Users</div>
       </div>
     </div>
 
     <div class="field" style="margin-top:20px;">
-      <label style="color:#10b981; font-size:14px; display:flex; align-items:center; gap:6px;">✏️ Update Full Name</label>
+      <label style="color:#10b981; font-size:14px; display:flex; align-items:center; gap:6px;">✏️ ${t.updateName}</label>
       <input id="p_name" value="${p.full_name||''}" style="background:#fff; border:1px solid #d1fae5;">
     </div>
-    <button class="btn btn-primary" style="display:flex; justify-content:center; align-items:center; gap:8px;" onclick="updateProfile()">💾 Save Changes <span>›</span></button>
+    <button class="btn btn-primary" style="display:flex; justify-content:center; align-items:center; gap:8px;" onclick="updateProfile()">💾 ${t.saveChanges} <span>›</span></button>
   </div>
   
   <div class="card" style="margin-top:20px;">
-    <h2 style="font-size:18px;margin-bottom:8px;color:#0f172a">🎁 Invite Friends</h2>
-    <p style="font-size:13px;color:#64748b;margin-bottom:8px">Earn ${S.settings.referral_percent || 0}% of every trade fee from your friends!</p>
+    <h2 style="font-size:18px;margin-bottom:8px;color:#0f172a">🎁 ${t.inviteFriends}</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:8px">${t.earn} ${S.settings.referral_percent || 0}% ${t.earnSub}</p>
     <div class="info" style="margin:8px 0; background:#f8fafc; border:1px dashed #cbd5e1;"><div class="value" style="font-size:12px;" id="refLink">${refLink}</div></div>
-    <button class="btn btn-blue" style="background:#0f172a;" onclick="copyRef()">📋 Copy Link</button>
+    <button class="btn btn-blue" style="background:#0f172a;" onclick="copyRef()">📋 ${t.copyLink}</button>
   </div>
   
   <div class="card" style="background:#f8fafc;text-align:center">
-    <p style="font-size:12px;color:#64748b">Need help? Contact Support.</p>
-    <button class="btn btn-primary" style="margin-top:8px" onclick="S.view='help'; render()">💬 Help & Support</button>
+    <p style="font-size:12px;color:#64748b">${t.needHelp}</p>
+    <button class="btn btn-primary" style="margin-top:8px" onclick="S.view='help'; render()">💬 ${t.help}</button>
   </div>`;
 }
 
-function viewWallet(){
-  return `<button class="btn btn-ghost" onclick="goHome()">⬅️ Back</button>
+function viewWallet(t){
+  return `<button class="btn btn-ghost" onclick="goHome()">⬅️ ${t.back}</button>
   <div class="card" style="text-align:center; padding:40px 20px;">
     <div style="font-size:60px; margin-bottom:10px;">👛</div>
-    <h1 style="color:#0f172a">My Wallet</h1>
+    <h1 style="color:#0f172a">${t.wallet}</h1>
     <p style="color:#64748b;font-size:13px;margin-top:8px">Available Balance</p>
     <div style="font-size:40px;font-weight:800;color:#10b981;margin:20px 0">${(S.profile.balance || 0).toFixed(2)} <span style="font-size:20px; color:#0f172a;">USDT</span></div>
     <p style="color:#64748b;font-size:12px">Earned from referrals</p>
@@ -462,98 +579,91 @@ function viewWallet(){
   <div class="card"><p style="text-align:center;color:#64748b">💸 Withdrawal system coming soon...</p></div>`;
 }
 
-function viewForm(){
+function viewForm(t){
   const f=S.form;
-  const title={BUY_USDT:'💵 Buy USDT',BUY_AFN:'💴 Buy AFN',TOPUP:'📱 Mobile Topup'}[f.type];
-  const amtLabel=f.type==='BUY_USDT'?'USDT Amount':'AFN Amount';
+  let title = t.buyUsdt; let amtLabel = t.usdtAmount;
+  if(f.type==='BUY_AFN') { title = t.buyAfn; amtLabel = t.afnAmount; }
+  if(f.type==='TOPUP') { title = t.topup; amtLabel = t.afnAmount; }
+
   let extra='';
   if(f.type==='BUY_USDT') extra=`
-    <div class="field"><label>Binance USDT Wallet Address</label><input id="f_wallet" value="${f.wallet||''}" placeholder="Your TRC20/BEP20 address"></div>
-    <div class="field"><label>Payment Method</label><select id="f_payment"><option value="HESABPAY">Hesab Pay</option><option value="MOMO">MTN MoMo</option></select></div>`;
+    <div class="field"><label>${t.walletAddr}</label><input id="f_wallet" value="${f.wallet||''}" placeholder="TRC20/BEP20 Address"></div>
+    <div class="field"><label>${t.payMethod}</label><select id="f_payment"><option value="HESABPAY">Hesab Pay</option><option value="MOMO">MTN MoMo</option></select></div>`;
   else if(f.type==='BUY_AFN') extra=`
-    <div class="field"><label>Receive AFN via</label><select id="f_payment"><option value="HESABPAY">Hesab Pay</option><option value="MOMO">MTN MoMo</option></select></div>
-    <div class="field"><label>Your Phone Number</label><input id="f_wallet" type="tel" value="${f.wallet||''}" placeholder="07XXXXXXXX"></div>`;
+    <div class="field"><label>${t.receiveAfn}</label><select id="f_payment"><option value="HESABPAY">Hesab Pay</option><option value="MOMO">MTN MoMo</option></select></div>
+    <div class="field"><label>${t.yourPhone}</label><input id="f_wallet" type="tel" value="${f.wallet||''}" placeholder="07XXXXXXXX"></div>`;
   else extra=`
-    <div class="field"><label>Mobile Network</label><select id="f_mnet"><option>AWCC</option><option>Salaam</option><option>ATOMA</option><option>Etisalat</option><option>Roshan</option></select></div>
-    <div class="field"><label>Mobile Number</label><input id="f_mobile" type="tel" value="${f.mobile||''}" placeholder="07XXXXXXXX"></div>`;
-  return `<button class="btn btn-ghost" onclick="goHome()">⬅️ Back to Home</button>
+    <div class="field"><label>${t.mobNetwork}</label><select id="f_mnet"><option>AWCC</option><option>Salaam</option><option>ATOMA</option><option>Etisalat</option><option>Roshan</option></select></div>
+    <div class="field"><label>${t.mobNumber}</label><input id="f_mobile" type="tel" value="${f.mobile||''}" placeholder="07XXXXXXXX"></div>`;
+  
+  return `<button class="btn btn-ghost" onclick="goHome()">⬅️ ${t.back}</button>
     <div class="card"><h1 class="page-title">${title}</h1>
     <div class="field"><label>${amtLabel}</label><input id="f_amount" type="number" step="0.01" min="0.01" value="${f.amount||''}" placeholder="0.00"></div>
-    <div class="field"><label>USDT Network</label><select id="f_net"><option ${f.network==='TRC20'?'selected':''}>TRC20</option><option ${f.network==='BEP20'?'selected':''}>BEP20</option><option ${f.network==='ERC20'?'selected':''}>ERC20</option></select></div>
+    <div class="field"><label>${t.network}</label><select id="f_net"><option ${f.network==='TRC20'?'selected':''}>TRC20</option><option ${f.network==='BEP20'?'selected':''}>BEP20</option><option ${f.network==='ERC20'?'selected':''}>ERC20</option></select></div>
     ${extra}<div id="formMsg"></div>
-    <button class="btn btn-primary" style="margin-top:20px" onclick="submitForm()">➡️ Next</button></div>`;
+    <button class="btn btn-primary" style="margin-top:20px" onclick="submitForm()">${t.next} ➡️</button></div>`;
 }
 
-function viewPay(){
+function viewPay(t){
   const c=S.calc, f=S.form, isBuy=f.type==='BUY_USDT';
   const dec = isBuy?2:8;
   const totalText = `${c.total.toFixed(dec)} ${isBuy?'AFN':'USDT'}`;
   let payTo = isBuy ? (f.payment==='HESABPAY'?S.settings.hesabpay_number:S.settings.momo_number) : S.settings['wallet_'+f.network.toLowerCase()];
-  return `<button class="btn btn-ghost" onclick="backToForm()">⬅️ Back</button>
-    <div class="card"><h1 class="page-title">🧾 Payment</h1>
-    <div class="row"><span style="color:#64748b">Rate</span><span style="font-weight:600">1 USDT = ${c.rate} AFN</span></div>
-    <div class="row"><span style="color:#64748b">Base</span><span style="font-weight:600">${c.base.toFixed(dec)}</span></div>
-    <div class="row"><span style="color:#64748b">Fee (${c.fee}%)</span><span style="font-weight:600">${c.feeAmt.toFixed(dec)}</span></div>
-    <div class="row big"><span>Total</span><span>${totalText}</span></div>
-    <div class="info"><div class="label">Send to this address/number:</div><div class="value">${payTo}</div></div>
-    <div class="field"><label>Transaction ID (TXID)</label><input id="f_txid" placeholder="Paste TXID here"></div>
-    <div class="field"><label>Payment Screenshot</label><input id="f_shot" type="file" accept="image/*" style="padding:10px"></div>
+  
+  return `<button class="btn btn-ghost" onclick="backToForm()">⬅️ ${t.back}</button>
+    <div class="card"><h1 class="page-title">🧾 ${t.payment}</h1>
+    <div class="row"><span style="color:#64748b">${t.rate}</span><span style="font-weight:600">1 USDT = ${c.rate} AFN</span></div>
+    <div class="row"><span style="color:#64748b">${t.base}</span><span style="font-weight:600">${c.base.toFixed(dec)}</span></div>
+    <div class="row"><span style="color:#64748b">${t.fee} (${c.fee}%)</span><span style="font-weight:600">${c.feeAmt.toFixed(dec)}</span></div>
+    <div class="row big"><span>${t.total}</span><span>${totalText}</span></div>
+    <div class="info"><div class="label">${t.sendTo}</div><div class="value">${payTo}</div></div>
+    <div class="field"><label>${t.txid}</label><input id="f_txid" placeholder="TXID..."></div>
+    <div class="field"><label>${t.screenshot}</label><input id="f_shot" type="file" accept="image/*" style="padding:10px"></div>
     <div id="payMsg"></div>
-    <button class="btn btn-primary" style="margin-top:10px" onclick="confirmOrder()">✅ CONFIRM ORDER</button></div>`;
+    <button class="btn btn-primary" style="margin-top:10px" onclick="confirmOrder()">✅ ${t.confirmOrder}</button></div>`;
 }
 
-function viewSuccess(){
+function viewSuccess(t){
   return `<div class="card" style="text-align:center;padding:40px 20px">
     <div style="font-size:60px;margin-bottom:10px">🎉</div>
-    <h1 style="color:#0f172a">Order Submitted!</h1>
-    <p style="color:#64748b;font-size:14px;margin-top:8px">Order ID: <strong>${S.lastOrderId}</strong></p>
-    <button class="btn btn-primary" style="margin-top:24px" onclick="goHome()">🏠 Back to Home</button>
+    <h1 style="color:#0f172a">${t.orderSubmitted}</h1>
+    <p style="color:#64748b;font-size:14px;margin-top:8px">${t.orderId}: <strong>${S.lastOrderId}</strong></p>
+    <button class="btn btn-primary" style="margin-top:24px" onclick="goHome()">🏠 ${t.backHome}</button>
   </div>`;
 }
 
-function viewHelp(){
+function viewHelp(t){
   const s = S.settings;
-  return `
-  <div style="display:flex; align-items:center; margin-bottom:20px;">
+  return `<div style="display:flex; align-items:center; margin-bottom:20px;">
     <button onclick="goHome()" style="background:#e8f5ec; border:none; width:40px; height:40px; border-radius:50%; font-size:18px; cursor:pointer; color:#10b981; display:flex; align-items:center; justify-content:center; margin-right:15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">⬅️</button>
-    <h1 style="font-size:24px; margin:0; color:#0f172a; font-weight:800;">Help & Support</h1>
+    <h1 style="font-size:24px; margin:0; color:#0f172a; font-weight:800;">${t.help}</h1>
   </div>
 
   <div style="background:#fff; border-radius:24px; padding:30px 20px; box-shadow:0 4px 15px rgba(0,0,0,0.03); text-align:center; border: 1px solid #d1fae5;">
     <div style="width:80px; height:80px; background:#ecfdf5; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:40px; margin:0 auto 15px auto; box-shadow: 0 4px 10px rgba(16,185,129,0.1);">
       🎧
     </div>
-    <h2 style="font-size:20px; color:#0f172a; margin-bottom:8px; font-weight:800;">How can we help you?</h2>
-    <p style="color:#64748b; font-size:14px; margin-bottom:30px; line-height:1.6;">Contact us directly for any issue. Our support team is available to assist you.</p>
+    <h2 style="font-size:20px; color:#0f172a; margin-bottom:8px; font-weight:800;">${t.contactUs}</h2>
 
-    <div style="display:flex; flex-direction:column; gap:15px;">
+    <div style="display:flex; flex-direction:column; gap:15px; margin-top:25px;">
       
-      <!-- Official Channel Button -->
       ${s.help_channel ? `
       <a href="${s.help_channel}" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:10px; background:linear-gradient(135deg, #3b82f6, #2563eb); color:#fff; padding:16px; border-radius:14px; font-weight:800; font-size:15px; text-decoration:none; box-shadow:0 4px 12px rgba(59,130,246,0.3); transition:0.2s;">
-        <span style="font-size:22px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">📢</span> Official Channel
+        <span style="font-size:22px;">📢</span> ${t.officialChannel}
       </a>` : ''}
 
-      <!-- WhatsApp Button -->
       ${s.help_whatsapp ? `
       <a href="https://wa.me/${s.help_whatsapp.replace(/[^0-9]/g,'')}" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:10px; background:linear-gradient(135deg, #10b981, #059669); color:#fff; padding:16px; border-radius:14px; font-weight:800; font-size:15px; text-decoration:none; box-shadow:0 4px 12px rgba(16,185,129,0.3); transition:0.2s;">
-        <span style="font-size:22px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">💬</span> WhatsApp Support
+        <span style="font-size:22px;">💬</span> ${t.whatsapp}
       </a>` : ''}
 
-      <!-- Telegram Button -->
       ${s.help_telegram ? `
       <a href="https://t.me/${s.help_telegram.replace('@','')}" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:10px; background:linear-gradient(135deg, #0f172a, #1e293b); color:#fff; padding:16px; border-radius:14px; font-weight:800; font-size:15px; text-decoration:none; box-shadow:0 4px 12px rgba(15,23,42,0.3); transition:0.2s;">
-        <span style="font-size:22px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">✈️</span> Telegram Support
+        <span style="font-size:22px;">✈️</span> ${t.telegram}
       </a>` : ''}
 
     </div>
-  </div>
-  
-  <div style="text-align:center; margin-top:30px; color:#94a3b8; font-size:12px; font-weight: 600;">
-    <p>USDT Exchange Afghanistan</p>
-    <p style="margin-top:4px;">We are here to help you 24/7</p>
-  </div>
-  `;
+  </div>`;
 }
 
 function goHome(){ S.view='main'; S.tab='home'; render(); }
@@ -562,13 +672,16 @@ function start(type){ S.form={type,amount:'',network:'TRC20',wallet:'',payment:'
 
 async function submitAuth(){
   const email=$('f_email').value.trim(), pass=$('f_pass').value;
-  if(!email||!pass){ showMsg('authMsg','Email and password required',true); return; }
+  const t = L[S.lang];
+  if(!email||!pass){ showMsg('authMsg', t.enterDetails, true); return; }
   
   if(S.authMode==='login'){
     const { error } = await db.auth.signInWithPassword({email,password:pass});
     if(error){ showMsg('authMsg',error.message,true); return; }
   } else {
     const name=$('f_name').value.trim(), phone=$('f_phone').value.trim();
+    if(!name || !phone) { showMsg('authMsg', t.enterDetails, true); return; }
+    
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const randomLetter = letters[Math.floor(Math.random() * letters.length)];
     const randomNumbers = Math.floor(1000 + Math.random() * 9000); 
@@ -618,15 +731,20 @@ async function updateProfile(){
   await loadProfile(); alert('Profile Updated!'); render();
 }
 
-function copyRef(){ navigator.clipboard.writeText($('refLink').innerText); alert('Referral Link Copied!'); }
+function copyRef(){ 
+  navigator.clipboard.writeText($('refLink').innerText); 
+  const t = L[S.lang];
+  alert(t.copied); 
+}
 
 function submitForm(){
   const f=S.form;
+  const t = L[S.lang];
   f.amount = parseFloat($('f_amount').value||'0');
   f.network = $('f_net').value;
-  if(f.type==='TOPUP'){ f.mobile=$('f_mobile').value.trim(); f.mnet=$('f_mnet').value; if(!f.mobile){ showMsg('formMsg','Enter mobile',true); return; } }
-  else { f.wallet=$('f_wallet').value.trim(); f.payment=$('f_payment').value; if(!f.wallet){ showMsg('formMsg','Enter wallet/phone',true); return; } }
-  if(!f.amount||f.amount<=0){ showMsg('formMsg','Enter valid amount',true); return; }
+  if(f.type==='TOPUP'){ f.mobile=$('f_mobile').value.trim(); f.mnet=$('f_mnet').value; if(!f.mobile){ showMsg('formMsg',t.enterDetails,true); return; } }
+  else { f.wallet=$('f_wallet').value.trim(); f.payment=$('f_payment').value; if(!f.wallet){ showMsg('formMsg',t.enterDetails,true); return; } }
+  if(!f.amount||f.amount<=0){ showMsg('formMsg',t.enterDetails,true); return; }
   const r=+S.settings.rate, fee=+S.settings.fee_percent;
   let base;
   if(f.type==='BUY_USDT') base=f.amount*r; else base=f.amount/r;
@@ -636,9 +754,10 @@ function submitForm(){
 }
 
 async function confirmOrder(){
+  const t = L[S.lang];
   const txid=$('f_txid').value.trim(), file=$('f_shot').files[0];
-  if(!txid){ showMsg('payMsg','Enter TXID',true); return; }
-  if(!file){ showMsg('payMsg','Upload screenshot',true); return; }
+  if(!txid){ showMsg('payMsg',t.enterDetails,true); return; }
+  if(!file){ showMsg('payMsg',t.enterDetails,true); return; }
   showMsg('payMsg','⏳ Uploading...',false);
   const ext=file.name.split('.').pop()||'jpg';
   const path = `${S.user.id}/${Date.now()}.${ext}`;
