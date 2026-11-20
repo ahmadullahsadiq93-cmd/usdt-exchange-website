@@ -6,67 +6,74 @@
 <title>Admin Panel - USDT Exchange</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
-  body{background:#B0C4DE ;color:#1e293b;padding:14px;min-height:100vh;}
+  body{background:#f4fbf7;color:#1e293b;padding:16px;min-height:100vh;}
   .wrap{max-width:800px;margin:0 auto}
   
   /* Top Header */
-  .admin-header { background: linear-gradient(135deg, #0f172a, #1e293b); color: white; border-radius: 16px; padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(15,23,42,0.2); }
-  .admin-header h1 { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
-  .admin-header p { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+  .admin-header { background: linear-gradient(135deg, #10b981, #047857); color: white; border-radius: 24px; padding: 24px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(16,185,129,0.2); position: relative; overflow: hidden;}
+  .admin-header::after { content: '🛡️'; position: absolute; right: -10px; bottom: -20px; font-size: 100px; opacity: 0.1; }
+  .admin-header h1 { font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+  .admin-header p { font-size: 13px; color: #a7f3d0; margin-top: 6px; font-weight: 600; }
   
   /* Tabs Navigation */
-  .tabs-nav { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+  .tabs-nav { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
   .tabs-nav::-webkit-scrollbar { display: none; }
-  .tab-btn { flex: 1; padding: 12px 16px; border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff; color: #64748b; font-weight: 700; cursor: pointer; font-size: 14px; transition: all 0.2s; white-space: nowrap; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-  .tab-btn.active { background: #3b82f6; color: #fff; border-color: #3b82f6; box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+  .tab-btn { flex: 1; padding: 14px 20px; border: 1px solid #e2e8f0; border-radius: 16px; background: #ffffff; color: #64748b; font-weight: 800; cursor: pointer; font-size: 14px; transition: all 0.2s; white-space: nowrap; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+  .tab-btn.active { background: #10b981; color: #fff; border-color: #10b981; box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
 
   /* Cards */
-  .card { background: #ffffff; border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; }
-  .card h2 { font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; }
+  .card { background: #ffffff; border-radius: 24px; padding: 24px; margin-bottom: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #d1fae5; }
+  .card h2 { font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 14px; }
   
   /* Form Fields */
-  .field { margin-bottom: 12px; }
-  .field label { display: block; font-size: 12px; color: #64748b; margin-bottom: 6px; font-weight: 700; }
-  .field input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #cbd5e1; background: #f8fafc; color: #0f172a; font-size: 14px; outline: none; transition: 0.2s; }
-  .field input:focus { border-color: #3b82f6; background: #fff; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
-  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 13px; color: #64748b; margin-bottom: 6px; font-weight: 700; }
+  .field input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #cbd5e1; background: #f8fafc; color: #0f172a; font-size: 15px; outline: none; transition: 0.2s; }
+  .field input:focus { border-color: #10b981; background: #fff; box-shadow: 0 0 0 3px rgba(16,185,129,0.1); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   
   /* Buttons */
-  .btn { padding: 12px 18px; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; color: #fff; font-size: 14px; margin-top: 8px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+  .btn { padding: 14px 20px; border: none; border-radius: 12px; cursor: pointer; font-weight: 800; color: #fff; font-size: 15px; margin-top: 8px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
   .btn:active { transform: scale(0.97); }
-  .btn-primary { background: #10b981; box-shadow: 0 4px 10px rgba(16,185,129,0.2); }
-  .btn-blue { background: #3b82f6; box-shadow: 0 4px 10px rgba(59,130,246,0.2); }
-  .btn-red { background: #ef4444; box-shadow: 0 4px 10px rgba(239,68,68,0.2); }
-  .btn-dark { background: #0f172a; }
-  .btn-outline { background: transparent; border: 1px solid #cbd5e1; color: #64748b; box-shadow: none; }
+  .btn-primary { background: #10b981; box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
+  .btn-blue { background: #3b82f6; box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+  .btn-red { background: #ef4444; box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
+  .btn-dark { background: #0f172a; box-shadow: 0 4px 12px rgba(15,23,42,0.3); }
+  .btn-outline { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: #fff; box-shadow: none; }
   
   /* Orders */
-  .order { background: #f8fafc; border-radius: 12px; padding: 16px; margin-bottom: 12px; border-left: 5px solid #3b82f6; border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; }
-  .order.pending { border-left-color: #f59e0b; }
-  .order.completed { border-left-color: #10b981; }
-  .order.rejected { border-left-color: #ef4444; }
+  .order { background: #f8fafc; border-radius: 16px; padding: 18px; margin-bottom: 14px; border-left: 5px solid #3b82f6; border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; }
+  .order.pending { border-left-color: #f59e0b; background: #fffbeb; }
+  .order.completed { border-left-color: #10b981; background: #f0fdf4; }
+  .order.rejected { border-left-color: #ef4444; background: #fef2f2; }
   
-  .row { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; gap: 10px; border-bottom: 1px dashed #e2e8f0; }
+  .row { display: flex; justify-content: space-between; font-size: 14px; padding: 8px 0; gap: 10px; border-bottom: 1px dashed #cbd5e1; }
   .row:last-child { border-bottom: none; }
   .row strong { color: #64748b; font-weight: 600; flex-shrink: 0; }
   .row span { word-break: break-all; text-align: right; color: #0f172a; font-weight: 700; }
   
-  .status { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; background: #fef3c7; color: #b45309; }
+  .status { display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; text-transform: uppercase; background: #fef3c7; color: #b45309; }
   .st-Completed { background: #d1fae5; color: #047857; }
   .st-Rejected { background: #fee2e2; color: #b91c1c; }
-  .actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  .actions { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
   
   /* Messages List */
-  .msg-item { background: #f8fafc; border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid #e2e8f0; border-left: 4px solid #3b82f6; }
+  .msg-item { background: #f8fafc; border-radius: 16px; padding: 18px; margin-bottom: 14px; border: 1px solid #e2e8f0; border-left: 5px solid #3b82f6; }
   
   /* Alerts */
-  .msg { padding: 12px 16px; border-radius: 10px; font-size: 13px; margin: 12px 0; font-weight: 600; }
+  .msg { padding: 14px 16px; border-radius: 12px; font-size: 14px; margin: 12px 0; font-weight: 700; }
   .msg.error { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
   .msg.ok { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+
+  /* Login Screen specific */
+  .login-wrapper { max-width: 400px; margin: 50px auto; text-align: center; }
+  .login-icon { font-size: 60px; margin-bottom: 15px; }
+  .login-title { font-size: 26px; font-weight: 800; color: #0f172a; margin-bottom: 20px;}
 
   @media (max-width: 480px) {
     .grid { grid-template-columns: 1fr; }
     .tabs-nav { padding-bottom: 10px; }
+    .admin-header { flex-direction: column; align-items: flex-start; gap: 15px;}
   }
 </style>
 </head>
@@ -112,24 +119,24 @@ function render(){
 }
 
 function viewLogin(){
-  return `<div style="text-align:center; margin-top:50px;">
-    <div style="font-size:60px; margin-bottom:15px;">🛡️</div>
-    <h1 style="font-size:24px; font-weight:800; color:#0f172a;">Admin Login</h1>
-  </div>
-  <div class="card" style="margin-top:30px; padding:30px 20px;">
-    <div class="field"><label>Email Address</label><input id="f_email" type="email" placeholder="admin@example.com"></div>
-    <div class="field"><label>Password</label><input id="f_pass" type="password" placeholder="••••••••"></div>
-    <div id="msg"></div>
-    <button class="btn btn-primary" style="width:100%; margin-top:15px;" onclick="doLogin()">🔓 Login to Dashboard</button>
+  return `<div class="login-wrapper">
+    <div class="login-icon">🛡️</div>
+    <h1 class="login-title">Admin Login</h1>
+    <div class="card" style="text-align:left;">
+      <div class="field"><label>Email Address</label><input id="f_email" type="email" placeholder="admin@example.com"></div>
+      <div class="field"><label>Password</label><input id="f_pass" type="password" placeholder="••••••••"></div>
+      <div id="msg"></div>
+      <button class="btn btn-primary" style="width:100%; margin-top:15px;" onclick="doLogin()">🔓 Login to Dashboard</button>
+    </div>
   </div>`;
 }
 
 function viewDenied(){
   return `<div class="card" style="text-align:center; margin-top:50px;">
     <div style="font-size:60px; margin-bottom:10px;">⛔</div>
-    <h1 style="color:#ef4444;">Access Denied</h1>
+    <h1 style="color:#ef4444; font-size:22px;">Access Denied</h1>
     <p style="color:#64748b;font-size:14px;margin-top:8px">This account does not have administrator privileges.</p>
-    <button class="btn btn-dark" onclick="doLogout()" style="margin-top:20px;">Logout</button>
+    <button class="btn btn-dark" onclick="doLogout()" style="margin-top:20px; width:100%;">Logout</button>
   </div>`;
 }
 
@@ -139,7 +146,7 @@ function viewDash(){
       <h1>🛡️ Admin Dashboard</h1>
       <p>Manage your exchange platform</p>
     </div>
-    <button class="btn btn-outline" style="margin:0; color:#cbd5e1; border-color:#475569;" onclick="doLogout()">🚪 Logout</button>
+    <button class="btn btn-outline" onclick="doLogout()">🚪 Logout</button>
   </div>
   
   <div class="tabs-nav">
@@ -186,7 +193,7 @@ function viewAdminSettings(){
   </div>
 
   <div id="settingsMsg"></div>
-  <button class="btn btn-primary" style="width:100%; padding:16px; font-size:16px;" onclick="saveSettings()">💾 Save All Settings</button>`;
+  <button class="btn btn-primary" style="width:100%; padding:18px; font-size:16px;" onclick="saveSettings()">💾 Save All Settings</button>`;
 }
 
 function viewAdminOrders() {
@@ -199,10 +206,10 @@ function viewAdminOrders() {
   return `<div class="card">
     <h2 style="justify-content:space-between; border-bottom:none; margin-bottom:0; padding-bottom:0;">
       <span>📦 Recent Orders (${sortedOrders.length})</span>
-      <button class="btn btn-blue" style="padding:6px 12px; margin:0; font-size:12px;" onclick="refreshOrders()">🔄 Refresh</button>
+      <button class="btn btn-blue" style="padding:8px 14px; margin:0; font-size:13px;" onclick="refreshOrders()">🔄 Refresh</button>
     </h2>
     
-    <div style="margin-top:15px;">
+    <div style="margin-top:20px;">
       ${sortedOrders.length ? sortedOrders.map(viewOrder).join('') : '<p style="color:#64748b;font-size:14px;text-align:center;padding:20px;">No orders yet</p>'}
     </div>
   </div>`;
@@ -211,8 +218,8 @@ function viewAdminOrders() {
 function viewAdminAnnouncement(){
   return `<div class="card">
     <h2>📢 Send Announcement</h2>
-    <p style="font-size:13px; color:#64748b; margin-bottom:15px;">This message will be sent to all users instantly.</p>
-    <div class="field"><label>Title</label><input id="n_title" placeholder="e.g., New Rate Update!"></div>
+    <p style="font-size:14px; color:#64748b; margin-bottom:16px; font-weight:600;">This message will be sent to all users instantly.</p>
+    <div class="field"><label>Message Title</label><input id="n_title" placeholder="e.g., New Rate Update!"></div>
     <div class="field"><label>Message Body</label><input id="n_msg" placeholder="Write your message here..."></div>
     <button class="btn btn-blue" style="width:100%" onclick="sendNotification()">🚀 Send Message</button>
     <div id="notifMsg"></div>
@@ -222,11 +229,11 @@ function viewAdminAnnouncement(){
     <h2>📜 Sent History</h2>
     ${S.notifications.length ? S.notifications.map(n => `
       <div class="msg-item">
-        <div style="font-weight:800; color:#0f172a; margin-bottom:5px;">${n.title}</div>
-        <div style="font-size:13px; color:#475569; margin-bottom:10px; line-height:1.5;">${n.message}</div>
+        <div style="font-weight:800; color:#0f172a; font-size:16px; margin-bottom:6px;">${n.title}</div>
+        <div style="font-size:14px; color:#475569; margin-bottom:12px; line-height:1.6;">${n.message}</div>
         <div style="display:flex; justify-content:space-between; align-items:center;">
-          <span style="font-size:11px; color:#94a3b8;">${new Date(n.created_at).toLocaleString()}</span>
-          <button class="btn btn-red" style="padding:6px 12px; margin:0; font-size:11px;" onclick="deleteNotification('${n.id}')">🗑️ Delete for All</button>
+          <span style="font-size:12px; color:#94a3b8; font-weight:600;">📅 ${new Date(n.created_at).toLocaleString()}</span>
+          <button class="btn btn-red" style="padding:8px 14px; margin:0; font-size:12px;" onclick="deleteNotification('${n.id}')">🗑️ Delete for All</button>
         </div>
       </div>
     `).join('') : '<p style="color:#64748b;font-size:14px;text-align:center;padding:20px;">No messages sent yet.</p>'}
@@ -237,21 +244,21 @@ function viewAdminUsers() {
   return `<div class="card">
     <h2>🔍 Find User Account</h2>
     <div class="field">
-      <div style="display:flex; gap:10px">
+      <div style="display:flex; gap:12px">
         <input id="s_user_id" value="${S.searchId || ''}" placeholder="Enter User ID (e.g., A-1234)">
         <button class="btn btn-blue" style="margin-top:0; white-space:nowrap" onclick="searchUser()">Search</button>
       </div>
     </div>
     
     ${S.searchUser ? `
-      <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:16px; border-radius:12px; margin-top:20px;">
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:20px; border-radius:16px; margin-top:24px;">
         <div class="row"><strong>Name</strong><span>${S.searchUser.full_name || 'N/A'}</span></div>
         <div class="row"><strong>User ID</strong><span style="color:#10b981">${S.searchUser.user_code}</span></div>
         <div class="row"><strong>Email</strong><span>${S.searchUser.email || S.searchUser.user_email || 'N/A'}</span></div>
         <div class="row"><strong>Balance</strong><span style="color:#3b82f6">${S.searchUser.balance || 0} USDT</span></div>
         
-        <div style="margin-top:20px; border-top:1px solid #cbd5e1; padding-top:20px;">
-          <h3 style="font-size:13px; color:#64748b; margin-bottom:12px; font-weight:800;">UPDATE CREDENTIALS</h3>
+        <div style="margin-top:24px; border-top:1px solid #cbd5e1; padding-top:20px;">
+          <h3 style="font-size:14px; color:#64748b; margin-bottom:16px; font-weight:800;">UPDATE CREDENTIALS</h3>
           <div class="field"><label>New Email</label><input id="u_email" value="${S.searchUser.email || ''}"></div>
           <div class="field"><label>New Password</label><input id="u_pass" type="text" placeholder="Leave empty to keep current"></div>
           <button class="btn btn-primary" style="width:100%" onclick="updateUserAuth('${S.searchUser.id}')">Update Email & Password</button>
@@ -259,7 +266,7 @@ function viewAdminUsers() {
       </div>
       
       <h2 style="margin-top:30px; border-bottom:none; padding-bottom:0;">User Order History</h2>
-      <div style="margin-top:15px;">
+      <div style="margin-top:16px;">
         ${S.searchOrders.length ? S.searchOrders.map(viewOrder).join('') : '<p style="color:#64748b;font-size:14px;text-align:center;padding:20px;">No orders found for this user.</p>'}
       </div>
     ` : ''}
@@ -298,14 +305,13 @@ function viewOrder(o){
   
   const isProcessed = (o.status === 'Completed' || o.status === 'Rejected');
   
-  // Choose an icon based on type
   let icon = '💵';
   if(o.order_type === 'BUY_USDT') icon = '🪙';
   else if(o.order_type === 'BUY_AFN') icon = '💵';
   else if(o.order_type === 'TOPUP') icon = '📱';
 
   return `<div class="order ${statusClass}">
-    <div class="row" style="align-items:center; margin-bottom:8px;">
+    <div class="row" style="align-items:center; margin-bottom:8px; border-bottom:none;">
       <strong style="font-size:16px; color:#0f172a;">${icon} ${o.order_type}</strong>
       <span class="status st-${o.status==='Completed'?'Completed':o.status==='Rejected'?'Rejected':''}">${o.status}</span>
     </div>
@@ -315,11 +321,11 @@ function viewOrder(o){
     ${o.wallet_address?`<div class="row"><strong>Wallet</strong><span>${o.wallet_address}</span></div>`:''}
     ${o.mobile_number?`<div class="row"><strong>Mobile</strong><span>${o.mobile_network} ${o.mobile_number}</span></div>`:''}
     <div class="row"><strong>TXID</strong><span>${o.txid||'-'}</span></div>
-    ${o.screenshot_url?`<div class="row"><strong>Proof</strong><button class="btn btn-blue" style="padding:6px 12px;font-size:11px;margin:0;" onclick="viewShot('${o.screenshot_url}')">📸 View Receipt</button></div>`:''}
+    ${o.screenshot_url?`<div class="row"><strong>Proof</strong><button class="btn btn-blue" style="padding:6px 12px;font-size:12px;margin:0;" onclick="viewShot('${o.screenshot_url}')">📸 View Receipt</button></div>`:''}
     
     <div class="actions">
       ${isProcessed 
-        ? `<div style="width:100%; text-align:center; color:#10b981; font-weight:800; font-size:13px; padding:10px; background:#f0fdf4; border-radius:10px; border:1px solid #bbf7d0;">✅ Processed & Locked</div>` 
+        ? `<div style="width:100%; text-align:center; color:#10b981; font-weight:800; font-size:14px; padding:12px; background:#fff; border-radius:12px; border:1px solid #bbf7d0;">✅ Processed & Locked</div>` 
         : `
           <button class="btn btn-primary" style="flex:1;" onclick="setStatus('${o.id}','Completed')">Complete</button>
           <button class="btn btn-red" style="flex:1;" onclick="setStatus('${o.id}','Rejected')">Reject</button>
