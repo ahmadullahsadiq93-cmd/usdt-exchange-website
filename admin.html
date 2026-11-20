@@ -108,7 +108,6 @@ function viewAdminSettings(){
     <div class="grid">
       <div class="field"><label>Rate (AFN/USDT)</label><input id="s_rate" type="number" step="0.01" value="${s.rate||''}"></div>
       <div class="field"><label>Fee %</label><input id="s_fee" type="number" step="0.1" value="${s.fee_percent||''}"></div>
-      <!-- ✅ د ریفرل فیصدي اضافه شوه -->
       <div class="field"><label style="color:#10b981; font-weight:bold;">Referral % (Invite Commission)</label><input id="s_ref" type="number" step="0.1" value="${s.referral_percent||'0'}" placeholder="e.g. 1"></div>
       
       <div class="field"><label>Hesab Pay #</label><input id="s_hp" value="${s.hesabpay_number||''}"></div>
@@ -210,8 +209,11 @@ async function updateUserAuth(userId) {
   S.searchUser.email = newEmail; render();
 }
 
+// ✅ دلته د فرمایش ښودلو برخه بدله شوه
 function viewOrder(o){
   const stCls = o.status==='Payment Submitted'?'':o.status;
+  const isProcessed = (o.status === 'Completed' || o.status === 'Rejected');
+  
   return `<div class="order">
     <div class="row"><strong>${o.order_type}</strong><span class="status ${stCls?'st-'+stCls:''}">${o.status}</span></div>
     <div class="row"><strong>Amount</strong><span>${o.amount_input} ${o.currency_input}</span></div>
@@ -221,10 +223,18 @@ function viewOrder(o){
     ${o.mobile_number?`<div class="row"><strong>Mobile</strong><span>${o.mobile_network} ${o.mobile_number}</span></div>`:''}
     <div class="row"><strong>TXID</strong><span>${o.txid||'-'}</span></div>
     ${o.screenshot_url?`<div class="row"><strong>Proof</strong><button class="btn btn-blue" style="padding:4px 8px;font-size:11px;margin:0" onclick="viewShot('${o.screenshot_url}')">View</button></div>`:''}
+    
+    <!-- ✅ که فرمایش پروسس شوی وي، بټنونه پټیږي او پر ځای یې Processed راځي -->
     <div class="actions">
-      ${o.status!=='Completed'?`<button class="btn btn-primary" onclick="setStatus('${o.id}','Completed')">Complete</button>`:''}
-      ${o.status!=='Rejected'?`<button class="btn btn-red" onclick="setStatus('${o.id}','Rejected')">Reject</button>`:''}
-    </div></div>`;
+      ${isProcessed 
+        ? `<div style="width:100%; text-align:center; color:#10b981; font-weight:bold; font-size:13px; padding:8px; background:#0f172a; border-radius:8px; border:1px solid #334155;">✅ Processed & Locked</div>` 
+        : `
+          <button class="btn btn-primary" onclick="setStatus('${o.id}','Completed')">Complete</button>
+          <button class="btn btn-red" onclick="setStatus('${o.id}','Rejected')">Reject</button>
+        `
+      }
+    </div>
+  </div>`;
 }
 
 async function doLogin(){
@@ -238,7 +248,7 @@ async function doLogout(){ await db.auth.signOut(); location.reload(); }
 
 async function saveSettings(){
   const map=[
-    ['rate','s_rate'],['fee_percent','s_fee'],['referral_percent','s_ref'], // ✅ Referral% اضافه شو
+    ['rate','s_rate'],['fee_percent','s_fee'],['referral_percent','s_ref'],
     ['hesabpay_number','s_hp'],['momo_number','s_momo'],
     ['wallet_trc20','s_trc'],['wallet_bep20','s_bep'],
     ['wallet_erc20','s_erc'],['account_holder','s_holder'],
@@ -263,8 +273,17 @@ async function sendNotification() {
   $('n_title').value = ''; $('n_msg').value = '';
 }
 
-// ✅ د فرمایش د بشپړولو پر مهال د ریفرل کمیشن محاسبه کول
+// ✅ د فرمایش د بدلولو فنکشن (د اضافي امنیت لپاره)
 async function setStatus(id, status){
+  // لومړی ګورو چې دا فرمایش لا دمخه پروسس شوی که نه
+  let order = S.orders.find(o => o.id === id);
+  if (!order && S.searchOrders) order = S.searchOrders.find(o => o.id === id);
+  
+  if (order && (order.status === 'Completed' || order.status === 'Rejected')) {
+    alert('❌ This order is already processed and cannot be changed.');
+    return;
+  }
+
   if(!confirm(`Set order to ${status}?`)) return;
   const upd={status};
   if(status==='Completed') upd.completed_at=new Date().toISOString();
@@ -272,17 +291,11 @@ async function setStatus(id, status){
   const { error } = await db.from('orders').update(upd).eq('id',id);
   if(error){ alert('Error: '+error.message); return; }
 
-  // که چیرې فرمایش بشپړ (Completed) شو، د ریفرل کمیشن حسابوو
+  // د ریفرل کمیشن حسابوو
   if(status === 'Completed') {
-    // فرمایش پیدا کوو
-    let order = S.orders.find(o => o.id === id);
-    if (!order && S.searchOrders) order = S.searchOrders.find(o => o.id === id);
-    
     if (order) {
-      // د هغه کارونکي پروفایل پیدا کوو چې فرمایش یې کړی
       const { data: buyerProfile } = await db.from('profiles').select('referred_by').eq('id', order.user_id).single();
       
-      // که چیرې د دې کارونکي یو ریفرر (هغه څوک چې په لینک یې راغلی) وي
       if (buyerProfile && buyerProfile.referred_by) {
         const refPercent = parseFloat(S.settings.referral_percent || '0');
         
@@ -291,7 +304,6 @@ async function setStatus(id, status){
           const commission = feeAmount * (refPercent / 100);
           
           if (commission > 0) {
-            // د ریفرر والټ ته پیسې اضافه کوو
             const { data: referrer } = await db.from('profiles').select('balance').eq('id', buyerProfile.referred_by).single();
             if (referrer) {
               const currentBalance = parseFloat(referrer.balance || '0');
