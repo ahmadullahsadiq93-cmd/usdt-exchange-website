@@ -234,6 +234,33 @@ function viewNotificationsPage() {
   }
   return html;
 }
+
+// ✅ نوی سم شوی فنکشن: یوازې د همدې کارونکي پیغامونه پاکوي
+async function clearAllNotifications() {
+  if (!confirm('ایا تاسو ډاډه یاست چې غواړئ خپل پیغامونه حذف کړئ؟')) return;
+
+  // 1. د هغو پیغامونو آی‌ډي (ID) راټولول چې اوس مهال په سکرین کې ښکاري
+  const idsToDelete = S.notifications.map(n => n.id);
+
+  // که چیرې پیغامونه موجود وي، د هغوی د آی‌ډي پر بنسټ یې له ډیټابیس څخه حذف کوو
+  if (idsToDelete.length > 0) {
+    const { error } = await db.from('notifications').delete().in('id', idsToDelete);
+    
+    if (error) {
+      alert('د پیغامونو حذفولو کې ستونزه: ' + error.message);
+      return;
+    }
+  }
+
+  // 2. په اپلیکیشن کې دننه د معلوماتو خالي کول
+  S.notifications = [];
+  S.hasUnread = false;
+  localStorage.removeItem('lastReadNotif');
+
+  // 3. سکرین تازه کول
+  render();
+}
+
 function viewPriceHistory(){
   const s = S.settings;
   setTimeout(async () => {
