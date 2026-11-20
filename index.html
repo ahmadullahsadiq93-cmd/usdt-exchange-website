@@ -13,7 +13,6 @@
   .logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:20px;color:#0f172a}
   .logo-icon{width:36px;height:36px;background:#10b981;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px}
   
-  /* Bell Icon and Red Dot */
   .bell-container { position: relative; cursor: pointer; }
   .bell { font-size: 24px; color: #64748b; }
   .bell-dot { display: none; position: absolute; top: 0; right: 0; width: 12px; height: 12px; background: #ef4444; border-radius: 50%; border: 2px solid #f4fbf7; }
@@ -47,6 +46,7 @@
   .field label{display:block;font-size:12px;color:#64748b;margin-bottom:6px;font-weight:600}
   .field input,.field select{width:100%;padding:14px;border-radius:12px;border:1px solid #e2e8f0;background:#f8fafc;color:#0f172a;font-size:15px;outline:none}
   .field input:focus,.field select:focus{border-color:#10b981;background:#fff}
+  .field input:disabled{background:#e2e8f0;color:#64748b;cursor:not-allowed}
   .btn{display:block;width:100%;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;color:#fff;margin-top:8px;text-align:center;text-decoration:none}
   .btn-primary{background:#10b981}.btn-blue{background:#3b82f6}.btn-orange{background:#f59e0b}.btn-dark{background:#0f172a}
   .btn-ghost{background:transparent;color:#64748b;font-size:14px;margin-bottom:10px;text-align:left;font-weight:600}
@@ -59,12 +59,18 @@
   .msg{padding:12px;border-radius:10px;font-size:13px;margin:10px 0;font-weight:600}
   .msg.error{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}.msg.ok{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0}
   
+  /* ✅ د پروفایل نوی ښکلی ډیزاین */
   .avatar-box{text-align:center;margin-bottom:20px}
-  .avatar{width:90px;height:90px;border-radius:50%;object-fit:cover;border:4px solid #10b981;margin:0 auto 10px;background:#e2e8f0}
-  .user-id-badge{display:inline-block;background:#dcfce7;color:#166534;padding:4px 12px;border-radius:20px;font-weight:700;font-size:14px;margin-top:6px}
+  .avatar{width:100px;height:100px;border-radius:50%;object-fit:cover;border:4px solid #10b981;margin:0 auto 10px;background:#e2e8f0;box-shadow: 0 4px 10px rgba(0,0,0,0.1)}
+  .user-id-badge{display:inline-block;background:#0f172a;color:#10b981;padding:6px 16px;border-radius:20px;font-weight:800;font-size:16px;margin-top:6px;letter-spacing:1px}
   .ref-box{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:12px;padding:12px;display:flex;justify-content:space-between;align-items:center;margin-top:8px}
   .ref-box span{font-size:13px;color:#334155;word-break:break-all}
   .loader{text-align:center;padding:40px;color:#64748b;font-weight:600}
+  
+  .profile-info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+  .profile-info-row:last-child { border-bottom: none; }
+  .profile-info-row .label { color: #64748b; font-weight: 600; }
+  .profile-info-row .value { font-weight: 700; color: #0f172a; }
 </style>
 </head>
 <body><div class="wrap"><div id="app"></div></div>
@@ -83,7 +89,7 @@ async function boot(){
     S.user=session.user; 
     await loadProfile();
     await loadSettings(); 
-    await checkNotifications(); // کتنه چې نوی پیغام شته که نه
+    await checkNotifications(); 
     S.view='main'; S.tab='home';
   }
   else S.view='auth';
@@ -100,12 +106,10 @@ async function loadSettings(){
   S.settings = Object.fromEntries((data||[]).map(r=>[r.key,r.value]));
 }
 
-// د اډمین د پیغامونو کتنه
 async function checkNotifications() {
   const { data } = await db.from('notifications').select('*').order('created_at', { ascending: false });
   S.notifications = data || [];
   if(S.notifications.length > 0) {
-    // د وروستي پیغام نیټه د موبایل په حافظه کې له خوندي شوي نیټې سره پرتله کوو
     const lastRead = localStorage.getItem('lastReadNotif');
     const newestNotif = new Date(S.notifications[0].created_at).getTime();
     if(!lastRead || newestNotif > parseInt(lastRead)) {
@@ -202,7 +206,6 @@ function viewHome(){
   </div>`;
 }
 
-// د پیغامونو نوی پاڼه
 function viewNotificationsPage() {
   let html = `
   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
@@ -235,29 +238,16 @@ function viewNotificationsPage() {
   return html;
 }
 
-// ✅ نوی سم شوی فنکشن: یوازې د همدې کارونکي پیغامونه پاکوي
 async function clearAllNotifications() {
   if (!confirm('ایا تاسو ډاډه یاست چې غواړئ خپل پیغامونه حذف کړئ؟')) return;
-
-  // 1. د هغو پیغامونو آی‌ډي (ID) راټولول چې اوس مهال په سکرین کې ښکاري
   const idsToDelete = S.notifications.map(n => n.id);
-
-  // که چیرې پیغامونه موجود وي، د هغوی د آی‌ډي پر بنسټ یې له ډیټابیس څخه حذف کوو
   if (idsToDelete.length > 0) {
     const { error } = await db.from('notifications').delete().in('id', idsToDelete);
-    
-    if (error) {
-      alert('د پیغامونو حذفولو کې ستونزه: ' + error.message);
-      return;
-    }
+    if (error) { alert('د پیغامونو حذفولو کې ستونزه: ' + error.message); return; }
   }
-
-  // 2. په اپلیکیشن کې دننه د معلوماتو خالي کول
   S.notifications = [];
   S.hasUnread = false;
   localStorage.removeItem('lastReadNotif');
-
-  // 3. سکرین تازه کول
   render();
 }
 
@@ -298,30 +288,52 @@ function viewPriceHistory(){
   <div id="ordersContainer"><div class="loader">⏳ Loading Orders...</div></div>`;
 }
 
+// ✅ د پروفایل نوی ښکلی پاڼه
 function viewProfile(){
   const p = S.profile;
   const refLink = `https://lahsadiq93.workers.dev/?ref=${p.referral_code}`;
+  const displayId = p.user_code || 'Pending'; // که آيډي نه وي، Pending ښکاري
+  
   return `<div class="header">
     <h1 style="font-size:24px">My Profile</h1>
-    <button class="btn btn-ghost" style="margin:0;color:#ef4444" onclick="logout()">🚪 Logout</button>
+    <button class="btn btn-ghost" style="margin:0;color:#ef4444; width:auto" onclick="logout()">🚪 Logout</button>
   </div>
-  <div class="card">
+  
+  <div class="card" style="text-align:center; padding-top:30px">
     <div class="avatar-box">
       <img src="${p.avatar_url || 'https://ui-avatars.com/api/?name='+p.full_name+'&background=random'}" class="avatar" id="avatarImg">
       <input type="file" id="avatarFile" accept="image/*" style="display:none" onchange="uploadAvatar()">
       <button class="btn btn-ghost" style="text-align:center;color:#3b82f6" onclick="document.getElementById('avatarFile').click()">📸 Change Photo</button>
-      <h1 style="margin-top:4px;color:#0f172a">${p.full_name || 'User'}</h1>
-      <div class="user-id-badge">${p.referral_code}</div>
+      
+      <h1 style="margin-top:10px;color:#0f172a">${p.full_name || 'User'}</h1>
+      <div class="user-id-badge">🆔 ${displayId}</div>
     </div>
-    <div class="field" style="margin-top:20px"><label>Update Name</label><input id="p_name" value="${p.full_name||''}"></div>
+    
+    <div style="margin-top:25px; text-align:left; background:#f8fafc; border-radius:12px; padding:15px;">
+      <div class="profile-info-row">
+        <span class="label">Email:</span>
+        <span class="value">${S.user.email}</span>
+      </div>
+      <div class="profile-info-row">
+        <span class="label">User ID:</span>
+        <span class="value" style="color:#10b981">${displayId}</span>
+      </div>
+    </div>
+
+    <div class="field" style="margin-top:20px; text-align:left">
+      <label>Update Full Name</label>
+      <input id="p_name" value="${p.full_name||''}">
+    </div>
     <button class="btn btn-dark" onclick="updateProfile()">💾 Save Changes</button>
   </div>
+  
   <div class="card">
     <h2 style="font-size:18px;margin-bottom:8px;color:#0f172a">🎁 Invite Friends</h2>
-    <p style="font-size:13px;color:#64748b;margin-bottom:8px">Earn ${S.settings.referral_percent}% of every trade fee from your friends!</p>
+    <p style="font-size:13px;color:#64748b;margin-bottom:8px">Earn ${S.settings.referral_percent || 0}% of every trade fee from your friends!</p>
     <div class="ref-box"><span id="refLink">${refLink}</span></div>
     <button class="btn btn-blue" style="margin-top:10px" onclick="copyRef()">📋 Copy Link</button>
   </div>
+  
   <div class="card" style="background:#f8fafc;text-align:center">
     <p style="font-size:12px;color:#64748b">Need help? Contact Support.</p>
     <button class="btn btn-primary" style="margin-top:8px" onclick="S.view='help'; render()">💬 Help & Support</button>
@@ -403,17 +415,29 @@ function goHome(){ S.view='main'; S.tab='home'; render(); }
 function backToForm(){ S.view='form'; render(); }
 function start(type){ S.form={type,amount:'',network:'TRC20',wallet:'',payment:'HESABPAY',mobile:''}; S.view='form'; render(); }
 
+// ✅ د راجستر فنکشن چې د کارونکي لپاره ۵ عددي آي‌ډي جوړوي (لکه A-1234)
 async function submitAuth(){
   const email=$('f_email').value.trim(), pass=$('f_pass').value;
   if(!email||!pass){ showMsg('authMsg','Email and password required',true); return; }
+  
   if(S.authMode==='login'){
     const { error } = await db.auth.signInWithPassword({email,password:pass});
     if(error){ showMsg('authMsg',error.message,true); return; }
   } else {
     const name=$('f_name').value.trim(), phone=$('f_phone').value.trim();
-    const meta = {full_name:name, phone};
+    
+    // د نوي کارونکي لپاره د آي‌ډي جوړول (لومړی حرف + ۴ عددونه)
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const randomLetter = letters[Math.floor(Math.random() * letters.length)];
+    const randomNumbers = Math.floor(1000 + Math.random() * 9000); 
+    const newUserCode = `${randomLetter}-${randomNumbers}`; // مثال: A-1234
+    
+    // د راجستر معلومات (آی‌ډي او ایمیل په میټاډیټا کې ځای پرځای کیږي)
+    const meta = { full_name: name, phone: phone, user_code: newUserCode, email: email };
     const { error } = await db.auth.signUp({email,password:pass,options:{data:meta}});
+    
     if(error){ showMsg('authMsg',error.message,true); return; }
+    
     const { error:le } = await db.auth.signInWithPassword({email,password:pass});
     if(le){ showMsg('authMsg','Account created. Please login.',false); S.authMode='login'; render(); return; }
   }
