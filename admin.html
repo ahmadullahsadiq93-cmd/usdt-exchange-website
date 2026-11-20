@@ -27,8 +27,6 @@
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .msg{padding:10px 14px;border-radius:8px;font-size:13px;margin:10px 0}
   .msg.error{background:#7f1d1d;color:#fecaca}.msg.ok{background:#14532d;color:#bbf7d0}
-  
-  /* د ټبونو (Tabs) ډیزاین */
   .tabs-nav { display: flex; gap: 8px; margin-bottom: 14px; overflow-x: auto; padding-bottom: 4px; }
   .tab-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; background: #1e293b; color: #94a3b8; font-weight: bold; cursor: pointer; font-size: 14px; transition: 0.2s; white-space: nowrap;}
   .tab-btn.active { background: #3b82f6; color: #fff; }
@@ -48,18 +46,9 @@ async function boot(){
   const { data:{ session } } = await db.auth.getSession();
   if(!session){ S.view='login'; render(); return; }
   S.user = session.user;
-  
   const { data: isAdmin, error } = await db.rpc('check_is_admin');
-  
-  if(error) {
-    alert("Database Error: " + error.message); 
-    return;
-  }
-  
-  if(!isAdmin){ 
-    S.view='denied'; render(); return; 
-  }
-  
+  if(error) { alert("Database Error: " + error.message); return; }
+  if(!isAdmin){ S.view='denied'; render(); return; }
   await loadAll();
   S.view='dashboard'; render();
 }
@@ -68,8 +57,6 @@ async function loadAll(){
   const { data:sd, error:se } = await db.from('settings').select('*');
   if(se){ alert('Settings load error: '+se.message); return; }
   S.settings = Object.fromEntries((sd||[]).map(r=>[r.key,r.value]));
-  
-  // د فرمایشونو راوړل (تر 200 پورې)
   const { data:od } = await db.from('orders').select('*').order('created_at',{ascending:false}).limit(200);
   S.orders = od || [];
 }
@@ -96,7 +83,6 @@ function viewDenied(){
     <button class="btn btn-ghost" onclick="doLogout()" style="margin-top:12px">Logout</button></div>`;
 }
 
-// د اډمین اصلي ډشبورډ چې ټبونه پکې دي
 function viewDash(){
   return `<div class="card" style="display:flex;justify-content:space-between;align-items:center; margin-bottom: 10px;">
     <h1>Admin Dashboard</h1><button class="btn btn-ghost" onclick="doLogout()">Logout</button>
@@ -116,13 +102,15 @@ function viewDash(){
   `;
 }
 
-// ================= 1. SETTINGS TAB =================
 function viewAdminSettings(){
   const s=S.settings;
   return `<div class="card"><h2>Daily Settings — Rate & Fee</h2>
     <div class="grid">
       <div class="field"><label>Rate (AFN/USDT)</label><input id="s_rate" type="number" step="0.01" value="${s.rate||''}"></div>
       <div class="field"><label>Fee %</label><input id="s_fee" type="number" step="0.1" value="${s.fee_percent||''}"></div>
+      <!-- ✅ د ریفرل فیصدي اضافه شوه -->
+      <div class="field"><label style="color:#10b981; font-weight:bold;">Referral % (Invite Commission)</label><input id="s_ref" type="number" step="0.1" value="${s.referral_percent||'0'}" placeholder="e.g. 1"></div>
+      
       <div class="field"><label>Hesab Pay #</label><input id="s_hp" value="${s.hesabpay_number||''}"></div>
       <div class="field"><label>MTN MoMo #</label><input id="s_momo" value="${s.momo_number||''}"></div>
       <div class="field"><label>TRC20 Wallet</label><input id="s_trc" value="${s.wallet_trc20||''}"></div>
@@ -138,9 +126,7 @@ function viewAdminSettings(){
   </div>`;
 }
 
-// ================= 2. ORDERS TAB =================
 function viewAdminOrders() {
-  // دلته فرمایشونه د وخت له مخې مرتب کوو، خو هغه چې د تادیې په تمه دي لومړی ښکاري
   const sortedOrders = [...S.orders].sort((a, b) => {
     if (a.status === 'Payment Submitted' && b.status !== 'Payment Submitted') return -1;
     if (a.status !== 'Payment Submitted' && b.status === 'Payment Submitted') return 1;
@@ -152,14 +138,10 @@ function viewAdminOrders() {
       <h2 style="margin:0">All Orders (${sortedOrders.length})</h2>
       <button class="btn btn-blue" style="margin:0; padding:8px 12px;" onclick="refreshOrders()">🔄 Refresh</button>
     </div>
-    
-    <p style="font-size:12px; color:#f59e0b; margin-bottom:12px;">💡 Orders with "Payment Submitted" status are shown first.</p>
-    
     ${sortedOrders.length ? sortedOrders.map(viewOrder).join('') : '<p style="color:#94a3b8;font-size:13px">No orders yet</p>'}
   </div>`;
 }
 
-// ================= 3. ANNOUNCEMENT TAB =================
 function viewAdminAnnouncement(){
   return `<div class="card">
     <h2>📢 Send Announcement to Users</h2>
@@ -171,7 +153,6 @@ function viewAdminAnnouncement(){
   </div>`;
 }
 
-// ================= 4. USERS TAB =================
 function viewAdminUsers() {
   return `<div class="card">
     <h2>🔍 Search User by ID</h2>
@@ -188,6 +169,7 @@ function viewAdminUsers() {
         <div class="row"><strong>Name</strong><span>${S.searchUser.full_name || 'N/A'}</span></div>
         <div class="row"><strong>User ID</strong><span style="color:#10b981; font-weight:bold">${S.searchUser.user_code}</span></div>
         <div class="row"><strong>Email</strong><span>${S.searchUser.email || S.searchUser.user_email || 'N/A'}</span></div>
+        <div class="row"><strong>Balance</strong><span style="color:#3b82f6; font-weight:bold">${S.searchUser.balance || 0} USDT</span></div>
         
         <div style="margin-top:15px; border-top:1px solid #334155; padding-top:15px;">
           <label style="font-size:12px;color:#94a3b8;font-weight:bold;">UPDATE CREDENTIALS</label>
@@ -203,55 +185,29 @@ function viewAdminUsers() {
   </div>`;
 }
 
-// ================= FUNCTIONS =================
-
-async function refreshOrders() {
-  await loadAll();
-  render();
-}
+async function refreshOrders() { await loadAll(); render(); }
 
 async function searchUser() {
   const code = $('s_user_id').value.trim();
   if(!code) return;
   S.searchId = code;
-  
   const { data: profile, error } = await db.from('profiles').select('*').eq('user_code', code).single();
-  
-  if(error || !profile) { 
-    alert('User not found! Please check the ID.'); 
-    S.searchUser = null; 
-    S.searchOrders = []; 
-    render(); 
-    return; 
-  }
-  
+  if(error || !profile) { alert('User not found! Please check the ID.'); S.searchUser = null; S.searchOrders = []; render(); return; }
   S.searchUser = profile;
   const { data: orders } = await db.from('orders').select('*').eq('user_id', profile.id).order('created_at', {ascending:false});
   S.searchOrders = orders || [];
-  
   render();
 }
 
 async function updateUserAuth(userId) {
   const newEmail = $('u_email').value.trim();
   const newPass = $('u_pass').value.trim();
-  
   if (!newEmail && !newPass) { alert('Please enter a new email or password to update.'); return; }
-  
-  const confirmUpdate = confirm("Are you sure you want to update this user's credentials?");
-  if(!confirmUpdate) return;
-
-  const { error } = await db.rpc('admin_update_user_auth', {
-    new_email: newEmail,
-    new_password: newPass,
-    target_user_id: userId
-  });
-  
+  if(!confirm("Are you sure you want to update this user's credentials?")) return;
+  const { error } = await db.rpc('admin_update_user_auth', { new_email: newEmail, new_password: newPass, target_user_id: userId });
   if(error) { alert('Error updating user: ' + error.message); return; }
-  
   alert('✅ User credentials updated successfully!');
-  S.searchUser.email = newEmail;
-  render();
+  S.searchUser.email = newEmail; render();
 }
 
 function viewOrder(o){
@@ -260,6 +216,7 @@ function viewOrder(o){
     <div class="row"><strong>${o.order_type}</strong><span class="status ${stCls?'st-'+stCls:''}">${o.status}</span></div>
     <div class="row"><strong>Amount</strong><span>${o.amount_input} ${o.currency_input}</span></div>
     <div class="row"><strong>Total</strong><span>${o.total_amount}</span></div>
+    <div class="row"><strong>Fee</strong><span>${o.fee_amount||0}</span></div>
     ${o.wallet_address?`<div class="row"><strong>Wallet</strong><span>${o.wallet_address}</span></div>`:''}
     ${o.mobile_number?`<div class="row"><strong>Mobile</strong><span>${o.mobile_network} ${o.mobile_number}</span></div>`:''}
     <div class="row"><strong>TXID</strong><span>${o.txid||'-'}</span></div>
@@ -277,12 +234,11 @@ async function doLogin(){
   if(error){ showMsg('msg',error.message,true); return; }
   await boot();
 }
-
 async function doLogout(){ await db.auth.signOut(); location.reload(); }
 
 async function saveSettings(){
   const map=[
-    ['rate','s_rate'],['fee_percent','s_fee'],
+    ['rate','s_rate'],['fee_percent','s_fee'],['referral_percent','s_ref'], // ✅ Referral% اضافه شو
     ['hesabpay_number','s_hp'],['momo_number','s_momo'],
     ['wallet_trc20','s_trc'],['wallet_bep20','s_bep'],
     ['wallet_erc20','s_erc'],['account_holder','s_holder'],
@@ -293,38 +249,67 @@ async function saveSettings(){
     if(newVal===oldVal) continue;
     const { error } = await db.from('settings').upsert({key,value:newVal,updated_at:new Date().toISOString()},{onConflict:'key'});
     if(error){ showMsg('settingsMsg',`Failed ${key}: ${error.message}`,true); return; }
-    await db.from('settings_history').insert({setting_key:key,old_value:oldVal,new_value:newVal,changed_by:S.user.id});
   }
   showMsg('settingsMsg','Settings saved successfully!',false);
-  await loadAll(); 
-  render();
+  await loadAll(); render();
 }
 
 async function sendNotification() {
-  const title = $('n_title').value.trim();
-  const msg = $('n_msg').value.trim();
+  const title = $('n_title').value.trim(), msg = $('n_msg').value.trim();
   if(!title || !msg) { showMsg('notifMsg', 'Please fill both title and message', true); return; }
-  
   const { error } = await db.from('notifications').insert({ title, message: msg });
   if(error) { showMsg('notifMsg', error.message, true); return; }
-  
   showMsg('notifMsg', '✅ Message sent successfully!', false);
   $('n_title').value = ''; $('n_msg').value = '';
 }
 
-async function setStatus(id,status){
+// ✅ د فرمایش د بشپړولو پر مهال د ریفرل کمیشن محاسبه کول
+async function setStatus(id, status){
   if(!confirm(`Set order to ${status}?`)) return;
   const upd={status};
   if(status==='Completed') upd.completed_at=new Date().toISOString();
+  
   const { error } = await db.from('orders').update(upd).eq('id',id);
   if(error){ alert('Error: '+error.message); return; }
+
+  // که چیرې فرمایش بشپړ (Completed) شو، د ریفرل کمیشن حسابوو
+  if(status === 'Completed') {
+    // فرمایش پیدا کوو
+    let order = S.orders.find(o => o.id === id);
+    if (!order && S.searchOrders) order = S.searchOrders.find(o => o.id === id);
+    
+    if (order) {
+      // د هغه کارونکي پروفایل پیدا کوو چې فرمایش یې کړی
+      const { data: buyerProfile } = await db.from('profiles').select('referred_by').eq('id', order.user_id).single();
+      
+      // که چیرې د دې کارونکي یو ریفرر (هغه څوک چې په لینک یې راغلی) وي
+      if (buyerProfile && buyerProfile.referred_by) {
+        const refPercent = parseFloat(S.settings.referral_percent || '0');
+        
+        if (refPercent > 0) {
+          const feeAmount = parseFloat(order.fee_amount || '0');
+          const commission = feeAmount * (refPercent / 100);
+          
+          if (commission > 0) {
+            // د ریفرر والټ ته پیسې اضافه کوو
+            const { data: referrer } = await db.from('profiles').select('balance').eq('id', buyerProfile.referred_by).single();
+            if (referrer) {
+              const currentBalance = parseFloat(referrer.balance || '0');
+              const newBalance = currentBalance + commission;
+              
+              await db.from('profiles').update({ balance: newBalance.toFixed(2) }).eq('id', buyerProfile.referred_by);
+              alert(`✅ Order Completed!\n💰 Commission: ${commission.toFixed(2)} USDT added to the referrer's wallet.`);
+            }
+          }
+        }
+      }
+    }
+  }
   
-  // که چیرې موږ د یو کارونکي تاریخچه خلاصه کړې وي، دا هم تازه کوو
   if(S.searchUser) {
      const { data: orders } = await db.from('orders').select('*').eq('user_id', S.searchUser.id).order('created_at', {ascending:false});
      S.searchOrders = orders || [];
   }
-  
   await loadAll(); render();
 }
 
