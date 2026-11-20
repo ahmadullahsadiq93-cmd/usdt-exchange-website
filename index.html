@@ -2,41 +2,77 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>USDT Exchange Afghanistan</title>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,sans-serif}
-  body{background:#0f172a;color:#e2e8f0;min-height:100vh;padding:16px}
-  .wrap{max-width:480px;margin:0 auto}
-  .card{background:#1e293b;border-radius:16px;padding:20px;margin-bottom:14px}
-  h1{font-size:20px;margin-bottom:6px}
-  .field{margin-bottom:12px}
-  .field label{display:block;font-size:12px;color:#94a3b8;margin-bottom:4px}
-  .field input,.field select{width:100%;padding:12px;border-radius:10px;border:1px solid #334155;background:#0f172a;color:#fff;font-size:15px}
-  .btn{display:block;width:100%;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;color:#fff;margin-top:8px;text-align:center;text-decoration:none}
-  .btn-primary{background:#10b981}.btn-blue{background:#3b82f6}.btn-orange{background:#f59e0b}
-  .btn-ghost{background:transparent;color:#94a3b8;font-size:13px;margin-bottom:10px;text-align:left}
-  .row{display:flex;justify-content:space-between;padding:5px 0;font-size:14px}
-  .row.big{font-size:18px;font-weight:700;color:#10b981;border-top:1px solid #334155;padding-top:10px;margin-top:6px}
-  .info{background:#1e40af;border-radius:10px;padding:14px;margin:12px 0}
-  .info .label{font-size:11px;color:#bfdbfe}
-  .info .value{font-size:15px;font-weight:700;margin-top:4px;word-break:break-all}
-  .msg{padding:10px 14px;border-radius:10px;font-size:13px;margin:10px 0}
-  .msg.error{background:#7f1d1d;color:#fecaca}.msg.ok{background:#14532d;color:#bbf7d0}
-  .rate-box{background:linear-gradient(135deg,#3b82f6,#8b5cf6);padding:20px;border-radius:12px;text-align:center;margin-bottom:14px}
-  .rate-box .n{font-size:28px;font-weight:700}
-  .tabs{display:flex;gap:8px;margin-bottom:14px}
-  .tabs button{flex:1;padding:10px;border:none;border-radius:10px;cursor:pointer;font-weight:600;background:#1e293b;color:#94a3b8}
-  .tabs button.active{background:#3b82f6;color:#fff}
+  *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
+  body{background:#f4fbf7;color:#1e293b;min-height:100vh;padding-bottom:80px}
+  .wrap{max-width:480px;margin:0 auto;padding:16px}
   
-  .floating-help {
-    position: fixed; bottom: 24px; right: 24px; width: 60px; height: 60px;
-    background: #8b5cf6; color: white; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 28px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    cursor: pointer; z-index: 9999;
-  }
-  .floating-help:active { transform: scale(0.9); }
+  /* Header */
+  .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+  .logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:20px;color:#0f172a}
+  .logo-icon{width:36px;height:36px;background:#10b981;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px}
+  .bell{font-size:24px;color:#64748b;position:relative}
+  .bell-dot{position:absolute;top:0;right:0;width:10px;height:10px;background:#ef4444;border-radius:50%;border:2px solid #f4fbf7}
+  
+  /* Welcome Text */
+  .welcome h1{font-size:28px;font-weight:800;margin-bottom:4px;color:#0f172a}
+  .welcome p{color:#64748b;font-size:14px;margin-bottom:16px}
+  
+  /* Map/Flag Graphic Box */
+  .hero-graphic{width:100%;height:140px;background:linear-gradient(180deg, #e0f2fe 0%, #f4fbf7 100%);border-radius:20px;margin-bottom:20px;display:flex;align-items:center;justify-content:center;font-size:70px;box-shadow:inset 0 -10px 20px rgba(255,255,255,0.5)}
+  
+  /* Home Grid Cards */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+  .card-btn{border-radius:16px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;min-height:110px;cursor:pointer;transition:transform 0.1s;position:relative}
+  .card-btn:active{transform:scale(0.96)}
+  .card-btn .icon{font-size:32px;margin-bottom:8px}
+  .card-btn .title{font-weight:700;font-size:14px;color:#0f172a}
+  .card-btn .arrow{position:absolute;top:16px;right:16px;color:#94a3b8;font-weight:bold}
+  
+  .bg-green{background:#d1fae5}.bg-orange{background:#ffedd5}.bg-blue{background:#dbeafe}.bg-purple{background:#ede9fe}
+  
+  /* Banner */
+  .banner{background:linear-gradient(135deg, #10b981 0%, #059669 100%);border-radius:20px;padding:20px;color:#fff;margin-bottom:20px;position:relative;overflow:hidden}
+  .banner h2{font-size:18px;margin-bottom:4px}
+  .banner p{font-size:12px;opacity:0.8}
+  .banner-icon{position:absolute;right:-10px;bottom:-10px;font-size:80px;opacity:0.2}
+  
+  /* Bottom Navigation */
+  .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#ffffff;display:flex;justify-content:space-around;padding:10px 0 20px;box-shadow:0 -4px 20px rgba(0,0,0,0.05);z-index:1000;border-top-left-radius:20px;border-top-right-radius:20px;max-width:480px;margin:0 auto}
+  .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;color:#94a3b8;font-size:12px;font-weight:600;cursor:pointer;width:80px;transition:all 0.2s}
+  .nav-item.active{color:#10b981}
+  .nav-item .icon{font-size:22px}
+  
+  /* Forms and Other Pages */
+  .card{background:#fff;border-radius:16px;padding:20px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,0.03)}
+  h1.page-title{font-size:20px;margin-bottom:14px;color:#0f172a}
+  .field{margin-bottom:12px}
+  .field label{display:block;font-size:12px;color:#64748b;margin-bottom:6px;font-weight:600}
+  .field input,.field select{width:100%;padding:14px;border-radius:12px;border:1px solid #e2e8f0;background:#f8fafc;color:#0f172a;font-size:15px;outline:none}
+  .field input:focus,.field select:focus{border-color:#10b981;background:#fff}
+  .btn{display:block;width:100%;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;color:#fff;margin-top:8px;text-align:center;text-decoration:none}
+  .btn-primary{background:#10b981}.btn-blue{background:#3b82f6}.btn-orange{background:#f59e0b}.btn-dark{background:#0f172a}
+  .btn-ghost{background:transparent;color:#64748b;font-size:14px;margin-bottom:10px;text-align:left;font-weight:600}
+  
+  .row{display:flex;justify-content:space-between;padding:6px 0;font-size:14px}
+  .row.big{font-size:18px;font-weight:800;color:#10b981;border-top:1px solid #e2e8f0;padding-top:10px;margin-top:6px}
+  .info{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;margin:12px 0}
+  .info .label{font-size:11px;color:#64748b;font-weight:600}
+  .info .value{font-size:16px;font-weight:800;margin-top:4px;word-break:break-all;color:#0f172a}
+  .msg{padding:12px;border-radius:10px;font-size:13px;margin:10px 0;font-weight:600}
+  .msg.error{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}.msg.ok{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0}
+  
+  /* Profile Specific */
+  .avatar-box{text-align:center;margin-bottom:20px}
+  .avatar{width:90px;height:90px;border-radius:50%;object-fit:cover;border:4px solid #10b981;margin:0 auto 10px;background:#e2e8f0}
+  .user-id-badge{display:inline-block;background:#dcfce7;color:#166534;padding:4px 12px;border-radius:20px;font-weight:700;font-size:14px;margin-top:6px}
+  .ref-box{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:12px;padding:12px;display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+  .ref-box span{font-size:13px;color:#334155;word-break:break-all}
+  
+  /* Loader */
+  .loader{text-align:center;padding:40px;color:#64748b;font-weight:600}
 </style>
 </head>
 <body><div class="wrap"><div id="app"></div></div>
@@ -45,15 +81,28 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.js"></script>
 <script>
 const db = supabase.createClient(window.APP_CONFIG.SUPABASE_URL, window.APP_CONFIG.SUPABASE_ANON_KEY);
-const S = { user:null, settings:{}, view:'loading', form:{}, calc:null, authMode:'login', lastOrderId:'' };
+const S = { user:null, profile:null, settings:{}, view:'loading', tab:'home', form:{}, calc:null, authMode:'login', lastOrderId:'' };
 const $ = id => document.getElementById(id);
 const showMsg = (id, text, isErr) => { const el=$(id); if(el) el.innerHTML = `<div class="msg ${isErr?'error':'ok'}">${text}</div>`; };
 
+const urlParams = new URLSearchParams(window.location.search);
+if(urlParams.get('ref')) S.refCodeFromUrl = urlParams.get('ref');
+
 async function boot(){
   const { data:{ session } } = await db.auth.getSession();
-  if(session){ S.user=session.user; await loadSettings(); S.view='home'; }
+  if(session){ 
+    S.user=session.user; 
+    await loadProfile();
+    await loadSettings(); 
+    S.view='main'; S.tab='home';
+  }
   else S.view='auth';
   render();
+}
+
+async function loadProfile(){
+  const { data } = await db.from('profiles').select('*').eq('id', S.user.id).single();
+  S.profile = data;
 }
 
 async function loadSettings(){
@@ -62,141 +111,249 @@ async function loadSettings(){
   S.settings = Object.fromEntries((data||[]).map(r=>[r.key,r.value]));
 }
 
+function navTo(tab) {
+  S.tab = tab;
+  S.view = 'main';
+  render();
+}
+
 function render(){
   const a=$('app');
-  let helpBtn = '';
-  if(S.user && (S.view==='home' || S.view==='myorders')) {
-    helpBtn = `<div class="floating-help" onclick="S.view='help'; render();">💬</div>`;
-  }
-
-  if(S.view==='loading') a.innerHTML='<div class="card">⏳ Loading...</div>';
+  
+  if(S.view==='loading') a.innerHTML='<div class="loader">⏳ Loading App...</div>';
   else if(S.view==='auth') a.innerHTML=viewAuth();
-  else if(S.view==='home') a.innerHTML=viewHome() + helpBtn;
+  else if(S.view==='main') {
+    let content = '';
+    if(S.tab==='home') content = viewHome();
+    else if(S.tab==='price') content = viewPriceHistory();
+    else if(S.tab==='profile') content = viewProfile();
+    
+    // Add Bottom Navigation
+    content += `
+    <div class="bottom-nav">
+      <div class="nav-item ${S.tab==='home'?'active':''}" onclick="navTo('home')">
+        <div class="icon">🏠</div> Home
+      </div>
+      <div class="nav-item ${S.tab==='price'?'active':''}" onclick="navTo('price')">
+        <div class="icon">↕️</div> Price
+      </div>
+      <div class="nav-item ${S.tab==='profile'?'active':''}" onclick="navTo('profile')">
+        <div class="icon">👤</div> Profile
+      </div>
+    </div>`;
+    a.innerHTML = content;
+  }
   else if(S.view==='form') a.innerHTML=viewForm();
   else if(S.view==='pay') a.innerHTML=viewPay();
   else if(S.view==='success') a.innerHTML=viewSuccess();
-  else if(S.view==='help') a.innerHTML=viewHelp();
-  else if(S.view==='myorders') {
-    a.innerHTML = '<div class="card" style="text-align:center">⏳ Loading Orders...</div>' + helpBtn;
-    viewMyOrdersList().then(html => {
-      if(S.view === 'myorders') {
-        a.innerHTML = html + helpBtn;
-      }
-    });
-  }
+  else if(S.view==='wallet') a.innerHTML=viewWallet();
 }
+
+/* ================= VIEWS ================= */
 
 function viewAuth(){
   const isLogin = S.authMode==='login';
-  return `<div class="card"><h1>🇦🇫 USDT Exchange Afghanistan</h1>
-    <p style="color:#94a3b8;font-size:13px;margin-top:4px">Sign in or create account</p></div>
-    <div class="card">
-    <div class="tabs">
-      <button class="${isLogin?'active':''}" onclick="setAuth('login')">🔑 Login</button>
-      <button class="${!isLogin?'active':''}" onclick="setAuth('register')">📝 Register</button>
+  return `<div style="text-align:center;margin-bottom:20px;margin-top:20px">
+    <div style="font-size:48px;margin-bottom:10px">💱</div>
+    <h1 style="font-size:24px;color:#0f172a">USDT Exchange AF</h1>
+    <p style="color:#64748b;font-size:14px">Trade smarter. A more open financial world.</p>
+  </div>
+  <div class="card">
+    <div style="display:flex;gap:10px;margin-bottom:16px">
+      <button class="btn ${isLogin?'btn-primary':'btn-ghost'}" style="margin:0;padding:10px;border-radius:8px" onclick="S.authMode='login'; render()">🔑 Login</button>
+      <button class="btn ${!isLogin?'btn-primary':'btn-ghost'}" style="margin:0;padding:10px;border-radius:8px" onclick="S.authMode='register'; render()">📝 Register</button>
     </div>
+    ${S.refCodeFromUrl && !isLogin ? `<div class="msg ok">🎁 You were invited! Register to get rewards.</div>` : ''}
     <div id="authMsg"></div>
-    ${!isLogin?`<div class="field"><label>👤 Full Name</label><input id="f_name"></div>
-      <div class="field"><label>📞 Phone</label><input id="f_phone" type="tel"></div>`:''}
-    <div class="field"><label>📧 Email</label><input id="f_email" type="email"></div>
-    <div class="field"><label>🔒 Password</label><input id="f_pass" type="password" placeholder="min 6 chars"></div>
+    ${!isLogin?`
+      <div class="field"><label>Full Name</label><input id="f_name" placeholder="Your Name"></div>
+      <div class="field"><label>Phone</label><input id="f_phone" type="tel" placeholder="07XXXXXXXX"></div>
+    `:''}
+    <div class="field"><label>Email</label><input id="f_email" type="email" placeholder="you@email.com"></div>
+    <div class="field"><label>Password</label><input id="f_pass" type="password" placeholder="min 6 chars"></div>
     <button class="btn btn-primary" onclick="submitAuth()">${isLogin?'🔓 Login':'✅ Create Account'}</button>
   </div>`;
 }
 
 function viewHome(){
   const s=S.settings;
-  return `<div class="card" style="display:flex;justify-content:space-between;align-items:center">
-    <div><h1 style="font-size:17px">💱 USDT Exchange AF</h1>
-    <div style="font-size:12px;color:#94a3b8">👤 ${S.user.email}</div></div>
-    <div style="display:flex;gap:8px">
-      <button class="btn btn-blue" style="width:auto;margin:0;padding:8px 12px" onclick="S.view='myorders'; render()">📋 My Orders</button>
-      <button class="btn btn- red " style="width:auto;margin:0" onclick="logout()">🚪 Logout</button>
+  return `<div class="header">
+    <div class="logo"><div class="logo-icon">₮</div> USDT-Exchange</div>
+    <div class="bell">🔔<div class="bell-dot"></div></div>
+  </div>
+  
+  <div class="welcome">
+    <h1>Welcome back</h1>
+    <p>Trade smarter. A more open financial world awaits.</p>
+  </div>
+  
+  <div class="hero-graphic">🇦🇫</div>
+
+  <div class="grid">
+    <div class="card-btn bg-green" onclick="start('BUY_USDT')">
+      <div class="arrow">›</div>
+      <div class="icon">🛒</div>
+      <div class="title">BUY USDT</div>
+    </div>
+    <div class="card-btn bg-orange" onclick="start('BUY_AFN')">
+      <div class="arrow">›</div>
+      <div class="icon">💵</div>
+      <div class="title">BUY AFN</div>
+    </div>
+    <div class="card-btn bg-blue" onclick="start('TOPUP')">
+      <div class="arrow">›</div>
+      <div class="icon">📱</div>
+      <div class="title">Mobile Topup</div>
+    </div>
+    <div class="card-btn bg-purple" onclick="navTo('price')">
+      <div class="arrow">›</div>
+      <div class="icon">🔄</div>
+      <div class="title">Exchange History</div>
     </div>
   </div>
-    <div class="rate-box"><div style="font-size:12px;color:#dbeafe">📊 Current Rate</div>
-    <div class="n">1 USDT = ${s.rate} AFN</div>
-    <div style="font-size:12px;color:#dbeafe;margin-top:6px">💸 Fee: ${s.fee_percent}%</div></div>
-    <button class="btn btn-primary" onclick="start('BUY_USDT')">💵 BUY USDT</button>
-    <button class="btn btn-blue" onclick="start('BUY_AFN')">💴 BUY AFN</button>
-    <button class="btn btn-orange" onclick="start('TOPUP')">📱 MOBILE TOPUP</button>`;
+
+  <div class="banner" onclick="S.view='wallet'; render()">
+    <h2>Safer Trading Brighter Tomorrow</h2>
+    <p>SAME VALUE MORE POSSIBILITIES</p>
+    <div class="banner-icon">₮</div>
+  </div>`;
 }
 
-async function viewMyOrdersList() {
-  const { data, error } = await db.from('orders').select('*').eq('user_id', S.user.id).order('created_at', { ascending: false });
-  
-  let html = `<button class="btn btn-ghost" onclick="goHome()">⬅️ Back to Home</button>
-  <div class="card"><h1>📋 My Orders</h1></div>`;
-  
-  if (error) {
-    html += `<div class="card"><div class="msg error">❌ Error: ${error.message}</div></div>`;
-  } else if (!data || data.length === 0) {
-    html += `<div class="card"><p style="text-align:center;color:#94a3b8">📭 No orders found.</p></div>`;
-  } else {
-    data.forEach(o => {
-      let statusColor = '#f59e0b'; // pending
-      let statusEmoji = '⏳';
-      if (o.status === 'Completed') { statusColor = '#10b981'; statusEmoji = '✅'; }
-      if (o.status === 'Rejected') { statusColor = '#ef4444'; statusEmoji = '❌'; }
-      
-      html += `<div class="card" style="padding:14px;margin-bottom:10px">
-        <div class="row"><span style="font-weight:bold;color:#fff">${o.order_type === 'BUY_USDT' ? '💵' : o.order_type === 'BUY_AFN' ? '💴' : '📱'} ${o.order_type}</span> 
-        <span style="color:${statusColor};font-weight:bold">${statusEmoji} ${o.status}</span></div>
-        <div class="row"><span>💰 Amount</span> <span>${o.amount_input} ${o.currency_input}</span></div>
-        <div class="row"><span>🧾 Total</span> <span>${o.total_amount} ${o.order_type==='BUY_USDT'?'AFN':'USDT'}</span></div>
-        <div class="row"><span>📅 Date</span> <span>${new Date(o.created_at).toLocaleString()}</span></div>
-        ${o.admin_note ? `<div class="row"><span>📝 Admin Note</span> <span style="color:#fca5a5">${o.admin_note}</span></div>` : ''}
-      </div>`;
-    });
-  }
-  return html;
-}
-
-function viewHelp(){
+function viewPriceHistory(){
   const s = S.settings;
-  return `<button class="btn btn-ghost" onclick="goHome()">⬅️ Back to Home</button>
-  <div class="card"><h1>❓ Help & Support</h1>
-    <p style="color:#94a3b8;font-size:13px;margin-top:8px">For any question, issue, or assistance, contact us directly:</p>
+  return `<div class="header">
+    <h1 style="font-size:24px">Market & History</h1>
+  </div>
+  
+  <div class="card" style="background:#0f172a;color:white">
+    <div style="font-size:12px;color:#94a3b8;margin-bottom:4px">Current Rate</div>
+    <div style="font-size:28px;font-weight:800;color:#10b981">1 USDT = ${s.rate} AFN</div>
+    <div style="font-size:12px;color:#94a3b8;margin-top:4px">Service Fee: ${s.fee_percent}%</div>
+  </div>
+  
+  <h1 class="page-title" style="margin-top:20px">Your Orders</h1>
+  <div id="ordersContainer">
+    <div class="loader">⏳ Loading Orders...</div>
+  </div>`;
+  
+  // Fetch orders asynchronously after render
+  setTimeout(async () => {
+    const { data, error } = await db.from('orders').select('*').eq('user_id', S.user.id).order('created_at', { ascending: false });
+    const container = $('ordersContainer');
+    if(!container) return;
+    
+    if (error) {
+      container.innerHTML = `<div class="msg error">❌ Error: ${error.message}</div>`;
+    } else if (!data || data.length === 0) {
+      container.innerHTML = `<div class="card" style="text-align:center;color:#64748b">📭 No orders found.</div>`;
+    } else {
+      let html = '';
+      data.forEach(o => {
+        let statusColor = '#f59e0b', statusEmoji = '⏳';
+        if (o.status === 'Completed') { statusColor = '#10b981'; statusEmoji = '✅'; }
+        if (o.status === 'Rejected') { statusColor = '#ef4444'; statusEmoji = '❌'; }
+        
+        html += `<div class="card" style="padding:14px">
+          <div class="row"><span style="font-weight:800">${o.order_type === 'BUY_USDT' ? '💵' : o.order_type === 'BUY_AFN' ? '💴' : '📱'} ${o.order_type}</span> 
+          <span style="color:${statusColor};font-weight:700">${statusEmoji} ${o.status}</span></div>
+          <div class="row"><span style="color:#64748b">Amount</span> <span style="font-weight:600">${o.amount_input} ${o.currency_input}</span></div>
+          <div class="row"><span style="color:#64748b">Total</span> <span style="font-weight:600">${o.total_amount} ${o.order_type==='BUY_USDT'?'AFN':'USDT'}</span></div>
+          <div class="row"><span style="color:#64748b">Date</span> <span style="color:#94a3b8">${new Date(o.created_at).toLocaleDateString()}</span></div>
+        </div>`;
+      });
+      container.innerHTML = html;
+    }
+  }, 100);
+  
+  return `<div class="header">
+    <h1 style="font-size:24px">Market & History</h1>
+  </div>
+  
+  <div class="card" style="background:#0f172a;color:white">
+    <div style="font-size:12px;color:#94a3b8;margin-bottom:4px">Current Rate</div>
+    <div style="font-size:28px;font-weight:800;color:#10b981">1 USDT = ${s.rate} AFN</div>
+    <div style="font-size:12px;color:#94a3b8;margin-top:4px">Service Fee: ${s.fee_percent}%</div>
+  </div>
+  
+  <h1 class="page-title" style="margin-top:20px">Your Orders</h1>
+  <div id="ordersContainer">
+    <div class="loader">⏳ Loading Orders...</div>
+  </div>`;
+}
+
+function viewProfile(){
+  const p = S.profile;
+  const refLink = `https://lahsadiq93.workers.dev/?ref=${p.referral_code}`;
+  return `<div class="header">
+    <h1 style="font-size:24px">My Profile</h1>
+    <button class="btn btn-ghost" style="margin:0;color:#ef4444" onclick="logout()">🚪 Logout</button>
+  </div>
+  
+  <div class="card">
+    <div class="avatar-box">
+      <img src="${p.avatar_url || 'https://ui-avatars.com/api/?name='+p.full_name+'&background=random'}" class="avatar" id="avatarImg">
+      <input type="file" id="avatarFile" accept="image/*" style="display:none" onchange="uploadAvatar()">
+      <button class="btn btn-ghost" style="text-align:center;color:#3b82f6" onclick="document.getElementById('avatarFile').click()">📸 Change Photo</button>
+      
+      <h1 style="margin-top:4px;color:#0f172a">${p.full_name || 'User'}</h1>
+      <div class="user-id-badge">${p.referral_code}</div>
+    </div>
+    
+    <div class="field" style="margin-top:20px">
+      <label>Update Name</label>
+      <input id="p_name" value="${p.full_name||''}">
+    </div>
+    <button class="btn btn-dark" onclick="updateProfile()">💾 Save Changes</button>
+  </div>
+
+  <div class="card">
+    <h2 style="font-size:18px;margin-bottom:8px;color:#0f172a">🎁 Invite Friends</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:8px">Earn ${S.settings.referral_percent}% of every trade fee from your friends!</p>
+    <div class="ref-box">
+      <span id="refLink">${refLink}</span>
+    </div>
+    <button class="btn btn-blue" style="margin-top:10px" onclick="copyRef()">📋 Copy Link</button>
+  </div>
+  
+  <div class="card" style="background:#f8fafc;text-align:center">
+    <p style="font-size:12px;color:#64748b">Need help? Contact Support.</p>
+    <button class="btn btn-primary" style="margin-top:8px" onclick="S.view='help'; render()">💬 Help & Support</button>
+  </div>`;
+}
+
+function viewWallet(){
+  return `<button class="btn btn-ghost" onclick="goHome()">⬅️ Back</button>
+  <div class="card" style="text-align:center">
+    <h1 style="color:#0f172a">💼 My Wallet</h1>
+    <p style="color:#64748b;font-size:13px;margin-top:8px">Available Balance</p>
+    <div style="font-size:36px;font-weight:800;color:#10b981;margin:20px 0">${(S.profile.balance || 0).toFixed(2)} USDT</div>
+    <p style="color:#64748b;font-size:12px">Earned from referrals</p>
   </div>
   <div class="card">
-    ${s.help_channel ? `<a href="${s.help_channel}" target="_blank" class="btn btn-blue" style="display:block">📢 Our Official Channel</a>` : ''}
-    ${s.help_whatsapp ? `<a href="https://wa.me/${s.help_whatsapp.replace(/[^0-9]/g,'')}" target="_blank" class="btn btn-primary" style="display:block">💬 WhatsApp Support</a>` : ''}
-    ${s.help_telegram ? `<a href="https://t.me/${s.help_telegram.replace('@','')}" target="_blank" class="btn" style="background:#0088cc;display:block">✈️ Telegram Support</a>` : ''}
-    ${!s.help_channel && !s.help_whatsapp && !s.help_telegram ? '<p style="color:#94a3b8;text-align:center">🚫 Contact information not available yet.</p>' : ''}
-  </div>
-  <div class="card" style="background:#1e40af">
-    <div style="font-size:12px;color:#bfdbfe">⚠️ Security Notice</div>
-    <div style="font-size:13px;margin-top:6px;color:#fff">🛡️ Admin will NEVER ask for your password or private keys. Only share your TXID and payment screenshot.</div>
+    <p style="text-align:center;color:#64748b">💸 Withdrawal system coming soon...</p>
   </div>`;
 }
 
 function viewForm(){
   const f=S.form;
   const title={BUY_USDT:'💵 Buy USDT',BUY_AFN:'💴 Buy AFN',TOPUP:'📱 Mobile Topup'}[f.type];
-  const amtLabel=f.type==='BUY_USDT'?'💰 USDT Amount':'💰 AFN Amount';
+  const amtLabel=f.type==='BUY_USDT'?'USDT Amount':'AFN Amount';
   let extra='';
   if(f.type==='BUY_USDT') extra=`
-    <div class="field"><label>👛 Binance USDT Wallet Address</label><input id="f_wallet" value="${f.wallet||''}"></div>
-    <div class="field"><label>💳 Payment Method</label><select id="f_payment">
-    <option value="HESABPAY">Hesab Pay</option><option value="MOMO">MTN MoMo</option></select></div>`;
+    <div class="field"><label>Binance USDT Wallet Address</label><input id="f_wallet" value="${f.wallet||''}" placeholder="Your TRC20/BEP20 address"></div>
+    <div class="field"><label>Payment Method</label><select id="f_payment"><option value="HESABPAY">Hesab Pay</option><option value="MOMO">MTN MoMo</option></select></div>`;
   else if(f.type==='BUY_AFN') extra=`
-    <div class="field"><label>💳 Receive AFN via</label><select id="f_payment">
-    <option value="HESABPAY">Hesab Pay</option><option value="MOMO">MTN MoMo</option></select></div>
-    <div class="field"><label>📞 Your Phone Number</label><input id="f_wallet" type="tel" value="${f.wallet||''}"></div>`;
+    <div class="field"><label>Receive AFN via</label><select id="f_payment"><option value="HESABPAY">Hesab Pay</option><option value="MOMO">MTN MoMo</option></select></div>
+    <div class="field"><label>Your Phone Number</label><input id="f_wallet" type="tel" value="${f.wallet||''}" placeholder="07XXXXXXXX"></div>`;
   else extra=`
-    <div class="field"><label>📶 Mobile Network</label><select id="f_mnet">
-    <option>AWCC</option><option>Salaam</option><option>ATOMA</option><option>Etisalat</option><option>Roshan</option></select></div>
-    <div class="field"><label>📞 Mobile Number</label><input id="f_mobile" type="tel" value="${f.mobile||''}"></div>`;
-  return `<button class="btn btn-ghost" onclick="goHome()">⬅️ Back</button>
-    <div class="card"><h1>${title}</h1></div>
-    <div class="card">
-    <div class="field"><label>${amtLabel}</label><input id="f_amount" type="number" step="0.01" min="0.01" value="${f.amount||''}"></div>
-    <div class="field"><label>🌐 USDT Network</label><select id="f_net">
-    <option ${f.network==='TRC20'?'selected':''}>TRC20</option>
-    <option ${f.network==='BEP20'?'selected':''}>BEP20</option>
-    <option ${f.network==='ERC20'?'selected':''}>ERC20</option></select></div>
+    <div class="field"><label>Mobile Network</label><select id="f_mnet"><option>AWCC</option><option>Salaam</option><option>ATOMA</option><option>Etisalat</option><option>Roshan</option></select></div>
+    <div class="field"><label>Mobile Number</label><input id="f_mobile" type="tel" value="${f.mobile||''}" placeholder="07XXXXXXXX"></div>`;
+  return `<button class="btn btn-ghost" onclick="goHome()">⬅️ Back to Home</button>
+    <div class="card"><h1 class="page-title">${title}</h1>
+    <div class="field"><label>${amtLabel}</label><input id="f_amount" type="number" step="0.01" min="0.01" value="${f.amount||''}" placeholder="0.00"></div>
+    <div class="field"><label>USDT Network</label><select id="f_net"><option ${f.network==='TRC20'?'selected':''}>TRC20</option><option ${f.network==='BEP20'?'selected':''}>BEP20</option><option ${f.network==='ERC20'?'selected':''}>ERC20</option></select></div>
     ${extra}<div id="formMsg"></div>
-    <button class="btn btn-primary" onclick="submitForm()">➡️ Next</button></div>`;
+    <button class="btn btn-primary" style="margin-top:20px" onclick="submitForm()">➡️ Next</button></div>`;
 }
 
 function viewPay(){
@@ -205,41 +362,59 @@ function viewPay(){
   const totalText = `${c.total.toFixed(dec)} ${isBuy?'AFN':'USDT'}`;
   let payTo = isBuy ? (f.payment==='HESABPAY'?S.settings.hesabpay_number:S.settings.momo_number) : S.settings['wallet_'+f.network.toLowerCase()];
   return `<button class="btn btn-ghost" onclick="backToForm()">⬅️ Back</button>
-    <div class="card"><h1>🧾 Payment</h1></div>
-    <div class="card">
-    <div class="row"><span>📈 Rate</span><span>1 USDT = ${c.rate} AFN</span></div>
-    <div class="row"><span>🧮 Base</span><span>${c.base.toFixed(dec)}</span></div>
-    <div class="row"><span>💸 Fee (${c.fee}%)</span><span>${c.feeAmt.toFixed(dec)}</span></div>
-    <div class="row big"><span>💰 Total</span><span>${totalText}</span></div>
-    <div class="info"><div class="label">📤 Send to:</div><div class="value">${payTo}</div></div>
-    <div class="field"><label>🔗 Transaction ID (TXID)</label><input id="f_txid"></div>
-    <div class="field"><label>🖼️ Payment Screenshot</label><input id="f_shot" type="file" accept="image/*"></div>
+    <div class="card"><h1 class="page-title">🧾 Payment</h1>
+    <div class="row"><span style="color:#64748b">Rate</span><span style="font-weight:600">1 USDT = ${c.rate} AFN</span></div>
+    <div class="row"><span style="color:#64748b">Base</span><span style="font-weight:600">${c.base.toFixed(dec)}</span></div>
+    <div class="row"><span style="color:#64748b">Fee (${c.fee}%)</span><span style="font-weight:600">${c.feeAmt.toFixed(dec)}</span></div>
+    <div class="row big"><span>Total</span><span>${totalText}</span></div>
+    
+    <div class="info"><div class="label">Send to this address/number:</div><div class="value">${payTo}</div></div>
+    
+    <div class="field"><label>Transaction ID (TXID)</label><input id="f_txid" placeholder="Paste TXID here"></div>
+    <div class="field"><label>Payment Screenshot</label><input id="f_shot" type="file" accept="image/*" style="padding:10px"></div>
     <div id="payMsg"></div>
-    <button class="btn btn-primary" onclick="confirmOrder()">✅ CONFIRM ORDER</button></div>`;
+    <button class="btn btn-primary" style="margin-top:10px" onclick="confirmOrder()">✅ CONFIRM ORDER</button></div>`;
 }
 
 function viewSuccess(){
-  return `<div class="card" style="text-align:center"><div style="font-size:48px">🎉</div>
-    <h1>Order Submitted</h1>
-    <p style="color:#94a3b8;font-size:13px;margin-top:8px">Order ID: ${S.lastOrderId}</p>
-    <button class="btn btn-primary" style="margin-top:18px" onclick="goHome()">🏠 Back to Home</button></div>`;
+  return `<div class="card" style="text-align:center;padding:40px 20px">
+    <div style="font-size:60px;margin-bottom:10px">🎉</div>
+    <h1 style="color:#0f172a">Order Submitted!</h1>
+    <p style="color:#64748b;font-size:14px;margin-top:8px">Order ID: <strong>${S.lastOrderId}</strong></p>
+    <p style="color:#64748b;font-size:13px;margin-top:8px">Admin will verify your payment shortly.</p>
+    <button class="btn btn-primary" style="margin-top:24px" onclick="goHome()">🏠 Back to Home</button>
+  </div>`;
 }
 
-function setAuth(m){ S.authMode=m; render(); }
-function goHome(){ S.view='home'; render(); }
+function viewHelp(){
+  const s = S.settings;
+  return `<button class="btn btn-ghost" onclick="goHome()">⬅️ Back</button>
+  <div class="card"><h1 class="page-title">❓ Help & Support</h1>
+    <p style="color:#64748b;font-size:13px;margin-bottom:14px">Contact us directly for any issue:</p>
+    ${s.help_channel ? `<a href="${s.help_channel}" target="_blank" class="btn btn-blue" style="display:block">📢 Official Channel</a>` : ''}
+    ${s.help_whatsapp ? `<a href="https://wa.me/${s.help_whatsapp.replace(/[^0-9]/g,'')}" target="_blank" class="btn btn-primary" style="display:block">💬 WhatsApp Support</a>` : ''}
+    ${s.help_telegram ? `<a href="https://t.me/${s.help_telegram.replace('@','')}" target="_blank" class="btn btn-dark" style="display:block">✈️ Telegram Support</a>` : ''}
+  </div>`;
+}
+
+/* ================= ACTIONS ================= */
+
+function goHome(){ S.view='main'; S.tab='home'; render(); }
 function backToForm(){ S.view='form'; render(); }
 function start(type){ S.form={type,amount:'',network:'TRC20',wallet:'',payment:'HESABPAY',mobile:''}; S.view='form'; render(); }
 
 async function submitAuth(){
   const email=$('f_email').value.trim(), pass=$('f_pass').value;
   if(!email||!pass){ showMsg('authMsg','Email and password required',true); return; }
-  if(pass.length<6){ showMsg('authMsg','Password min 6 chars',true); return; }
   if(S.authMode==='login'){
     const { error } = await db.auth.signInWithPassword({email,password:pass});
     if(error){ showMsg('authMsg',error.message,true); return; }
   } else {
     const name=$('f_name').value.trim(), phone=$('f_phone').value.trim();
-    const { error } = await db.auth.signUp({email,password:pass,options:{data:{full_name:name,phone}}});
+    const meta = {full_name:name, phone};
+    if(S.refCodeFromUrl) meta.referred_by_code = S.refCodeFromUrl;
+
+    const { error } = await db.auth.signUp({email,password:pass,options:{data:meta}});
     if(error){ showMsg('authMsg',error.message,true); return; }
     const { error:le } = await db.auth.signInWithPassword({email,password:pass});
     if(le){ showMsg('authMsg','Account created. Please login.',false); S.authMode='login'; render(); return; }
@@ -247,7 +422,34 @@ async function submitAuth(){
   await boot();
 }
 
-async function logout(){ await db.auth.signOut(); S.user=null; S.view='auth'; S.authMode='login'; render(); }
+async function logout(){ await db.auth.signOut(); S.user=null; S.profile=null; S.view='auth'; S.authMode='login'; render(); }
+
+async function uploadAvatar(){
+  const file = $('avatarFile').files[0];
+  if(!file) return;
+  const path = `${S.user.id}/avatar_${Date.now()}.${file.name.split('.').pop()}`;
+  const { error } = await db.storage.from('screenshots').upload(path, file);
+  if(error) { alert('Upload failed: '+error.message); return; }
+  
+  const { data } = db.storage.from('screenshots').getPublicUrl(path);
+  await db.from('profiles').update({ avatar_url: data.publicUrl }).eq('id', S.user.id);
+  await loadProfile();
+  render();
+}
+
+async function updateProfile(){
+  const name = $('p_name').value.trim();
+  await db.from('profiles').update({ full_name: name }).eq('id', S.user.id);
+  await loadProfile();
+  alert('Profile Updated!');
+  render();
+}
+
+function copyRef(){
+  const link = $('refLink').innerText;
+  navigator.clipboard.writeText(link);
+  alert('Referral Link Copied!');
+}
 
 function submitForm(){
   const f=S.form;
@@ -268,7 +470,6 @@ async function confirmOrder(){
   const txid=$('f_txid').value.trim(), file=$('f_shot').files[0];
   if(!txid){ showMsg('payMsg','Enter TXID',true); return; }
   if(!file){ showMsg('payMsg','Upload screenshot',true); return; }
-  if(file.size>5*1024*1024){ showMsg('payMsg','Max 5MB',true); return; }
   showMsg('payMsg','⏳ Uploading...',false);
   const ext=file.name.split('.').pop()||'jpg';
   const path = `${S.user.id}/${Date.now()}.${ext}`;
