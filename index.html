@@ -78,7 +78,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.js"></script>
 <script>
 const db = supabase.createClient(window.APP_CONFIG.SUPABASE_URL, window.APP_CONFIG.SUPABASE_ANON_KEY);
-const S = { user:null, profile:null, settings:{}, view:'loading', tab:'home', form:{}, calc:null, authMode:'login', lastOrderId:'', hasUnread: false, notifications: [] };
+const S = { user:null, profile:null, settings:{}, view:'loading', tab:'home', form:{}, calc:null, authMode:'login', lastOrderId:'', hasUnread: false, notifications: [], inviteCount: 0 };
 const $ = id => document.getElementById(id);
 const showMsg = (id, text, isErr) => { const el=$(id); if(el) el.innerHTML = `<div class="msg ${isErr?'error':'ok'}">${text}</div>`; };
 
@@ -95,12 +95,12 @@ async function boot(){
   render();
 }
 
-// ✅ دا فنکشن اوس پخپله د کارونکي ID چک کوي، که نه وي یې جوړوي
+// ✅ د ID تلپاتې کول او د بلنې شویو کسانو شمیرل
 async function loadProfile(){
   const { data } = await db.from('profiles').select('*').eq('id', S.user.id).single();
   S.profile = data;
   
-  // که چیرې د کارونکي user_code (ID) خالي وي، نو اتوماتیک یې جوړوي
+  // 1. که چیرې ID (user_code) نه وي، یو ځل جوړیږي او بیا هیڅکله نه بدلیږي
   if (S.profile && !S.profile.user_code) {
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const randomLetter = letters[Math.floor(Math.random() * letters.length)];
@@ -108,8 +108,12 @@ async function loadProfile(){
     const newCode = `${randomLetter}-${randomNumbers}`;
     
     await db.from('profiles').update({ user_code: newCode }).eq('id', S.user.id);
-    S.profile.user_code = newCode; // په اپلیکیشن کې هم تازه کوو
+    S.profile.user_code = newCode; 
   }
+
+  // 2. د هغو کسانو شمیر چې د دې کارونکي په لینک یې راجستر کړی دی
+  const { count } = await db.from('profiles').select('*', { count: 'exact', head: true }).eq('referred_by', S.user.id);
+  S.inviteCount = count || 0;
 }
 
 async function loadSettings(){
@@ -299,9 +303,10 @@ function viewPriceHistory(){
   <div id="ordersContainer"><div class="loader">⏳ Loading Orders...</div></div>`;
 }
 
+// ✅ د پروفایل پاڼه چې د بلنې شویو کسانو شمیر هم ښیي
 function viewProfile(){
   const p = S.profile;
-  const refLink = `https://lahsadiq93.workers.dev/?ref=${p.referral_code || p.user_code || 'none'}`;
+  const refLink = `https://lahsadiq93.workers.dev/?ref=${p.user_code || p.referral_code || 'none'}`;
   
   return `<div class="header">
     <h1 style="font-size:24px">My Profile</h1>
@@ -326,6 +331,10 @@ function viewProfile(){
       <div class="profile-info-row">
         <span class="label">User ID:</span>
         <span class="value" style="color:#10b981">${p.user_code || 'Pending'}</span>
+      </div>
+      <div class="profile-info-row">
+        <span class="label">Invited Friends:</span>
+        <span class="value" style="color:#3b82f6">${S.inviteCount} Users</span>
       </div>
     </div>
 
@@ -437,8 +446,20 @@ async function submitAuth(){
     const randomLetter = letters[Math.floor(Math.random() * letters.length)];
     const randomNumbers = Math.floor(1000 + Math.random() * 9000); 
     const newUserCode = `${randomLetter}-${randomNumbers}`;
-    const meta = { full_name: name, phone: phone, user_code: newUserCode, email: email };
+    
+    // ✅ د URL څخه د ریفرر کوډ نیول
+    let referredById = null;
+    const urlParams = new URLSearchParams(window.location.search);
+    const refCodeFromUrl = urlParams.get('ref');
+    
+    if (refCodeFromUrl) {
+      const { data: referrer } = await db.from('profiles').select('id').eq('user_code', refCodeFromUrl).single();
+      if (referrer) referredById = referrer.id; 
+    }
+
+    const meta = { full_name: name, phone: phone, user_code: newUserCode, email: email, referred_by: referredById };
     const { error } = await db.auth.signUp({email,password:pass,options:{data:meta}});
+    
     if(error){ showMsg('authMsg',error.message,true); return; }
     const { error:le } = await db.auth.signInWithPassword({email,password:pass});
     if(le){ showMsg('authMsg','Account created. Please login.',false); S.authMode='login'; render(); return; }
@@ -448,38 +469,26 @@ async function submitAuth(){
 
 async function logout(){ await db.auth.signOut(); S.user=null; S.profile=null; S.view='auth'; S.authMode='login'; render(); }
 
-// ✅ عکس اپلوډ کول
 async function uploadAvatar(){
   const file = $('avatarFile').files[0];
   if(!file) return;
-  
-  // د عکس نوم جوړول
   const ext = file.name.split('.').pop() || 'jpg';
   const path = `${S.user.id}/avatar_${Date.now()}.${ext}`;
   
-  // عکس Supabase ته اپلوډ کوو
   const { error: upErr } = await db.storage.from('screenshots').upload(path, file);
-  if(upErr) { 
-    alert('Upload failed: ' + upErr.message); 
-    return; 
-  }
+  if(upErr) { alert('Upload failed: ' + upErr.message); return; }
   
-  // د عکس لینک ترلاسه کوو
   const { data } = db.storage.from('screenshots').getPublicUrl(path);
   
-  // د کارونکي په پروفایل کې د عکس لینک ثبتوو
   const { error: dbErr } = await db.from('profiles').update({ avatar_url: data.publicUrl }).eq('id', S.user.id);
-  if(dbErr) {
-    alert('Failed to save photo to profile: ' + dbErr.message);
-    return;
-  }
+  if(dbErr) { alert('Failed to save photo: ' + dbErr.message); return; }
   
-  await loadProfile(); 
-  render();
+  await loadProfile(); render();
 }
 
 async function updateProfile(){
   const name = $('p_name').value.trim();
+  // یوازې نوم بدلیږي، ID (user_code) ته لاس نه ورکول کیږي
   await db.from('profiles').update({ full_name: name }).eq('id', S.user.id);
   await loadProfile(); alert('Profile Updated!'); render();
 }
