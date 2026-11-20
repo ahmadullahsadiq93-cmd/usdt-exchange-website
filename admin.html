@@ -104,6 +104,9 @@ function viewDash(){
       <div class="field"><label>BEP20 Wallet</label><input id="s_bep" value="${s.wallet_bep20||''}"></div>
       <div class="field"><label>ERC20 Wallet</label><input id="s_erc" value="${s.wallet_erc20||''}"></div>
       <div class="field"><label>Holder Name</label><input id="s_holder" value="${s.account_holder||''}"></div>
+      <div class="field"><label>Support Channel Link</label><input id="s_channel" value="${s.help_channel||''}" placeholder="https://t.me/..."></div>
+<div class="field"><label>WhatsApp Number</label><input id="s_wa" value="${s.help_whatsapp||''}" placeholder="93700000000"></div>
+<div class="field"><label>Telegram Username</label><input id="s_tg" value="${s.help_telegram||''}" placeholder="@username"></div>
     </div>
     <div id="settingsMsg"></div>
     <button class="btn btn-primary" onclick="saveSettings()">Save All Settings</button></div>
@@ -138,8 +141,13 @@ async function doLogin(){
 async function doLogout(){ await db.auth.signOut(); location.reload(); }
 
 async function saveSettings(){
-  const map=[['rate','s_rate'],['fee_percent','s_fee'],['hesabpay_number','s_hp'],['momo_number','s_momo'],
-             ['wallet_trc20','s_trc'],['wallet_bep20','s_bep'],['wallet_erc20','s_erc'],['account_holder','s_holder']];
+  const map=[
+  ['rate','s_rate'],['fee_percent','s_fee'],
+  ['hesabpay_number','s_hp'],['momo_number','s_momo'],
+  ['wallet_trc20','s_trc'],['wallet_bep20','s_bep'],
+  ['wallet_erc20','s_erc'],['account_holder','s_holder'],
+  ['help_channel','s_channel'],['help_whatsapp','s_wa'],['help_telegram','s_tg']
+];
   for(const[key,inputId]of map){
     const newVal=$(inputId).value.trim(), oldVal=S.settings[key]||'';
     if(newVal===oldVal) continue;
