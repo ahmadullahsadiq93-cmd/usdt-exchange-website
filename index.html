@@ -29,23 +29,12 @@
   .tabs button{flex:1;padding:10px;border:none;border-radius:10px;cursor:pointer;font-weight:600;background:#1e293b;color:#94a3b8}
   .tabs button.active{background:#3b82f6;color:#fff}
   
-  /* د ګردي Help بټن لپاره ډیزاین */
   .floating-help {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    width: 60px;
-    height: 60px;
-    background: #8b5cf6;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    cursor: pointer;
-    z-index: 9999;
+    position: fixed; bottom: 24px; right: 24px; width: 60px; height: 60px;
+    background: #8b5cf6; color: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    cursor: pointer; z-index: 9999;
   }
   .floating-help:active { transform: scale(0.9); }
 </style>
@@ -76,12 +65,11 @@ async function loadSettings(){
 function render(){
   const a=$('app');
   let helpBtn = '';
-  // ګردی Help بټن یوازې په اصلي پاڼه او My Orders کې ښکاري
   if(S.user && (S.view==='home' || S.view==='myorders')) {
     helpBtn = `<div class="floating-help" onclick="S.view='help'; render();">💬</div>`;
   }
 
-  if(S.view==='loading') a.innerHTML='<div class="card">Loading...</div>';
+  if(S.view==='loading') a.innerHTML='<div class="card">⏳ Loading...</div>';
   else if(S.view==='auth') a.innerHTML=viewAuth();
   else if(S.view==='home') a.innerHTML=viewHome() + helpBtn;
   else if(S.view==='form') a.innerHTML=viewForm();
@@ -89,8 +77,7 @@ function render(){
   else if(S.view==='success') a.innerHTML=viewSuccess();
   else if(S.view==='help') a.innerHTML=viewHelp();
   else if(S.view==='myorders') {
-    // د معلوماتو د راوستلو تر څو چې انتظار کوو، دا ښکاره کوو
-    a.innerHTML = '<div class="card" style="text-align:center">Loading Orders...</div>' + helpBtn;
+    a.innerHTML = '<div class="card" style="text-align:center">⏳ Loading Orders...</div>' + helpBtn;
     viewMyOrdersList().then(html => {
       if(S.view === 'myorders') {
         a.innerHTML = html + helpBtn;
@@ -101,63 +88,64 @@ function render(){
 
 function viewAuth(){
   const isLogin = S.authMode==='login';
-  return `<div class="card"><h1>USDT Exchange Afghanistan</h1>
+  return `<div class="card"><h1>🇦🇫 USDT Exchange Afghanistan</h1>
     <p style="color:#94a3b8;font-size:13px;margin-top:4px">Sign in or create account</p></div>
     <div class="card">
     <div class="tabs">
-      <button class="${isLogin?'active':''}" onclick="setAuth('login')">Login</button>
-      <button class="${!isLogin?'active':''}" onclick="setAuth('register')">Register</button>
+      <button class="${isLogin?'active':''}" onclick="setAuth('login')">🔑 Login</button>
+      <button class="${!isLogin?'active':''}" onclick="setAuth('register')">📝 Register</button>
     </div>
     <div id="authMsg"></div>
-    ${!isLogin?`<div class="field"><label>Full Name</label><input id="f_name"></div>
-      <div class="field"><label>Phone</label><input id="f_phone" type="tel"></div>`:''}
-    <div class="field"><label>Email</label><input id="f_email" type="email"></div>
-    <div class="field"><label>Password</label><input id="f_pass" type="password" placeholder="min 6 chars"></div>
-    <button class="btn btn-primary" onclick="submitAuth()">${isLogin?'Login':'Create Account'}</button>
+    ${!isLogin?`<div class="field"><label>👤 Full Name</label><input id="f_name"></div>
+      <div class="field"><label>📞 Phone</label><input id="f_phone" type="tel"></div>`:''}
+    <div class="field"><label>📧 Email</label><input id="f_email" type="email"></div>
+    <div class="field"><label>🔒 Password</label><input id="f_pass" type="password" placeholder="min 6 chars"></div>
+    <button class="btn btn-primary" onclick="submitAuth()">${isLogin?'🔓 Login':'✅ Create Account'}</button>
   </div>`;
 }
 
 function viewHome(){
   const s=S.settings;
   return `<div class="card" style="display:flex;justify-content:space-between;align-items:center">
-    <div><h1 style="font-size:17px">USDT Exchange AF</h1>
-    <div style="font-size:12px;color:#94a3b8">${S.user.email}</div></div>
+    <div><h1 style="font-size:17px">💱 USDT Exchange AF</h1>
+    <div style="font-size:12px;color:#94a3b8">👤 ${S.user.email}</div></div>
     <div style="display:flex;gap:8px">
-      <button class="btn btn-blue" style="width:auto;margin:0;padding:8px 12px" onclick="S.view='myorders'; render()">My Orders</button>
-      <button class="btn btn-crimson" style="width:auto;margin:0" onclick="logout()">Logout</button>
+      <button class="btn btn-blue" style="width:auto;margin:0;padding:8px 12px" onclick="S.view='myorders'; render()">📋 My Orders</button>
+      <button class="btn btn- red " style="width:auto;margin:0" onclick="logout()">🚪 Logout</button>
     </div>
   </div>
-    <div class="rate-box"><div style="font-size:12px;color:#dbeafe">Current Rate</div>
+    <div class="rate-box"><div style="font-size:12px;color:#dbeafe">📊 Current Rate</div>
     <div class="n">1 USDT = ${s.rate} AFN</div>
-    <div style="font-size:12px;color:#dbeafe;margin-top:6px">Fee: ${s.fee_percent}%</div></div>
-    <button class="btn btn-primary" onclick="start('BUY_USDT')">BUY USDT</button>
-    <button class="btn btn-blue" onclick="start('BUY_AFN')">BUY AFN</button>
-    <button class="btn btn-orange" onclick="start('TOPUP')">MOBILE TOPUP</button>`;
+    <div style="font-size:12px;color:#dbeafe;margin-top:6px">💸 Fee: ${s.fee_percent}%</div></div>
+    <button class="btn btn-primary" onclick="start('BUY_USDT')">💵 BUY USDT</button>
+    <button class="btn btn-blue" onclick="start('BUY_AFN')">💴 BUY AFN</button>
+    <button class="btn btn-orange" onclick="start('TOPUP')">📱 MOBILE TOPUP</button>`;
 }
 
 async function viewMyOrdersList() {
   const { data, error } = await db.from('orders').select('*').eq('user_id', S.user.id).order('created_at', { ascending: false });
   
-  let html = `<button class="btn btn-ghost" onclick="goHome()">← Back to Home</button>
-  <div class="card"><h1>My Orders</h1></div>`;
+  let html = `<button class="btn btn-ghost" onclick="goHome()">⬅️ Back to Home</button>
+  <div class="card"><h1>📋 My Orders</h1></div>`;
   
   if (error) {
-    html += `<div class="card"><div class="msg error">Error: ${error.message}</div></div>`;
+    html += `<div class="card"><div class="msg error">❌ Error: ${error.message}</div></div>`;
   } else if (!data || data.length === 0) {
-    html += `<div class="card"><p style="text-align:center;color:#94a3b8">No orders found.</p></div>`;
+    html += `<div class="card"><p style="text-align:center;color:#94a3b8">📭 No orders found.</p></div>`;
   } else {
     data.forEach(o => {
       let statusColor = '#f59e0b'; // pending
-      if (o.status === 'Completed') statusColor = '#10b981';
-      if (o.status === 'Rejected') statusColor = '#ef4444';
+      let statusEmoji = '⏳';
+      if (o.status === 'Completed') { statusColor = '#10b981'; statusEmoji = '✅'; }
+      if (o.status === 'Rejected') { statusColor = '#ef4444'; statusEmoji = '❌'; }
       
       html += `<div class="card" style="padding:14px;margin-bottom:10px">
-        <div class="row"><span style="font-weight:bold;color:#fff">${o.order_type}</span> 
-        <span style="color:${statusColor};font-weight:bold">${o.status}</span></div>
-        <div class="row"><span>Amount</span> <span>${o.amount_input} ${o.currency_input}</span></div>
-        <div class="row"><span>Total</span> <span>${o.total_amount} ${o.order_type==='BUY_USDT'?'AFN':'USDT'}</span></div>
-        <div class="row"><span>Date</span> <span>${new Date(o.created_at).toLocaleString()}</span></div>
-        ${o.admin_note ? `<div class="row"><span>Admin Note</span> <span style="color:#fca5a5">${o.admin_note}</span></div>` : ''}
+        <div class="row"><span style="font-weight:bold;color:#fff">${o.order_type === 'BUY_USDT' ? '💵' : o.order_type === 'BUY_AFN' ? '💴' : '📱'} ${o.order_type}</span> 
+        <span style="color:${statusColor};font-weight:bold">${statusEmoji} ${o.status}</span></div>
+        <div class="row"><span>💰 Amount</span> <span>${o.amount_input} ${o.currency_input}</span></div>
+        <div class="row"><span>🧾 Total</span> <span>${o.total_amount} ${o.order_type==='BUY_USDT'?'AFN':'USDT'}</span></div>
+        <div class="row"><span>📅 Date</span> <span>${new Date(o.created_at).toLocaleString()}</span></div>
+        ${o.admin_note ? `<div class="row"><span>📝 Admin Note</span> <span style="color:#fca5a5">${o.admin_note}</span></div>` : ''}
       </div>`;
     });
   }
@@ -166,7 +154,7 @@ async function viewMyOrdersList() {
 
 function viewHelp(){
   const s = S.settings;
-  return `<button class="btn btn-ghost" onclick="goHome()">← Back to Home</button>
+  return `<button class="btn btn-ghost" onclick="goHome()">⬅️ Back to Home</button>
   <div class="card"><h1>❓ Help & Support</h1>
     <p style="color:#94a3b8;font-size:13px;margin-top:8px">For any question, issue, or assistance, contact us directly:</p>
   </div>
@@ -174,41 +162,41 @@ function viewHelp(){
     ${s.help_channel ? `<a href="${s.help_channel}" target="_blank" class="btn btn-blue" style="display:block">📢 Our Official Channel</a>` : ''}
     ${s.help_whatsapp ? `<a href="https://wa.me/${s.help_whatsapp.replace(/[^0-9]/g,'')}" target="_blank" class="btn btn-primary" style="display:block">💬 WhatsApp Support</a>` : ''}
     ${s.help_telegram ? `<a href="https://t.me/${s.help_telegram.replace('@','')}" target="_blank" class="btn" style="background:#0088cc;display:block">✈️ Telegram Support</a>` : ''}
-    ${!s.help_channel && !s.help_whatsapp && !s.help_telegram ? '<p style="color:#94a3b8;text-align:center">Contact information not available yet.</p>' : ''}
+    ${!s.help_channel && !s.help_whatsapp && !s.help_telegram ? '<p style="color:#94a3b8;text-align:center">🚫 Contact information not available yet.</p>' : ''}
   </div>
   <div class="card" style="background:#1e40af">
     <div style="font-size:12px;color:#bfdbfe">⚠️ Security Notice</div>
-    <div style="font-size:13px;margin-top:6px;color:#fff">Admin will NEVER ask for your password or private keys. Only share your TXID and payment screenshot.</div>
+    <div style="font-size:13px;margin-top:6px;color:#fff">🛡️ Admin will NEVER ask for your password or private keys. Only share your TXID and payment screenshot.</div>
   </div>`;
 }
 
 function viewForm(){
   const f=S.form;
-  const title={BUY_USDT:'Buy USDT',BUY_AFN:'Buy AFN',TOPUP:'Mobile Topup'}[f.type];
-  const amtLabel=f.type==='BUY_USDT'?'USDT Amount':'AFN Amount';
+  const title={BUY_USDT:'💵 Buy USDT',BUY_AFN:'💴 Buy AFN',TOPUP:'📱 Mobile Topup'}[f.type];
+  const amtLabel=f.type==='BUY_USDT'?'💰 USDT Amount':'💰 AFN Amount';
   let extra='';
   if(f.type==='BUY_USDT') extra=`
-    <div class="field"><label>Binance USDT Wallet Address</label><input id="f_wallet" value="${f.wallet||''}"></div>
-    <div class="field"><label>Payment Method</label><select id="f_payment">
+    <div class="field"><label>👛 Binance USDT Wallet Address</label><input id="f_wallet" value="${f.wallet||''}"></div>
+    <div class="field"><label>💳 Payment Method</label><select id="f_payment">
     <option value="HESABPAY">Hesab Pay</option><option value="MOMO">MTN MoMo</option></select></div>`;
   else if(f.type==='BUY_AFN') extra=`
-    <div class="field"><label>Receive AFN via</label><select id="f_payment">
+    <div class="field"><label>💳 Receive AFN via</label><select id="f_payment">
     <option value="HESABPAY">Hesab Pay</option><option value="MOMO">MTN MoMo</option></select></div>
-    <div class="field"><label>Your Phone Number</label><input id="f_wallet" type="tel" value="${f.wallet||''}"></div>`;
+    <div class="field"><label>📞 Your Phone Number</label><input id="f_wallet" type="tel" value="${f.wallet||''}"></div>`;
   else extra=`
-    <div class="field"><label>Mobile Network</label><select id="f_mnet">
+    <div class="field"><label>📶 Mobile Network</label><select id="f_mnet">
     <option>AWCC</option><option>Salaam</option><option>ATOMA</option><option>Etisalat</option><option>Roshan</option></select></div>
-    <div class="field"><label>Mobile Number</label><input id="f_mobile" type="tel" value="${f.mobile||''}"></div>`;
-  return `<button class="btn btn-ghost" onclick="goHome()">← Back</button>
+    <div class="field"><label>📞 Mobile Number</label><input id="f_mobile" type="tel" value="${f.mobile||''}"></div>`;
+  return `<button class="btn btn-ghost" onclick="goHome()">⬅️ Back</button>
     <div class="card"><h1>${title}</h1></div>
     <div class="card">
     <div class="field"><label>${amtLabel}</label><input id="f_amount" type="number" step="0.01" min="0.01" value="${f.amount||''}"></div>
-    <div class="field"><label>USDT Network</label><select id="f_net">
+    <div class="field"><label>🌐 USDT Network</label><select id="f_net">
     <option ${f.network==='TRC20'?'selected':''}>TRC20</option>
     <option ${f.network==='BEP20'?'selected':''}>BEP20</option>
     <option ${f.network==='ERC20'?'selected':''}>ERC20</option></select></div>
     ${extra}<div id="formMsg"></div>
-    <button class="btn btn-primary" onclick="submitForm()">Next →</button></div>`;
+    <button class="btn btn-primary" onclick="submitForm()">➡️ Next</button></div>`;
 }
 
 function viewPay(){
@@ -216,25 +204,25 @@ function viewPay(){
   const dec = isBuy?2:8;
   const totalText = `${c.total.toFixed(dec)} ${isBuy?'AFN':'USDT'}`;
   let payTo = isBuy ? (f.payment==='HESABPAY'?S.settings.hesabpay_number:S.settings.momo_number) : S.settings['wallet_'+f.network.toLowerCase()];
-  return `<button class="btn btn-ghost" onclick="backToForm()">← Back</button>
-    <div class="card"><h1>Payment</h1></div>
+  return `<button class="btn btn-ghost" onclick="backToForm()">⬅️ Back</button>
+    <div class="card"><h1>🧾 Payment</h1></div>
     <div class="card">
-    <div class="row"><span>Rate</span><span>1 USDT = ${c.rate} AFN</span></div>
-    <div class="row"><span>Base</span><span>${c.base.toFixed(dec)}</span></div>
-    <div class="row"><span>Fee (${c.fee}%)</span><span>${c.feeAmt.toFixed(dec)}</span></div>
-    <div class="row big"><span>Total</span><span>${totalText}</span></div>
-    <div class="info"><div class="label">Send to:</div><div class="value">${payTo}</div></div>
-    <div class="field"><label>Transaction ID (TXID)</label><input id="f_txid"></div>
-    <div class="field"><label>Payment Screenshot</label><input id="f_shot" type="file" accept="image/*"></div>
+    <div class="row"><span>📈 Rate</span><span>1 USDT = ${c.rate} AFN</span></div>
+    <div class="row"><span>🧮 Base</span><span>${c.base.toFixed(dec)}</span></div>
+    <div class="row"><span>💸 Fee (${c.fee}%)</span><span>${c.feeAmt.toFixed(dec)}</span></div>
+    <div class="row big"><span>💰 Total</span><span>${totalText}</span></div>
+    <div class="info"><div class="label">📤 Send to:</div><div class="value">${payTo}</div></div>
+    <div class="field"><label>🔗 Transaction ID (TXID)</label><input id="f_txid"></div>
+    <div class="field"><label>🖼️ Payment Screenshot</label><input id="f_shot" type="file" accept="image/*"></div>
     <div id="payMsg"></div>
-    <button class="btn btn-primary" onclick="confirmOrder()">CONFIRM ORDER</button></div>`;
+    <button class="btn btn-primary" onclick="confirmOrder()">✅ CONFIRM ORDER</button></div>`;
 }
 
 function viewSuccess(){
-  return `<div class="card" style="text-align:center"><div style="font-size:48px">✅</div>
+  return `<div class="card" style="text-align:center"><div style="font-size:48px">🎉</div>
     <h1>Order Submitted</h1>
     <p style="color:#94a3b8;font-size:13px;margin-top:8px">Order ID: ${S.lastOrderId}</p>
-    <button class="btn btn-primary" style="margin-top:18px" onclick="goHome()">Back to Home</button></div>`;
+    <button class="btn btn-primary" style="margin-top:18px" onclick="goHome()">🏠 Back to Home</button></div>`;
 }
 
 function setAuth(m){ S.authMode=m; render(); }
@@ -281,11 +269,11 @@ async function confirmOrder(){
   if(!txid){ showMsg('payMsg','Enter TXID',true); return; }
   if(!file){ showMsg('payMsg','Upload screenshot',true); return; }
   if(file.size>5*1024*1024){ showMsg('payMsg','Max 5MB',true); return; }
-  showMsg('payMsg','Uploading...',false);
+  showMsg('payMsg','⏳ Uploading...',false);
   const ext=file.name.split('.').pop()||'jpg';
   const path = `${S.user.id}/${Date.now()}.${ext}`;
   const { error:upErr } = await db.storage.from('screenshots').upload(path,file);
-  if(upErr){ showMsg('payMsg','Upload failed: '+upErr.message,true); return; }
+  if(upErr){ showMsg('payMsg','❌ Upload failed: '+upErr.message,true); return; }
   const f=S.form, c=S.calc;
   const row = {
     user_id:S.user.id, order_type:f.type, amount_input:f.amount,
@@ -300,7 +288,7 @@ async function confirmOrder(){
     txid, screenshot_url:path, status:'Payment Submitted'
   };
   const { data, error } = await db.from('orders').insert(row).select().single();
-  if(error){ showMsg('payMsg','Order failed: '+error.message,true); return; }
+  if(error){ showMsg('payMsg','❌ Order failed: '+error.message,true); return; }
   S.lastOrderId = data.id.slice(0,8);
   S.view='success'; render();
 }
