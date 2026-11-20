@@ -128,7 +128,7 @@
 <script>
 const db = supabase.createClient(window.APP_CONFIG.SUPABASE_URL, window.APP_CONFIG.SUPABASE_ANON_KEY);
 
-// ✅ د درو ژبو لپاره بشپړ او ساده ژباړې (د نویو اخطارونو سره)
+// ✅ د درو ژبو لپاره بشپړ او ساده ژباړې
 const L = {
   en: {
     welcome: "Welcome", welcomeSub: "Trade smarter. A more open financial world awaits.",
@@ -155,7 +155,6 @@ const L = {
     notifications: "Notifications", clear: "Clear", noMessages: "No messages found.",
     langSelect: "Language / ژبه / زبان", copied: "Copied!", enterDetails: "Please fill all fields",
     approvalMsg: "Your order will be verified by Admin within 1 to 3 hours.",
-    // نوي پیغامونه
     minTopup: "Minimum Mobile Topup is 50 AFN.",
     minBuyAfn: "Minimum BUY AFN amount is 50 AFN.",
     minBuyUsdt: "Minimum BUY USDT amount is 1 USDT.",
@@ -188,7 +187,6 @@ const L = {
     notifications: "خبرتیاوې", clear: "پاکول", noMessages: "هیڅ پیغام ونه موندل شو.",
     langSelect: "Language / ژبه / زبان", copied: "کاپي شو!", enterDetails: "مهرباني وکړئ ټول معلومات ډک کړئ",
     approvalMsg: "ستاسو فرمایش به د ۱ څخه تر ۳ ساعتونو پورې د اډمین لخوا تایید شي.",
-    // نوي پیغامونه
     minTopup: "لږ تر لږه د موبایل کریدت اندازه 50 افغانۍ ده.",
     minBuyAfn: "لږ تر لږه د AFN پیرودلو اندازه 50 افغانۍ ده.",
     minBuyUsdt: "لږ تر لږه د USDT پیرودلو اندازه 1 ډالر (USDT) ده.",
@@ -221,7 +219,6 @@ const L = {
     notifications: "اعلانات", clear: "پاک کردن", noMessages: "هیچ پیامی یافت نشد.",
     langSelect: "Language / ژبه / زبان", copied: "کپی شد!", enterDetails: "لطفاً تمام اطلاعات را وارد کنید",
     approvalMsg: "سفارش شما ظرف ۱ تا ۳ ساعت آینده توسط مدیر تایید خواهد شد.",
-    // نوي پیغامونه
     minTopup: "حداقل شارژ موبایل 50 افغانی است.",
     minBuyAfn: "حداقل خرید AFN 50 افغانی است.",
     minBuyUsdt: "حداقل خرید USDT 1 دالر (USDT) است.",
@@ -697,7 +694,9 @@ function viewHelp(t){
 
 function goHome(){ S.view='main'; S.tab='home'; render(); }
 function backToForm(){ S.view='form'; render(); }
-function start(type){ S.form={type,amount:'',network:'TRC20',wallet:'',payment:'HESABPAY',mobile:''}; S.view='form'; render(); }
+
+// ✅ دلته مو BEP20 اتوماتیک کړ
+function start(type){ S.form={type,amount:'',network:'BEP20',wallet:'',payment:'HESABPAY',mobile:''}; S.view='form'; render(); }
 
 async function submitAuth(){
   const email=$('f_email').value.trim(), pass=$('f_pass').value;
@@ -766,24 +765,20 @@ function copyRef(){
   alert(t.copied); 
 }
 
-// ✅ دلته د معلوماتو د سمولو (Validation) بشپړ کوډ اضافه شو
 function submitForm(){
   const f=S.form;
   const t = L[S.lang];
   f.amount = parseFloat($('f_amount').value||'0');
   f.network = $('f_net').value;
 
-  // 1. د اندازې کنټرول
   if(f.type === 'TOPUP' && f.amount < 50) { showMsg('formMsg', t.minTopup, true); return; }
   if(f.type === 'BUY_AFN' && f.amount < 50) { showMsg('formMsg', t.minBuyAfn, true); return; }
   if(f.type === 'BUY_USDT' && f.amount < 1) { showMsg('formMsg', t.minBuyUsdt, true); return; }
 
   if(!f.amount || f.amount <= 0){ showMsg('formMsg', t.enterDetails, true); return; }
 
-  // 2. د موبایل شمیرې کنټرول (د Topup او BUY_AFN لپاره)
   if(f.type === 'TOPUP' || f.type === 'BUY_AFN') {
     let phone = (f.type === 'TOPUP' ? $('f_mobile').value.trim() : $('f_wallet').value.trim());
-    // شمیره باید د 07 سره پیل او 10 عدده وي
     let phoneRegex = /^07[0-9]{8}$/; 
     if(!phoneRegex.test(phone)) {
        showMsg('formMsg', t.invalidPhone, true);
@@ -793,18 +788,15 @@ function submitForm(){
     else f.wallet = phone;
   }
 
-  // 3. د USDT والټ آدرس کنټرول (د BUY_USDT لپاره)
   if(f.type === 'BUY_USDT') {
     f.wallet = $('f_wallet').value.trim();
     if(!f.wallet) { showMsg('formMsg', t.enterDetails, true); return; }
 
     let isValidAddress = false;
     if(f.network === 'TRC20') {
-       // TRC20 باید د 'T' سره پیل او 34 حرفه وي
        isValidAddress = /^T[a-zA-Z0-9]{33}$/.test(f.wallet);
        if(!isValidAddress) { showMsg('formMsg', t.invalidTrc, true); return; }
     } else if (f.network === 'BEP20' || f.network === 'ERC20') {
-       // BEP20 او ERC20 باید د '0x' سره پیل او 42 حرفه وي
        isValidAddress = /^0x[a-fA-F0-9]{40}$/.test(f.wallet);
        if(!isValidAddress) { showMsg('formMsg', t.invalidEvm, true); return; }
     }
