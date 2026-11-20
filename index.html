@@ -13,7 +13,7 @@
   .field{margin-bottom:12px}
   .field label{display:block;font-size:12px;color:#94a3b8;margin-bottom:4px}
   .field input,.field select{width:100%;padding:12px;border-radius:10px;border:1px solid #334155;background:#0f172a;color:#fff;font-size:15px}
-  .btn{display:block;width:100%;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;color:#fff;margin-top:8px}
+  .btn{display:block;width:100%;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;color:#fff;margin-top:8px;text-align:center;text-decoration:none}
   .btn-primary{background:#10b981}.btn-blue{background:#3b82f6}.btn-orange{background:#f59e0b}
   .btn-ghost{background:transparent;color:#94a3b8;font-size:13px;margin-bottom:10px;text-align:left}
   .row{display:flex;justify-content:space-between;padding:5px 0;font-size:14px}
@@ -28,66 +28,38 @@
   .tabs{display:flex;gap:8px;margin-bottom:14px}
   .tabs button{flex:1;padding:10px;border:none;border-radius:10px;cursor:pointer;font-weight:600;background:#1e293b;color:#94a3b8}
   .tabs button.active{background:#3b82f6;color:#fff}
- .floating-help {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  width: 60px;
-  height: 60px;
-  background: #8b5cf6;
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-  cursor: pointer;
-  z-index: 9999;
-}
-.floating-help:active {
-  transform: scale(0.9);
-}
+  
+  /* د ګردي Help بټن لپاره ډیزاین */
+  .floating-help {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 60px;
+    height: 60px;
+    background: #8b5cf6;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    cursor: pointer;
+    z-index: 9999;
+  }
+  .floating-help:active { transform: scale(0.9); }
 </style>
 </head>
-<body>
- <div id="toast" style="display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 15px 25px; border-radius: 10px; color: white; font-weight: bold; z-index: 1000; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3);"></div>
- <div class="wrap"><div id="app"></div></div>
+<body><div class="wrap"><div id="app"></div></div>
 
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.js"></script>
 <script>
-// ═══════════════ STATE ═══════════════
 const db = supabase.createClient(window.APP_CONFIG.SUPABASE_URL, window.APP_CONFIG.SUPABASE_ANON_KEY);
 const S = { user:null, settings:{}, view:'loading', form:{}, calc:null, authMode:'login', lastOrderId:'' };
 const $ = id => document.getElementById(id);
 const showMsg = (id, text, isErr) => { const el=$(id); if(el) el.innerHTML = `<div class="msg ${isErr?'error':'ok'}">${text}</div>`; };
-function showToast(message, isError) {
-  const toast = document.getElementById('toast');
-  toast.innerText = message;
-  toast.style.background = isError ? '#ef4444' : '#10b981';
-  toast.style.display = 'block';
-  setTimeout(() => { toast.style.display = 'none'; }, 8000); // پیغام به ۸ ثانیې وښکاره شي
-}
 
-// د ژوندیو بدلونونو اوریدل (Realtime Listener)
-function listenToOrderUpdates() {
-  if (!S.user) return;
-  db.channel('custom-update-channel')
-    .on('postgres_changes', 
-      { event: 'UPDATE', schema: 'public', table: 'orders', filter: `user_id=eq.${S.user.id}` }, 
-      payload => {
-        const order = payload.new;
-        if (order.status === 'Completed') {
-          showToast(`✅ ستاسو امر (${order.id.slice(0,8)}) په بریالیتوب سره بشپړ شو!`, false);
-        } else if (order.status === 'Rejected') {
-          showToast(`❌ ستاسو امر (${order.id.slice(0,8)}) رد شو. د لا زیاتو معلوماتو لپاره اړیکه ونیسئ.`, true);
-        }
-      }
-    )
-    .subscribe();
-}
-// ═══════════════ BOOT ═══════════════
 async function boot(){
   const { data:{ session } } = await db.auth.getSession();
   if(session){ S.user=session.user; await loadSettings(); S.view='home'; }
@@ -100,26 +72,23 @@ async function loadSettings(){
   if(error){ alert('Settings: '+error.message); return; }
   S.settings = Object.fromEntries((data||[]).map(r=>[r.key,r.value]));
 }
-async function boot(){
-  const { data:{ session } } = await db.auth.getSession();
-  if(session){ 
-    S.user=session.user; 
-    await loadSettings(); 
-    listenToOrderUpdates(); // <--- دا نوی فنکشن باید دلته اضافه شي
-    S.view='home'; 
-  }
-  else S.view='auth';
-  render();
-   }
-// ═══════════════ RENDER ═══════════════
+
 function render(){
   const a=$('app');
+  let helpBtn = '';
+  // که چېرې کارن لاګن وي، ګردی Help بټن وښایه
+  if(S.user && (S.view==='home' || S.view==='myorders')) {
+    helpBtn = `<div class="floating-help" onclick="S.view='help'; render();">💬</div>`;
+  }
+
   if(S.view==='loading') a.innerHTML='<div class="card">Loading...</div>';
   else if(S.view==='auth') a.innerHTML=viewAuth();
-  else if(S.view==='home') a.innerHTML=viewHome();
+  else if(S.view==='home') a.innerHTML=viewHome() + helpBtn;
   else if(S.view==='form') a.innerHTML=viewForm();
   else if(S.view==='pay') a.innerHTML=viewPay();
   else if(S.view==='success') a.innerHTML=viewSuccess();
+  else if(S.view==='myorders') a.innerHTML=viewMyOrdersList() + helpBtn;
+  else if(S.view==='help') a.innerHTML=viewHelp();
 }
 
 function viewAuth(){
@@ -139,14 +108,15 @@ function viewAuth(){
     <button class="btn btn-primary" onclick="submitAuth()">${isLogin?'Login':'Create Account'}</button>
   </div>`;
 }
+
 function viewHome(){
   const s=S.settings;
   return `<div class="card" style="display:flex;justify-content:space-between;align-items:center">
     <div><h1 style="font-size:17px">USDT Exchange AF</h1>
     <div style="font-size:12px;color:#94a3b8">${S.user.email}</div></div>
     <div style="display:flex;gap:8px">
-      <button class="btn btn-blue" style="width:auto;margin:0;padding:8px 12px" onclick="viewMyOrdersList()">My Orders</button>
-      <button class="btn btn-ghost" style="width:auto;margin:0" onclick="logout()">Logout</button>
+      <button class="btn btn-blue" style="width:auto;margin:0;padding:8px 12px" onclick="S.view='myorders'; render()">My Orders</button>
+      <button class="btn btn-red" style="width:auto;margin:0" onclick="logout()">Logout</button>
     </div>
   </div>
     <div class="rate-box"><div style="font-size:12px;color:#dbeafe">Current Rate</div>
@@ -154,29 +124,55 @@ function viewHome(){
     <div style="font-size:12px;color:#dbeafe;margin-top:6px">Fee: ${s.fee_percent}%</div></div>
     <button class="btn btn-primary" onclick="start('BUY_USDT')">BUY USDT</button>
     <button class="btn btn-blue" onclick="start('BUY_AFN')">BUY AFN</button>
-    <button class="btn btn-orange" onclick="start('TOPUP')">MOBILE TOPUP</button>
-   function viewHome(){
-  const s=S.settings;
-  return `<div class="card" style="display:flex;justify-content:space-between;align-items:center">
-    <div><h1 style="font-size:17px">USDT Exchange AF</h1>
-    <div style="font-size:12px;color:#94a3b8">${S.user.email}</div></div>
-    <div style="display:flex;gap:8px">
-      <button class="btn btn-blue" style="width:auto;margin:0;padding:8px 12px" onclick="viewMyOrdersList()">My Orders</button>
-      <button class="btn btn-ghost" style="width:auto;margin:0" onclick="logout()">Logout</button>
-    </div>
-  </div>
-    <div class="rate-box"><div style="font-size:12px;color:#dbeafe">Current Rate</div>
-    <div class="n">1 USDT = ${s.rate} AFN</div>
-    <div style="font-size:12px;color:#dbeafe;margin-top:6px">Fee: ${s.fee_percent}%</div></div>
-    <button class="btn btn-primary" onclick="start('BUY_USDT')">BUY USDT</button>
-    <button class="btn btn-blue" onclick="start('BUY_AFN')">BUY AFN</button>
-    <button class="btn btn-orange" onclick="start('TOPUP')">MOBILE TOPUP</button>
-    
-    <!-- دا نوی ګردی بټن دی -->
-    <div class="floating-help" onclick="S.view='help'; render();">💬</div>`;
-}
+    <button class="btn btn-orange" onclick="start('TOPUP')">MOBILE TOPUP</button>`;
 }
 
+async function viewMyOrdersList() {
+  const { data, error } = await db.from('orders').select('*').eq('user_id', S.user.id).order('created_at', { ascending: false });
+  
+  let html = `<button class="btn btn-ghost" onclick="goHome()">← Back to Home</button>
+  <div class="card"><h1>My Orders</h1></div>`;
+  
+  if (error) {
+    html += `<div class="card"><div class="msg error">Error: ${error.message}</div></div>`;
+  } else if (!data || data.length === 0) {
+    html += `<div class="card"><p style="text-align:center;color:#94a3b8">No orders found.</p></div>`;
+  } else {
+    data.forEach(o => {
+      let statusColor = '#f59e0b'; // pending
+      if (o.status === 'Completed') statusColor = '#10b981';
+      if (o.status === 'Rejected') statusColor = '#ef4444';
+      
+      html += `<div class="card" style="padding:14px;margin-bottom:10px">
+        <div class="row"><span style="font-weight:bold;color:#fff">${o.order_type}</span> 
+        <span style="color:${statusColor};font-weight:bold">${o.status}</span></div>
+        <div class="row"><span>Amount</span> <span>${o.amount_input} ${o.currency_input}</span></div>
+        <div class="row"><span>Total</span> <span>${o.total_amount} ${o.order_type==='BUY_USDT'?'AFN':'USDT'}</span></div>
+        <div class="row"><span>Date</span> <span>${new Date(o.created_at).toLocaleString()}</span></div>
+        ${o.admin_note ? `<div class="row"><span>Admin Note</span> <span style="color:#fca5a5">${o.admin_note}</span></div>` : ''}
+      </div>`;
+    });
+  }
+  return html;
+}
+
+function viewHelp(){
+  const s = S.settings;
+  return `<button class="btn btn-ghost" onclick="goHome()">← Back to Home</button>
+  <div class="card"><h1>❓ Help & Support</h1>
+    <p style="color:#94a3b8;font-size:13px;margin-top:8px">For any question, issue, or assistance, contact us directly:</p>
+  </div>
+  <div class="card">
+    ${s.help_channel ? `<a href="${s.help_channel}" target="_blank" class="btn btn-blue" style="display:block">📢 Our Official Channel</a>` : ''}
+    ${s.help_whatsapp ? `<a href="https://wa.me/${s.help_whatsapp.replace(/[^0-9]/g,'')}" target="_blank" class="btn btn-primary" style="display:block">💬 WhatsApp Support</a>` : ''}
+    ${s.help_telegram ? `<a href="https://t.me/${s.help_telegram.replace('@','')}" target="_blank" class="btn" style="background:#0088cc;display:block">✈️ Telegram Support</a>` : ''}
+    ${!s.help_channel && !s.help_whatsapp && !s.help_telegram ? '<p style="color:#94a3b8;text-align:center">Contact information not available yet.</p>' : ''}
+  </div>
+  <div class="card" style="background:#1e40af">
+    <div style="font-size:12px;color:#bfdbfe">⚠️ Security Notice</div>
+    <div style="font-size:13px;margin-top:6px;color:#fff">Admin will NEVER ask for your password or private keys. Only share your TXID and payment screenshot.</div>
+  </div>`;
+}
 
 function viewForm(){
   const f=S.form;
@@ -233,43 +229,8 @@ function viewSuccess(){
     <button class="btn btn-primary" style="margin-top:18px" onclick="goHome()">Back to Home</button></div>`;
 }
 
-// ═══════════════ ACTIONS ═══════════════
 function setAuth(m){ S.authMode=m; render(); }
 function goHome(){ S.view='home'; render(); }
- async function viewMyOrdersList() {
-  const a=$('app');
-  a.innerHTML = '<div class="card">Loading Orders...</div>';
-  
-  const { data, error } = await db.from('orders').select('*').eq('user_id', S.user.id).order('created_at', { ascending: false });
-  
-  if (error) {
-    a.innerHTML = `<div class="card"><div class="msg error">Error: ${error.message}</div></div>`;
-    return;
-  }
-  
-  let html = `<button class="btn btn-ghost" onclick="goHome()">← Back to Home</button>
-  <div class="card"><h1>My Orders</h1></div>`;
-  
-  if (!data || data.length === 0) {
-    html += `<div class="card"><p style="text-align:center;color:#94a3b8">No orders found.</p></div>`;
-  } else {
-    data.forEach(o => {
-      let statusColor = '#f59e0b'; // pending
-      if (o.status === 'Completed') statusColor = '#10b981';
-      if (o.status === 'Rejected') statusColor = '#ef4444';
-      
-      html += `<div class="card" style="padding:14px;margin-bottom:10px">
-        <div class="row"><span style="font-weight:bold;color:#fff">${o.order_type}</span> 
-        <span style="color:${statusColor};font-weight:bold">${o.status}</span></div>
-        <div class="row"><span>Amount</span> <span>${o.amount_input} ${o.currency_input}</span></div>
-        <div class="row"><span>Total</span> <span>${o.total_amount} ${o.order_type==='BUY_USDT'?'AFN':'USDT'}</span></div>
-        <div class="row"><span>Date</span> <span>${new Date(o.created_at).toLocaleString()}</span></div>
-        ${o.admin_note ? `<div class="row"><span>Admin Note</span> <span style="color:#fca5a5">${o.admin_note}</span></div>` : ''}
-      </div>`;
-    });
-  }
-  a.innerHTML = html;
-}
 function backToForm(){ S.view='form'; render(); }
 function start(type){ S.form={type,amount:'',network:'TRC20',wallet:'',payment:'HESABPAY',mobile:''}; S.view='form'; render(); }
 
