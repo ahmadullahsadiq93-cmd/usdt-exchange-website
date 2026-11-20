@@ -513,13 +513,47 @@ function viewSuccess(){
 
 function viewHelp(){
   const s = S.settings;
-  return `<button class="btn btn-ghost" onclick="goHome()">⬅️ Back</button>
-  <div class="card"><h1 class="page-title">❓ Help & Support</h1>
-    <p style="color:#64748b;font-size:13px;margin-bottom:14px">Contact us directly for any issue:</p>
-    ${s.help_channel ? `<a href="${s.help_channel}" target="_blank" class="btn btn-green" style="display:block">📢 Official Channel</a>` : ''}
-    ${s.help_whatsapp ? `<a href="https://wa.me/${s.help_whatsapp.replace(/[^0-9]/g,'')}" target="_blank" class="btn btn-primary" style="display:block">💬 WhatsApp Support</a>` : ''}
-    ${s.help_telegram ? `<a href="https://t.me/${s.help_telegram.replace('@','')}" target="_blank" class="btn btn-dark" style="display:block">✈️ Telegram Support</a>` : ''}
-  </div>`;
+  return `
+  <div style="display:flex; align-items:center; margin-bottom:20px;">
+    <button onclick="goHome()" style="background:#e8f5ec; border:none; width:40px; height:40px; border-radius:50%; font-size:18px; cursor:pointer; color:#10b981; display:flex; align-items:center; justify-content:center; margin-right:15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">⬅️</button>
+    <h1 style="font-size:24px; margin:0; color:#0f172a; font-weight:800;">Help & Support</h1>
+  </div>
+
+  <div style="background:#fff; border-radius:24px; padding:30px 20px; box-shadow:0 4px 15px rgba(0,0,0,0.03); text-align:center; border: 1px solid #d1fae5;">
+    <div style="width:80px; height:80px; background:#ecfdf5; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:40px; margin:0 auto 15px auto; box-shadow: 0 4px 10px rgba(16,185,129,0.1);">
+      🎧
+    </div>
+    <h2 style="font-size:20px; color:#0f172a; margin-bottom:8px; font-weight:800;">How can we help you?</h2>
+    <p style="color:#64748b; font-size:14px; margin-bottom:30px; line-height:1.6;">Contact us directly for any issue. Our support team is available to assist you.</p>
+
+    <div style="display:flex; flex-direction:column; gap:15px;">
+      
+      <!-- Official Channel Button -->
+      ${s.help_channel ? `
+      <a href="${s.help_channel}" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:10px; background:linear-gradient(135deg, #3b82f6, #2563eb); color:#fff; padding:16px; border-radius:14px; font-weight:800; font-size:15px; text-decoration:none; box-shadow:0 4px 12px rgba(59,130,246,0.3); transition:0.2s;">
+        <span style="font-size:22px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">📢</span> Official Channel
+      </a>` : ''}
+
+      <!-- WhatsApp Button -->
+      ${s.help_whatsapp ? `
+      <a href="https://wa.me/${s.help_whatsapp.replace(/[^0-9]/g,'')}" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:10px; background:linear-gradient(135deg, #10b981, #059669); color:#fff; padding:16px; border-radius:14px; font-weight:800; font-size:15px; text-decoration:none; box-shadow:0 4px 12px rgba(16,185,129,0.3); transition:0.2s;">
+        <span style="font-size:22px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">💬</span> WhatsApp Support
+      </a>` : ''}
+
+      <!-- Telegram Button -->
+      ${s.help_telegram ? `
+      <a href="https://t.me/${s.help_telegram.replace('@','')}" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:10px; background:linear-gradient(135deg, #0f172a, #1e293b); color:#fff; padding:16px; border-radius:14px; font-weight:800; font-size:15px; text-decoration:none; box-shadow:0 4px 12px rgba(15,23,42,0.3); transition:0.2s;">
+        <span style="font-size:22px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">✈️</span> Telegram Support
+      </a>` : ''}
+
+    </div>
+  </div>
+  
+  <div style="text-align:center; margin-top:30px; color:#94a3b8; font-size:12px; font-weight: 600;">
+    <p>USDT Exchange Afghanistan</p>
+    <p style="margin-top:4px;">We are here to help you 24/7</p>
+  </div>
+  `;
 }
 
 function goHome(){ S.view='main'; S.tab='home'; render(); }
