@@ -108,6 +108,12 @@ function viewDash(){
 <div class="field"><label>WhatsApp Number</label><input id="s_wa" value="${s.help_whatsapp||''}" placeholder="93700000000"></div>
 <div class="field"><label>Telegram Username</label><input id="s_tg" value="${s.help_telegram||''}" placeholder="@username"></div>
     </div>
+    <div class="card"><h2>📢 Send Announcement to Users</h2>
+  <div class="field"><label>Message Title</label><input id="n_title" placeholder="e.g., New Rate Update!"></div>
+  <div class="field"><label>Message Body</label><input id="n_msg" placeholder="Write your message here..."></div>
+  <button class="btn btn-blue" onclick="sendNotification()">Send Message</button>
+  <div id="notifMsg"></div>
+</div>
     <div id="settingsMsg"></div>
     <button class="btn btn-primary" onclick="saveSettings()">Save All Settings</button></div>
     <div class="card"><h2>Orders (${S.orders.length})</h2>
@@ -158,7 +164,17 @@ async function saveSettings(){
   showMsg('settingsMsg','Settings saved!',false);
   await loadAll(); render();
 }
-
+async function sendNotification() {
+  const title = $('n_title').value.trim();
+  const msg = $('n_msg').value.trim();
+  if(!title || !msg) { showMsg('notifMsg', 'Please fill both title and message', true); return; }
+  
+  const { error } = await db.from('notifications').insert({ title, message: msg });
+  if(error) { showMsg('notifMsg', error.message, true); return; }
+  
+  showMsg('notifMsg', '✅ Message sent successfully!', false);
+  $('n_title').value = ''; $('n_msg').value = '';
+     }
 async function setStatus(id,status){
   if(!confirm(`Set order to ${status}?`)) return;
   const upd={status};
