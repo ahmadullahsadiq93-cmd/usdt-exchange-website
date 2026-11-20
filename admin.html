@@ -39,12 +39,23 @@ const S = { user:null, view:'loading', settings:{}, orders:[] };
 const $ = id => document.getElementById(id);
 const showMsg = (id, t, isErr) => { const el=$(id); if(el) el.innerHTML=`<div class="msg ${isErr?'error':'ok'}">${t}</div>`; };
 
-async function boot(){
+ async function boot(){
   const { data:{ session } } = await db.auth.getSession();
   if(!session){ S.view='login'; render(); return; }
   S.user = session.user;
-  const { data:prof } = await db.from('profiles').select('is_admin').eq('id',session.user.id).maybeSingle();
-  if(!prof?.is_admin){ S.view='denied'; render(); return; }
+  
+  // د نوي فنکشن کارول ترڅو امنیتي ستونزه حل شي
+  const { data: isAdmin, error } = await db.rpc('check_is_admin');
+  
+  if(error) {
+    alert("Database Error: " + error.message); // که ستونزه وه، به یې راته ووایي
+    return;
+  }
+  
+  if(!isAdmin){ 
+    S.view='denied'; render(); return; 
+  }
+  
   await loadAll();
   S.view='dashboard'; render();
 }
