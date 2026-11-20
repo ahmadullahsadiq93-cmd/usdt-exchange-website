@@ -76,7 +76,7 @@ async function loadSettings(){
 function render(){
   const a=$('app');
   let helpBtn = '';
-  // که چېرې کارن لاګن وي، ګردی Help بټن وښایه
+  // ګردی Help بټن یوازې په اصلي پاڼه او My Orders کې ښکاري
   if(S.user && (S.view==='home' || S.view==='myorders')) {
     helpBtn = `<div class="floating-help" onclick="S.view='help'; render();">💬</div>`;
   }
@@ -87,8 +87,16 @@ function render(){
   else if(S.view==='form') a.innerHTML=viewForm();
   else if(S.view==='pay') a.innerHTML=viewPay();
   else if(S.view==='success') a.innerHTML=viewSuccess();
-  else if(S.view==='myorders') a.innerHTML=viewMyOrdersList() + helpBtn;
   else if(S.view==='help') a.innerHTML=viewHelp();
+  else if(S.view==='myorders') {
+    // د معلوماتو د راوستلو تر څو چې انتظار کوو، دا ښکاره کوو
+    a.innerHTML = '<div class="card" style="text-align:center">Loading Orders...</div>' + helpBtn;
+    viewMyOrdersList().then(html => {
+      if(S.view === 'myorders') {
+        a.innerHTML = html + helpBtn;
+      }
+    });
+  }
 }
 
 function viewAuth(){
@@ -116,7 +124,7 @@ function viewHome(){
     <div style="font-size:12px;color:#94a3b8">${S.user.email}</div></div>
     <div style="display:flex;gap:8px">
       <button class="btn btn-blue" style="width:auto;margin:0;padding:8px 12px" onclick="S.view='myorders'; render()">My Orders</button>
-      <button class="btn btn-red" style="width:auto;margin:0" onclick="logout()">Logout</button>
+      <button class="btn btn-crimson" style="width:auto;margin:0" onclick="logout()">Logout</button>
     </div>
   </div>
     <div class="rate-box"><div style="font-size:12px;color:#dbeafe">Current Rate</div>
