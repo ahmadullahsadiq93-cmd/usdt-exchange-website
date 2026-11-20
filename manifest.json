@@ -5,18 +5,18 @@
   "display": "standalone",
   "background_color": "#f4fbf7",
   "theme_color": "#10b981",
-  "description": "Trade smarter. A more open financial world awaits.",
-"icons": [
-  {
-    "src": "/file_0000000081d88211ad5d836e4cd0fef7.png",
-    "sizes": "192x192",
-    "type": "image/png",
-    "purpose": "any maskable"
-  },
-  {
-    "src": "/file_0000000081d88211ad5d836e4cd0fef7.png",
-    "sizes": "512x512",
-    "type": "image/png",
-    "purpose": "any maskable"
-  }
-]
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
