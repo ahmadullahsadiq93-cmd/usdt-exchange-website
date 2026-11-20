@@ -80,7 +80,17 @@ async function loadSettings(){
   if(error){ alert('Settings: '+error.message); return; }
   S.settings = Object.fromEntries((data||[]).map(r=>[r.key,r.value]));
 }
-
+async function boot(){
+  const { data:{ session } } = await db.auth.getSession();
+  if(session){ 
+    S.user=session.user; 
+    await loadSettings(); 
+    listenToOrderUpdates(); // <--- دا نوی فنکشن باید دلته اضافه شي
+    S.view='home'; 
+  }
+  else S.view='auth';
+  render();
+   }
 // ═══════════════ RENDER ═══════════════
 function render(){
   const a=$('app');
