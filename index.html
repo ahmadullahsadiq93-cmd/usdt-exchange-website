@@ -95,9 +95,10 @@ async function boot(){
   render();
 }
 
-// ✅ د ID تلپاتې کول او د بلنې شویو کسانو شمیرل
+// ✅ د ID ستونزې سمول
 async function loadProfile(){
-  const { data } = await db.from('profiles').select('*').eq('id', S.user.id).single();
+  const { data, error } = await db.from('profiles').select('*').eq('id', S.user.id).single();
+  if (error) { console.error("Profile fetch error:", error); }
   S.profile = data;
   
   // 1. که چیرې ID (user_code) نه وي، یو ځل جوړیږي او بیا هیڅکله نه بدلیږي
@@ -107,8 +108,14 @@ async function loadProfile(){
     const randomNumbers = Math.floor(1000 + Math.random() * 9000); 
     const newCode = `${randomLetter}-${randomNumbers}`;
     
-    await db.from('profiles').update({ user_code: newCode }).eq('id', S.user.id);
-    S.profile.user_code = newCode; 
+    // ✅ د خطا کتنه: که ډیټابیس اجازه نه ورکړي، موږ ته ووایي
+    const { error: updateErr } = await db.from('profiles').update({ user_code: newCode }).eq('id', S.user.id);
+    
+    if (updateErr) {
+        alert("⚠️ Database Error: Unable to save ID.\n" + updateErr.message + "\n\nPlease run the SQL permissions code in Supabase.");
+    } else {
+        S.profile.user_code = newCode; 
+    }
   }
 
   // 2. د هغو کسانو شمیر چې د دې کارونکي په لینک یې راجستر کړی دی
@@ -303,7 +310,6 @@ function viewPriceHistory(){
   <div id="ordersContainer"><div class="loader">⏳ Loading Orders...</div></div>`;
 }
 
-// ✅ د پروفایل پاڼه چې د بلنې شویو کسانو شمیر هم ښیي
 function viewProfile(){
   const p = S.profile;
   const refLink = `https://lahsadiq93.workers.dev/?ref=${p.user_code || p.referral_code || 'none'}`;
@@ -447,7 +453,6 @@ async function submitAuth(){
     const randomNumbers = Math.floor(1000 + Math.random() * 9000); 
     const newUserCode = `${randomLetter}-${randomNumbers}`;
     
-    // ✅ د URL څخه د ریفرر کوډ نیول
     let referredById = null;
     const urlParams = new URLSearchParams(window.location.search);
     const refCodeFromUrl = urlParams.get('ref');
@@ -488,7 +493,6 @@ async function uploadAvatar(){
 
 async function updateProfile(){
   const name = $('p_name').value.trim();
-  // یوازې نوم بدلیږي، ID (user_code) ته لاس نه ورکول کیږي
   await db.from('profiles').update({ full_name: name }).eq('id', S.user.id);
   await loadProfile(); alert('Profile Updated!'); render();
 }
