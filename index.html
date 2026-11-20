@@ -30,7 +30,9 @@
   .tabs button.active{background:#3b82f6;color:#fff}
 </style>
 </head>
-<body><div class="wrap"><div id="app"></div></div>
+<body>
+ <div id="toast" style="display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 15px 25px; border-radius: 10px; color: white; font-weight: bold; z-index: 1000; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3);"></div>
+ <div class="wrap"><div id="app"></div></div>
 
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.js"></script>
@@ -40,7 +42,31 @@ const db = supabase.createClient(window.APP_CONFIG.SUPABASE_URL, window.APP_CONF
 const S = { user:null, settings:{}, view:'loading', form:{}, calc:null, authMode:'login', lastOrderId:'' };
 const $ = id => document.getElementById(id);
 const showMsg = (id, text, isErr) => { const el=$(id); if(el) el.innerHTML = `<div class="msg ${isErr?'error':'ok'}">${text}</div>`; };
+function showToast(message, isError) {
+  const toast = document.getElementById('toast');
+  toast.innerText = message;
+  toast.style.background = isError ? '#ef4444' : '#10b981';
+  toast.style.display = 'block';
+  setTimeout(() => { toast.style.display = 'none'; }, 8000); // پیغام به ۸ ثانیې وښکاره شي
+}
 
+// د ژوندیو بدلونونو اوریدل (Realtime Listener)
+function listenToOrderUpdates() {
+  if (!S.user) return;
+  db.channel('custom-update-channel')
+    .on('postgres_changes', 
+      { event: 'UPDATE', schema: 'public', table: 'orders', filter: `user_id=eq.${S.user.id}` }, 
+      payload => {
+        const order = payload.new;
+        if (order.status === 'Completed') {
+          showToast(`✅ ستاسو امر (${order.id.slice(0,8)}) په بریالیتوب سره بشپړ شو!`, false);
+        } else if (order.status === 'Rejected') {
+          showToast(`❌ ستاسو امر (${order.id.slice(0,8)}) رد شو. د لا زیاتو معلوماتو لپاره اړیکه ونیسئ.`, true);
+        }
+      }
+    )
+    .subscribe();
+}
 // ═══════════════ BOOT ═══════════════
 async function boot(){
   const { data:{ session } } = await db.auth.getSession();
