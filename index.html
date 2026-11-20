@@ -128,7 +128,7 @@
 <script>
 const db = supabase.createClient(window.APP_CONFIG.SUPABASE_URL, window.APP_CONFIG.SUPABASE_ANON_KEY);
 
-// ✅ د درو ژبو لپاره بشپړ او ساده ژباړې (د نوي پیغام سره)
+// ✅ د درو ژبو لپاره بشپړ او ساده ژباړې (د نویو اخطارونو سره)
 const L = {
   en: {
     welcome: "Welcome", welcomeSub: "Trade smarter. A more open financial world awaits.",
@@ -154,7 +154,14 @@ const L = {
     orderSubmitted: "Order Submitted!", orderId: "Order ID", backHome: "Back to Home",
     notifications: "Notifications", clear: "Clear", noMessages: "No messages found.",
     langSelect: "Language / ژبه / زبان", copied: "Copied!", enterDetails: "Please fill all fields",
-    approvalMsg: "Your order will be verified by Admin within 1 to 3 hours."
+    approvalMsg: "Your order will be verified by Admin within 1 to 3 hours.",
+    // نوي پیغامونه
+    minTopup: "Minimum Mobile Topup is 50 AFN.",
+    minBuyAfn: "Minimum BUY AFN amount is 50 AFN.",
+    minBuyUsdt: "Minimum BUY USDT amount is 1 USDT.",
+    invalidPhone: "Invalid phone number. Must start with 07 and be 10 digits.",
+    invalidTrc: "Invalid TRC20 address. Must start with 'T' and be 34 characters.",
+    invalidEvm: "Invalid BEP20/ERC20 address. Must start with '0x' and be 42 characters."
   },
   ps: {
     welcome: "ښه راغلاست", welcomeSub: "هوښیارانه تجارت وکړئ. یوه پراخه مالي نړۍ ستاسو په تمه ده.",
@@ -180,7 +187,14 @@ const L = {
     orderSubmitted: "فرمایش وسپارل شو!", orderId: "د فرمایش آی‌ډي", backHome: "کور ته بیرته",
     notifications: "خبرتیاوې", clear: "پاکول", noMessages: "هیڅ پیغام ونه موندل شو.",
     langSelect: "Language / ژبه / زبان", copied: "کاپي شو!", enterDetails: "مهرباني وکړئ ټول معلومات ډک کړئ",
-    approvalMsg: "ستاسو فرمایش به د ۱ څخه تر ۳ ساعتونو پورې د اډمین لخوا تایید شي."
+    approvalMsg: "ستاسو فرمایش به د ۱ څخه تر ۳ ساعتونو پورې د اډمین لخوا تایید شي.",
+    // نوي پیغامونه
+    minTopup: "لږ تر لږه د موبایل کریدت اندازه 50 افغانۍ ده.",
+    minBuyAfn: "لږ تر لږه د AFN پیرودلو اندازه 50 افغانۍ ده.",
+    minBuyUsdt: "لږ تر لږه د USDT پیرودلو اندازه 1 ډالر (USDT) ده.",
+    invalidPhone: "ناسمه شمیره! باید د 07 سره پیل او ټولټال 10 عدده وي.",
+    invalidTrc: "ناسم TRC20 آدرس! باید د 'T' سره پیل او 34 حرفه وي.",
+    invalidEvm: "ناسم BEP20/ERC20 آدرس! باید د '0x' سره پیل او 42 حرفه وي."
   },
   fa: {
     welcome: "خوش آمدید", welcomeSub: "هوشمندانه معامله کنید. دنیای مالی بازتر در انتظار شماست.",
@@ -206,7 +220,14 @@ const L = {
     orderSubmitted: "سفارش ثبت شد!", orderId: "شناسه سفارش", backHome: "بازگشت به خانه",
     notifications: "اعلانات", clear: "پاک کردن", noMessages: "هیچ پیامی یافت نشد.",
     langSelect: "Language / ژبه / زبان", copied: "کپی شد!", enterDetails: "لطفاً تمام اطلاعات را وارد کنید",
-    approvalMsg: "سفارش شما ظرف ۱ تا ۳ ساعت آینده توسط مدیر تایید خواهد شد."
+    approvalMsg: "سفارش شما ظرف ۱ تا ۳ ساعت آینده توسط مدیر تایید خواهد شد.",
+    // نوي پیغامونه
+    minTopup: "حداقل شارژ موبایل 50 افغانی است.",
+    minBuyAfn: "حداقل خرید AFN 50 افغانی است.",
+    minBuyUsdt: "حداقل خرید USDT 1 دالر (USDT) است.",
+    invalidPhone: "شماره نامعتبر است! باید با 07 شروع شده و 10 رقم باشد.",
+    invalidTrc: "آدرس TRC20 نامعتبر است! باید با 'T' شروع شده و 34 کاراکتر باشد.",
+    invalidEvm: "آدرس BEP20/ERC20 نامعتبر است! باید با '0x' شروع شده و 42 کاراکتر باشد."
   }
 };
 
@@ -590,14 +611,14 @@ function viewForm(t){
 
   let extra='';
   if(f.type==='BUY_USDT') extra=`
-    <div class="field"><label>${t.walletAddr}</label><input id="f_wallet" value="${f.wallet||''}" placeholder="TRC20/BEP20 Address"></div>
+    <div class="field"><label>${t.walletAddr}</label><input id="f_wallet" value="${f.wallet||''}" placeholder="TRC20/T... or BEP20/0x..."></div>
     <div class="field"><label>${t.payMethod}</label><select id="f_payment"><option value="HESABPAY">Hesab Pay</option><option value="MOMO">MTN MoMo</option></select></div>`;
   else if(f.type==='BUY_AFN') extra=`
     <div class="field"><label>${t.receiveAfn}</label><select id="f_payment"><option value="HESABPAY">Hesab Pay</option><option value="MOMO">MTN MoMo</option></select></div>
-    <div class="field"><label>${t.yourPhone}</label><input id="f_wallet" type="tel" value="${f.wallet||''}" placeholder="07XXXXXXXX"></div>`;
+    <div class="field"><label>${t.yourPhone}</label><input id="f_wallet" type="tel" value="${f.wallet||''}" placeholder="07XXXXXXXX" maxlength="10"></div>`;
   else extra=`
     <div class="field"><label>${t.mobNetwork}</label><select id="f_mnet"><option>AWCC</option><option>Salaam</option><option>ATOMA</option><option>Etisalat</option><option>Roshan</option></select></div>
-    <div class="field"><label>${t.mobNumber}</label><input id="f_mobile" type="tel" value="${f.mobile||''}" placeholder="07XXXXXXXX"></div>`;
+    <div class="field"><label>${t.mobNumber}</label><input id="f_mobile" type="tel" value="${f.mobile||''}" placeholder="07XXXXXXXX" maxlength="10"></div>`;
   
   return `<button class="btn btn-ghost" onclick="goHome()">⬅️ ${t.back}</button>
     <div class="card"><h1 class="page-title">${title}</h1>
@@ -626,14 +647,12 @@ function viewPay(t){
     <button class="btn btn-primary" style="margin-top:10px" onclick="confirmOrder()">✅ ${t.confirmOrder}</button></div>`;
 }
 
-// ✅ دلته نوی پیغام اضافه شو
 function viewSuccess(t){
   return `<div class="card" style="text-align:center;padding:40px 20px">
     <div style="font-size:60px;margin-bottom:10px">🎉</div>
     <h1 style="color:#0f172a">${t.orderSubmitted}</h1>
     <p style="color:#64748b;font-size:14px;margin-top:8px; margin-bottom: 20px;">${t.orderId}: <strong>${S.lastOrderId}</strong></p>
     
-    <!-- ⏳ د انتظار پیغام -->
     <div style="background: #fffbeb; border: 1px solid #fde68a; color: #b45309; padding: 16px; border-radius: 12px; font-size: 14px; font-weight: 700; line-height: 1.6; margin-bottom: 24px;">
       ⏳ ${t.approvalMsg}
     </div>
@@ -747,14 +766,52 @@ function copyRef(){
   alert(t.copied); 
 }
 
+// ✅ دلته د معلوماتو د سمولو (Validation) بشپړ کوډ اضافه شو
 function submitForm(){
   const f=S.form;
   const t = L[S.lang];
   f.amount = parseFloat($('f_amount').value||'0');
   f.network = $('f_net').value;
-  if(f.type==='TOPUP'){ f.mobile=$('f_mobile').value.trim(); f.mnet=$('f_mnet').value; if(!f.mobile){ showMsg('formMsg',t.enterDetails,true); return; } }
-  else { f.wallet=$('f_wallet').value.trim(); f.payment=$('f_payment').value; if(!f.wallet){ showMsg('formMsg',t.enterDetails,true); return; } }
-  if(!f.amount||f.amount<=0){ showMsg('formMsg',t.enterDetails,true); return; }
+
+  // 1. د اندازې کنټرول
+  if(f.type === 'TOPUP' && f.amount < 50) { showMsg('formMsg', t.minTopup, true); return; }
+  if(f.type === 'BUY_AFN' && f.amount < 50) { showMsg('formMsg', t.minBuyAfn, true); return; }
+  if(f.type === 'BUY_USDT' && f.amount < 1) { showMsg('formMsg', t.minBuyUsdt, true); return; }
+
+  if(!f.amount || f.amount <= 0){ showMsg('formMsg', t.enterDetails, true); return; }
+
+  // 2. د موبایل شمیرې کنټرول (د Topup او BUY_AFN لپاره)
+  if(f.type === 'TOPUP' || f.type === 'BUY_AFN') {
+    let phone = (f.type === 'TOPUP' ? $('f_mobile').value.trim() : $('f_wallet').value.trim());
+    // شمیره باید د 07 سره پیل او 10 عدده وي
+    let phoneRegex = /^07[0-9]{8}$/; 
+    if(!phoneRegex.test(phone)) {
+       showMsg('formMsg', t.invalidPhone, true);
+       return;
+    }
+    if(f.type === 'TOPUP') f.mobile = phone;
+    else f.wallet = phone;
+  }
+
+  // 3. د USDT والټ آدرس کنټرول (د BUY_USDT لپاره)
+  if(f.type === 'BUY_USDT') {
+    f.wallet = $('f_wallet').value.trim();
+    if(!f.wallet) { showMsg('formMsg', t.enterDetails, true); return; }
+
+    let isValidAddress = false;
+    if(f.network === 'TRC20') {
+       // TRC20 باید د 'T' سره پیل او 34 حرفه وي
+       isValidAddress = /^T[a-zA-Z0-9]{33}$/.test(f.wallet);
+       if(!isValidAddress) { showMsg('formMsg', t.invalidTrc, true); return; }
+    } else if (f.network === 'BEP20' || f.network === 'ERC20') {
+       // BEP20 او ERC20 باید د '0x' سره پیل او 42 حرفه وي
+       isValidAddress = /^0x[a-fA-F0-9]{40}$/.test(f.wallet);
+       if(!isValidAddress) { showMsg('formMsg', t.invalidEvm, true); return; }
+    }
+
+    f.payment = $('f_payment').value;
+  }
+
   const r=+S.settings.rate, fee=+S.settings.fee_percent;
   let base;
   if(f.type==='BUY_USDT') base=f.amount*r; else base=f.amount/r;
