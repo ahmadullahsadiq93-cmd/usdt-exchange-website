@@ -516,7 +516,7 @@ function viewHelp(){
   return `<button class="btn btn-ghost" onclick="goHome()">⬅️ Back</button>
   <div class="card"><h1 class="page-title">❓ Help & Support</h1>
     <p style="color:#64748b;font-size:13px;margin-bottom:14px">Contact us directly for any issue:</p>
-    ${s.help_channel ? `<a href="${s.help_channel}" target="_blank" class="btn btn-blue" style="display:block">📢 Official Channel</a>` : ''}
+    ${s.help_channel ? `<a href="${s.help_channel}" target="_blank" class="btn btn-green" style="display:block">📢 Official Channel</a>` : ''}
     ${s.help_whatsapp ? `<a href="https://wa.me/${s.help_whatsapp.replace(/[^0-9]/g,'')}" target="_blank" class="btn btn-primary" style="display:block">💬 WhatsApp Support</a>` : ''}
     ${s.help_telegram ? `<a href="https://t.me/${s.help_telegram.replace('@','')}" target="_blank" class="btn btn-dark" style="display:block">✈️ Telegram Support</a>` : ''}
   </div>`;
