@@ -38,7 +38,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.js"></script>
 <script>
 const db = supabase.createClient(window.APP_CONFIG.SUPABASE_URL, window.APP_CONFIG.SUPABASE_ANON_KEY);
-const S = { user:null, view:'loading', settings:{}, orders:[], searchUser:null, searchOrders:[], searchId:'', adminTab: 'settings' };
+// ✅ notifications په S کې اضافه شو
+const S = { user:null, view:'loading', settings:{}, orders:[], searchUser:null, searchOrders:[], searchId:'', adminTab: 'settings', notifications: [] };
 const $ = id => document.getElementById(id);
 const showMsg = (id, t, isErr) => { const el=$(id); if(el) el.innerHTML=`<div class="msg ${isErr?'error':'ok'}">${t}</div>`; };
 
@@ -57,8 +58,13 @@ async function loadAll(){
   const { data:sd, error:se } = await db.from('settings').select('*');
   if(se){ alert('Settings load error: '+se.message); return; }
   S.settings = Object.fromEntries((sd||[]).map(r=>[r.key,r.value]));
+  
   const { data:od } = await db.from('orders').select('*').order('created_at',{ascending:false}).limit(200);
   S.orders = od || [];
+
+  // ✅ دلته د لیږل شویو پیغامونو معلومات راوړو
+  const { data:notifData } = await db.from('notifications').select('*').order('created_at',{ascending:false});
+  S.notifications = notifData || [];
 }
 
 function render(){
@@ -141,6 +147,7 @@ function viewAdminOrders() {
   </div>`;
 }
 
+// ✅ د پیغامونو برخه چې اوس لیست هم ښیي
 function viewAdminAnnouncement(){
   return `<div class="card">
     <h2>📢 Send Announcement to Users</h2>
@@ -149,6 +156,22 @@ function viewAdminAnnouncement(){
     <div class="field"><label>Message Body</label><input id="n_msg" placeholder="Write your message here..."></div>
     <button class="btn btn-blue" style="width:100%" onclick="sendNotification()">🚀 Send Message</button>
     <div id="notifMsg"></div>
+  </div>
+
+  <div class="card">
+    <h2>📜 Sent Messages (${S.notifications.length})</h2>
+    <p style="font-size:12px; color:#94a3b8; margin-bottom:12px;">You can delete any message below to remove it from all users.</p>
+    
+    ${S.notifications.length ? S.notifications.map(n => `
+      <div class="order" style="border-left-color: #3b82f6;">
+        <div class="row"><strong>Title</strong><span>${n.title}</span></div>
+        <div class="row"><strong>Message</strong><span>${n.message}</span></div>
+        <div class="row"><strong>Date</strong><span>${new Date(n.created_at).toLocaleString()}</span></div>
+        <div class="actions">
+          <button class="btn btn-red" style="width:100%" onclick="deleteNotification('${n.id}')">🗑️ Delete for All Users</button>
+        </div>
+      </div>
+    `).join('') : '<p style="color:#94a3b8;font-size:13px">No messages sent yet.</p>'}
   </div>`;
 }
 
@@ -209,7 +232,6 @@ async function updateUserAuth(userId) {
   S.searchUser.email = newEmail; render();
 }
 
-// ✅ دلته د فرمایش ښودلو برخه بدله شوه
 function viewOrder(o){
   const stCls = o.status==='Payment Submitted'?'':o.status;
   const isProcessed = (o.status === 'Completed' || o.status === 'Rejected');
@@ -224,7 +246,6 @@ function viewOrder(o){
     <div class="row"><strong>TXID</strong><span>${o.txid||'-'}</span></div>
     ${o.screenshot_url?`<div class="row"><strong>Proof</strong><button class="btn btn-blue" style="padding:4px 8px;font-size:11px;margin:0" onclick="viewShot('${o.screenshot_url}')">View</button></div>`:''}
     
-    <!-- ✅ که فرمایش پروسس شوی وي، بټنونه پټیږي او پر ځای یې Processed راځي -->
     <div class="actions">
       ${isProcessed 
         ? `<div style="width:100%; text-align:center; color:#10b981; font-weight:bold; font-size:13px; padding:8px; background:#0f172a; border-radius:8px; border:1px solid #334155;">✅ Processed & Locked</div>` 
@@ -264,18 +285,35 @@ async function saveSettings(){
   await loadAll(); render();
 }
 
+// ✅ پیغام لیږل او بیا لیست تازه کول
 async function sendNotification() {
   const title = $('n_title').value.trim(), msg = $('n_msg').value.trim();
   if(!title || !msg) { showMsg('notifMsg', 'Please fill both title and message', true); return; }
+  
   const { error } = await db.from('notifications').insert({ title, message: msg });
   if(error) { showMsg('notifMsg', error.message, true); return; }
+  
   showMsg('notifMsg', '✅ Message sent successfully!', false);
   $('n_title').value = ''; $('n_msg').value = '';
+  
+  // لیست تازه کوو ترڅو نوی پیغام هم ښکاره شي
+  await loadAll();
+  render();
 }
 
-// ✅ د فرمایش د بدلولو فنکشن (د اضافي امنیت لپاره)
+// ✅ د پیغام د حذفولو فنکشن
+async function deleteNotification(id) {
+  if(!confirm("ایا تاسو ډاډه یاست چې غواړئ دا پیغام د ټولو کاروونکو لپاره حذف کړئ؟")) return;
+  
+  const { error } = await db.from('notifications').delete().eq('id', id);
+  if(error) { alert('Error deleting message: ' + error.message); return; }
+  
+  alert('✅ Message deleted for all users successfully!');
+  await loadAll(); // لیست تازه کوو
+  render();
+}
+
 async function setStatus(id, status){
-  // لومړی ګورو چې دا فرمایش لا دمخه پروسس شوی که نه
   let order = S.orders.find(o => o.id === id);
   if (!order && S.searchOrders) order = S.searchOrders.find(o => o.id === id);
   
@@ -291,24 +329,19 @@ async function setStatus(id, status){
   const { error } = await db.from('orders').update(upd).eq('id',id);
   if(error){ alert('Error: '+error.message); return; }
 
-  // د ریفرل کمیشن حسابوو
   if(status === 'Completed') {
     if (order) {
       const { data: buyerProfile } = await db.from('profiles').select('referred_by').eq('id', order.user_id).single();
-      
       if (buyerProfile && buyerProfile.referred_by) {
         const refPercent = parseFloat(S.settings.referral_percent || '0');
-        
         if (refPercent > 0) {
           const feeAmount = parseFloat(order.fee_amount || '0');
           const commission = feeAmount * (refPercent / 100);
-          
           if (commission > 0) {
             const { data: referrer } = await db.from('profiles').select('balance').eq('id', buyerProfile.referred_by).single();
             if (referrer) {
               const currentBalance = parseFloat(referrer.balance || '0');
               const newBalance = currentBalance + commission;
-              
               await db.from('profiles').update({ balance: newBalance.toFixed(2) }).eq('id', buyerProfile.referred_by);
               alert(`✅ Order Completed!\n💰 Commission: ${commission.toFixed(2)} USDT added to the referrer's wallet.`);
             }
