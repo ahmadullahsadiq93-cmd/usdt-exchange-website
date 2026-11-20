@@ -128,7 +128,7 @@
 <script>
 const db = supabase.createClient(window.APP_CONFIG.SUPABASE_URL, window.APP_CONFIG.SUPABASE_ANON_KEY);
 
-// ✅ د درو ژبو لپاره بشپړ او ساده ژباړې
+// ✅ د درو ژبو لپاره بشپړ او ساده ژباړې (د نوي پیغام سره)
 const L = {
   en: {
     welcome: "Welcome", welcomeSub: "Trade smarter. A more open financial world awaits.",
@@ -153,7 +153,8 @@ const L = {
     txid: "Transaction ID (TXID)", screenshot: "Payment Screenshot", confirmOrder: "Confirm Order",
     orderSubmitted: "Order Submitted!", orderId: "Order ID", backHome: "Back to Home",
     notifications: "Notifications", clear: "Clear", noMessages: "No messages found.",
-    langSelect: "Language / ژبه / زبان", copied: "Copied!", enterDetails: "Please fill all fields"
+    langSelect: "Language / ژبه / زبان", copied: "Copied!", enterDetails: "Please fill all fields",
+    approvalMsg: "Your order will be verified by Admin within 1 to 3 hours."
   },
   ps: {
     welcome: "ښه راغلاست", welcomeSub: "هوښیارانه تجارت وکړئ. یوه پراخه مالي نړۍ ستاسو په تمه ده.",
@@ -178,7 +179,8 @@ const L = {
     txid: "د تراکنش آی‌ډي (TXID)", screenshot: "د تادیې سکرین شاټ", confirmOrder: "فرمایش تایید کړئ",
     orderSubmitted: "فرمایش وسپارل شو!", orderId: "د فرمایش آی‌ډي", backHome: "کور ته بیرته",
     notifications: "خبرتیاوې", clear: "پاکول", noMessages: "هیڅ پیغام ونه موندل شو.",
-    langSelect: "Language / ژبه / زبان", copied: "کاپي شو!", enterDetails: "مهرباني وکړئ ټول معلومات ډک کړئ"
+    langSelect: "Language / ژبه / زبان", copied: "کاپي شو!", enterDetails: "مهرباني وکړئ ټول معلومات ډک کړئ",
+    approvalMsg: "ستاسو فرمایش به د ۱ څخه تر ۳ ساعتونو پورې د اډمین لخوا تایید شي."
   },
   fa: {
     welcome: "خوش آمدید", welcomeSub: "هوشمندانه معامله کنید. دنیای مالی بازتر در انتظار شماست.",
@@ -203,7 +205,8 @@ const L = {
     txid: "شناسه تراکنش (TXID)", screenshot: "اسکرین شات پرداخت", confirmOrder: "تایید سفارش",
     orderSubmitted: "سفارش ثبت شد!", orderId: "شناسه سفارش", backHome: "بازگشت به خانه",
     notifications: "اعلانات", clear: "پاک کردن", noMessages: "هیچ پیامی یافت نشد.",
-    langSelect: "Language / ژبه / زبان", copied: "کپی شد!", enterDetails: "لطفاً تمام اطلاعات را وارد کنید"
+    langSelect: "Language / ژبه / زبان", copied: "کپی شد!", enterDetails: "لطفاً تمام اطلاعات را وارد کنید",
+    approvalMsg: "سفارش شما ظرف ۱ تا ۳ ساعت آینده توسط مدیر تایید خواهد شد."
   }
 };
 
@@ -623,12 +626,19 @@ function viewPay(t){
     <button class="btn btn-primary" style="margin-top:10px" onclick="confirmOrder()">✅ ${t.confirmOrder}</button></div>`;
 }
 
+// ✅ دلته نوی پیغام اضافه شو
 function viewSuccess(t){
   return `<div class="card" style="text-align:center;padding:40px 20px">
     <div style="font-size:60px;margin-bottom:10px">🎉</div>
     <h1 style="color:#0f172a">${t.orderSubmitted}</h1>
-    <p style="color:#64748b;font-size:14px;margin-top:8px">${t.orderId}: <strong>${S.lastOrderId}</strong></p>
-    <button class="btn btn-primary" style="margin-top:24px" onclick="goHome()">🏠 ${t.backHome}</button>
+    <p style="color:#64748b;font-size:14px;margin-top:8px; margin-bottom: 20px;">${t.orderId}: <strong>${S.lastOrderId}</strong></p>
+    
+    <!-- ⏳ د انتظار پیغام -->
+    <div style="background: #fffbeb; border: 1px solid #fde68a; color: #b45309; padding: 16px; border-radius: 12px; font-size: 14px; font-weight: 700; line-height: 1.6; margin-bottom: 24px;">
+      ⏳ ${t.approvalMsg}
+    </div>
+
+    <button class="btn btn-primary" style="margin-top:0;" onclick="goHome()">🏠 ${t.backHome}</button>
   </div>`;
 }
 
