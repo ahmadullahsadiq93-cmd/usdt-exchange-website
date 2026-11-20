@@ -1,9 +1,11 @@
-self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open('usdt-store').then((cache) => cache.addAll(['/'])));
+self.addEventListener('install', () => {
+  self.skipWaiting();
 });
 
-self.addEventListener('fetch', (e) => {
-  e.respondWith(
-    caches.match(e.request).then((response) => response || fetch(e.request))
-  );
+self.addEventListener('activate', (event) => {
+  event.waitUntil(clients.claim());
+});
+
+self.addEventListener('fetch', (event) => {
+  event.respondWith(fetch(event.request));
 });
