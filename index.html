@@ -4,13 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>USDT Exchange Afghanistan</title>
-<!-- د PWA فایلونه -->
 <link rel="manifest" href="/manifest.json">
 <style>
   *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
   body{background:#f4fbf7;color:#1e293b;min-height:100vh;padding-bottom:90px; transition: font-family 0.3s;}
   
-  /* د پښتو او دري ژبو لپاره د لیکنې بڼه (RTL - ښي لاس ته) */
+  /* RTL Support */
   [dir="rtl"] body { font-family: 'Tahoma', system-ui, sans-serif; }
   [dir="rtl"] .header { flex-direction: row-reverse; }
   [dir="rtl"] .header-actions { flex-direction: row-reverse; }
@@ -41,7 +40,6 @@
   .bell-dot { position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; background: #ef4444; border-radius: 50%; display: none; }
   .bell-dot.show { display: block; }
 
-  /* ✅ د ډاونلوډ بټن لپاره ښکلی ډیزاین */
   .download-btn {
     background: linear-gradient(135deg, #10b981, #047857) !important;
     color: white !important;
@@ -142,12 +140,10 @@
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.js"></script>
 <script>
-// ✅ د PWA د نصبولو لپاره د سیسټم چمتو کول
 let deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  // کله چې سیسټم چمتو شو، بټن ښکاره کوو
   const dlBtn = document.getElementById('appDownloadBtn');
   if (dlBtn) dlBtn.style.display = 'flex';
 });
@@ -156,18 +152,14 @@ async function downloadApp() {
   if (deferredPrompt) {
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') {
-      console.log('User accepted the install prompt');
-    }
+    if (outcome === 'accepted') console.log('User accepted the install prompt');
     deferredPrompt = null;
   } else {
-    // که چیرې د نصبولو کړکۍ نه وي راغلې (لکه په iOS یا کله چې مخکې نصب شوی وي)
     const t = L[S.lang];
     alert(t.installFallback);
   }
 }
 
-// که اپلیکیشن مخکې نصب شوی وي (په اپلیکیشن کې خلاص شوی وي)، بټن پټوو
 if (window.matchMedia('(display-mode: standalone)').matches) {
     setTimeout(() => {
         const dlBtn = document.getElementById('appDownloadBtn');
@@ -175,10 +167,8 @@ if (window.matchMedia('(display-mode: standalone)').matches) {
     }, 1000);
 }
 
-
 const db = supabase.createClient(window.APP_CONFIG.SUPABASE_URL, window.APP_CONFIG.SUPABASE_ANON_KEY);
 
-// ✅ د ژباړو برخه (د نوي بټن سره)
 const L = {
   en: {
     welcome: "Welcome", welcomeSub: "Trade smarter. A more open financial world awaits.",
@@ -205,11 +195,8 @@ const L = {
     notifications: "Notifications", clear: "Clear", noMessages: "No messages found.",
     langSelect: "Language / ژبه / زبان", copied: "Copied!", enterDetails: "Please fill all fields",
     approvalMsg: "Your order will be verified by Admin within 1 to 3 hours.",
-    minTopup: "Minimum Mobile Topup is 50 AFN.",
-    minBuyAfn: "Minimum BUY AFN amount is 50 AFN.",
-    minBuyUsdt: "Minimum BUY USDT amount is 1 USDT.",
-    invalidPhone: "Invalid phone number. Must start with 07 and be 10 digits.",
-    invalidTrc: "Invalid TRC20 address. Must start with 'T' and be 34 characters.",
+    minTopup: "Minimum Mobile Topup is 50 AFN.", minBuyAfn: "Minimum BUY AFN amount is 50 AFN.", minBuyUsdt: "Minimum BUY USDT amount is 1 USDT.",
+    invalidPhone: "Invalid phone number. Must start with 07 and be 10 digits.", invalidTrc: "Invalid TRC20 address. Must start with 'T' and be 34 characters.",
     invalidEvm: "Invalid BEP20/ERC20 address. Must start with '0x' and be 42 characters.",
     installTitle: "Download App", installFallback: "To install, tap the browser menu (⋮) and select 'Install App' or 'Add to Home Screen'."
   },
@@ -238,11 +225,8 @@ const L = {
     notifications: "خبرتیاوې", clear: "پاکول", noMessages: "هیڅ پیغام ونه موندل شو.",
     langSelect: "Language / ژبه / زبان", copied: "کاپي شو!", enterDetails: "مهرباني وکړئ ټول معلومات ډک کړئ",
     approvalMsg: "ستاسو فرمایش به د ۱ څخه تر ۳ ساعتونو پورې د اډمین لخوا تایید شي.",
-    minTopup: "لږ تر لږه د موبایل کریدت اندازه 50 افغانۍ ده.",
-    minBuyAfn: "لږ تر لږه د AFN پیرودلو اندازه 50 افغانۍ ده.",
-    minBuyUsdt: "لږ تر لږه د USDT پیرودلو اندازه 1 ډالر (USDT) ده.",
-    invalidPhone: "ناسمه شمیره! باید د 07 سره پیل او ټولټال 10 عدده وي.",
-    invalidTrc: "ناسم TRC20 آدرس! باید د 'T' سره پیل او 34 حرفه وي.",
+    minTopup: "لږ تر لږه د موبایل کریدت اندازه 50 افغانۍ ده.", minBuyAfn: "لږ تر لږه د AFN پیرودلو اندازه 50 افغانۍ ده.", minBuyUsdt: "لږ تر لږه د USDT پیرودلو اندازه 1 ډالر (USDT) ده.",
+    invalidPhone: "ناسمه شمیره! باید د 07 سره پیل او ټولټال 10 عدده وي.", invalidTrc: "ناسم TRC20 آدرس! باید د 'T' سره پیل او 34 حرفه وي.",
     invalidEvm: "ناسم BEP20/ERC20 آدرس! باید د '0x' سره پیل او 42 حرفه وي.",
     installTitle: "اپلیکیشن ډاونلوډ کړئ", installFallback: "د نصبولو لپاره، د براوزر مینو (⋮) ته لاړ شئ او 'Install App' یا 'Add to Home Screen' غوره کړئ."
   },
@@ -271,11 +255,8 @@ const L = {
     notifications: "اعلانات", clear: "پاک کردن", noMessages: "هیچ پیامی یافت نشد.",
     langSelect: "Language / ژبه / زبان", copied: "کپی شد!", enterDetails: "لطفاً تمام اطلاعات را وارد کنید",
     approvalMsg: "سفارش شما ظرف ۱ تا ۳ ساعت آینده توسط مدیر تایید خواهد شد.",
-    minTopup: "حداقل شارژ موبایل 50 افغانی است.",
-    minBuyAfn: "حداقل خرید AFN 50 افغانی است.",
-    minBuyUsdt: "حداقل خرید USDT 1 دالر (USDT) است.",
-    invalidPhone: "شماره نامعتبر است! باید با 07 شروع شده و 10 رقم باشد.",
-    invalidTrc: "آدرس TRC20 نامعتبر است! باید با 'T' شروع شده و 34 کاراکتر باشد.",
+    minTopup: "حداقل شارژ موبایل 50 افغانی است.", minBuyAfn: "حداقل خرید AFN 50 افغانی است.", minBuyUsdt: "حداقل خرید USDT 1 دالر (USDT) است.",
+    invalidPhone: "شماره نامعتبر است! باید با 07 شروع شده و 10 رقم باشد.", invalidTrc: "آدرس TRC20 نامعتبر است! باید با 'T' شروع شده و 34 کاراکتر باشد.",
     invalidEvm: "آدرس BEP20/ERC20 نامعتبر است! باید با '0x' شروع شده و 42 کاراکتر باشد.",
     installTitle: "دانلود اپلیکیشن", installFallback: "برای نصب، منوی مرورگر (⋮) را باز کرده و 'Install App' یا 'Add to Home Screen' را انتخاب کنید."
   }
@@ -308,12 +289,11 @@ async function boot(){
   }
   else S.view='auth';
 
-  // ✅ دا نوی کوډ اضافه کړه: د نرخ ژوندی تعقیب
   db.channel('live-rates')
     .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'settings' }, payload => {
       S.settings[payload.new.key] = payload.new.value;
       if(S.view === 'main' && S.tab === 'home') {
-        render(); // که کارونکی په اصلي پاڼه کې وي، سمدلاسه نوی نرخ وښیي
+        render();
       }
     })
     .subscribe();
@@ -427,9 +407,7 @@ function viewHome(t){
   return `<div class="header">
     <div class="logo"><div class="logo-icon">₮</div> USDT-Exchange</div>
     <div class="header-actions">
-      <!-- ✅ دا نوی ډاونلوډ بټن دی، اوس به تل ښکاره وي -->
       <div id="appDownloadBtn" class="icon-btn download-btn" onclick="downloadApp()" title="${t.installTitle}">📥</div>
-      
       <div class="icon-btn" onclick="S.view='lang'; render()" title="Change Language" style="font-size: 16px;">🌐</div>
       <div class="icon-btn" onclick="openNotifications()">
         🔔<div class="bell-dot ${S.hasUnread ? 'show' : ''}"></div>
@@ -584,8 +562,8 @@ function viewPriceHistory(t){
 
   <div class="rate-card">
     <div style="font-size:13px; font-weight:700; color:#a7f3d0; display:flex; align-items:center; gap:6px;">📈 ${t.currentRate}</div>
-    <h2>1 USDT = <span>${s.rate} AFN</span></h2>
-    <div style="font-size:13px; font-weight:600; color:#a7f3d0;">⚙️ ${t.serviceFee}: ${s.fee_percent}%</div>
+    <h2>1 USDT = <span>${s.rate_usdt || s.rate || 64} AFN</span></h2>
+    <div style="font-size:13px; font-weight:600; color:#a7f3d0;">⚙️ ${t.serviceFee}: ${s.fee_usdt || s.fee_percent || 3}%</div>
     <div class="coin-bg">🪙</div>
   </div>
 
@@ -694,13 +672,13 @@ function viewForm(t){
 
 function viewPay(t){
   const c=S.calc, f=S.form, isBuy=f.type==='BUY_USDT';
-  const dec = isBuy?2:8;
+  const dec = (f.type==='TOPUP' || f.type==='BUY_AFN') ? 8 : 2;
   const totalText = `${c.total.toFixed(dec)} ${isBuy?'AFN':'USDT'}`;
   let payTo = isBuy ? (f.payment==='HESABPAY'?S.settings.hesabpay_number:S.settings.momo_number) : S.settings['wallet_'+f.network.toLowerCase()];
   
   return `<button class="btn btn-ghost" onclick="backToForm()">⬅️ ${t.back}</button>
     <div class="card"><h1 class="page-title">🧾 ${t.payment}</h1>
-    <div class="row"><span style="color:#64748b">${t.rate}</span><span style="font-weight:600">1 USDT = ${c.rate} AFN</span></div>
+    <div class="row"><span style="color:#64748b">${t.rate}</span><span style="font-weight:600">${f.type==='BUY_AFN' ? '1 AFN = $'+c.rate : '1 USDT = '+c.rate+' AFN'}</span></div>
     <div class="row"><span style="color:#64748b">${t.base}</span><span style="font-weight:600">${c.base.toFixed(dec)}</span></div>
     <div class="row"><span style="color:#64748b">${t.fee} (${c.fee}%)</span><span style="font-weight:600">${c.feeAmt.toFixed(dec)}</span></div>
     <div class="row big"><span>${t.total}</span><span>${totalText}</span></div>
@@ -870,7 +848,6 @@ async function submitForm(){
     f.payment = $('f_payment').value;
   }
 
-  // ✅ دا برخه نوی ده: له ډیټابیس څخه د تازه نرخ راوړل
   showMsg('formMsg', '⏳ Checking current rate...', false); 
   const { data: latestSettings, error } = await db.from('settings').select('*');
   
@@ -878,15 +855,24 @@ async function submitForm(){
     showMsg('formMsg', '❌ Connection error. Please try again.', true);
     return;
   }
-  
-  // نوی نرخ په سیسټم کې خوندي کوو
   S.settings = Object.fromEntries((latestSettings||[]).map(r=>[r.key,r.value]));
 
-  const r = +S.settings.rate;
-  const fee = +S.settings.fee_percent;
+  let r = 0, fee = 0, base = 0;
   
-  let base;
-  if(f.type==='BUY_USDT') base=f.amount*r; else base=f.amount/r;
+  if(f.type === 'BUY_USDT') {
+    r = +S.settings.rate_usdt || 64;
+    fee = +S.settings.fee_usdt || 3;
+    base = f.amount * r;
+  } else if(f.type === 'BUY_AFN') {
+    r = +S.settings.rate_afn || 0.0154;
+    fee = +S.settings.fee_afn || 3;
+    base = f.amount * r;
+  } else if(f.type === 'TOPUP') {
+    r = +S.settings.rate_topup || 66;
+    fee = +S.settings.fee_topup || 3;
+    base = f.amount / r;
+  }
+
   const feeAmt = base*fee/100;
   S.calc = {base,feeAmt,total:base+feeAmt,rate:r,fee};
   
@@ -916,7 +902,6 @@ async function confirmOrder(){
   S.lastOrderId = data.id.slice(0,8); S.view='success'; render();
 }
 
-// ✅ د Service Worker فایل تړل
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/service-worker.js');
 }
