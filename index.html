@@ -307,6 +307,17 @@ async function boot(){
     S.view='main'; S.tab='home';
   }
   else S.view='auth';
+
+  // ✅ دا نوی کوډ اضافه کړه: د نرخ ژوندی تعقیب
+  db.channel('live-rates')
+    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'settings' }, payload => {
+      S.settings[payload.new.key] = payload.new.value;
+      if(S.view === 'main' && S.tab === 'home') {
+        render(); // که کارونکی په اصلي پاڼه کې وي، سمدلاسه نوی نرخ وښیي
+      }
+    })
+    .subscribe();
+
   render();
 }
 
@@ -820,7 +831,7 @@ function copyRef(){
   alert(t.copied); 
 }
 
-function submitForm(){
+async function submitForm(){
   const f=S.form;
   const t = L[S.lang];
   f.amount = parseFloat($('f_amount').value||'0');
@@ -859,11 +870,26 @@ function submitForm(){
     f.payment = $('f_payment').value;
   }
 
-  const r=+S.settings.rate, fee=+S.settings.fee_percent;
+  // ✅ دا برخه نوی ده: له ډیټابیس څخه د تازه نرخ راوړل
+  showMsg('formMsg', '⏳ Checking current rate...', false); 
+  const { data: latestSettings, error } = await db.from('settings').select('*');
+  
+  if (error) {
+    showMsg('formMsg', '❌ Connection error. Please try again.', true);
+    return;
+  }
+  
+  // نوی نرخ په سیسټم کې خوندي کوو
+  S.settings = Object.fromEntries((latestSettings||[]).map(r=>[r.key,r.value]));
+
+  const r = +S.settings.rate;
+  const fee = +S.settings.fee_percent;
+  
   let base;
   if(f.type==='BUY_USDT') base=f.amount*r; else base=f.amount/r;
   const feeAmt = base*fee/100;
   S.calc = {base,feeAmt,total:base+feeAmt,rate:r,fee};
+  
   S.view='pay'; render();
 }
 
