@@ -27,7 +27,10 @@
   [dir="rtl"] .row { flex-direction: row-reverse; }
   [dir="rtl"] .welcome-banner .flag-bg { right: auto; left: -10px; transform: rotate(-15deg); }
   [dir="rtl"] .camera-btn { right: auto; left: 0; }
-  [dir="rtl"] .rate-card-item { flex-direction: row-reverse; }
+  [dir="rtl"] .rate-card-item { flex-direction: row-reverse; border-left: none; border-right: 4px solid #10b981; }
+  [dir="rtl"] .rate-card-item.afn { border-right-color: #f59e0b; }
+  [dir="rtl"] .rate-card-item.topup { border-right-color: #3b82f6; }
+  [dir="rtl"] .rate-card-item .rate-info { text-align: right; }
 
   .wrap{max-width:480px;margin:0 auto;padding:16px}
   
@@ -78,17 +81,21 @@
   .wallet-text p { font-size: 12px; opacity: 0.9;}
   .wallet-banner .arrow { width: 35px; height: 35px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; z-index: 2;}
 
-  /* د نرخونو نوی ښکلی ډیزاین */
-  .rates-container { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
-  .rate-card-item { background: #fff; border-radius: 16px; padding: 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-left: 5px solid #10b981; position: relative; overflow: hidden; }
+  /* ✅ د نرخونو نوی، کوچنی او ښکلی ډیزاین */
+  .rates-container { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+  .rate-card-item { background: #fff; border-radius: 14px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border-left: 4px solid #10b981; position: relative; overflow: hidden; }
   .rate-card-item.afn { border-left-color: #f59e0b; }
   .rate-card-item.topup { border-left-color: #3b82f6; }
-  .rate-card-item .icon { font-size: 32px; margin-right: 12px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
-  .rate-card-item .info { flex: 1; }
-  .rate-card-item .title { font-size: 13px; font-weight: 700; color: #64748b; margin-bottom: 4px; }
-  .rate-card-item .price { font-size: 20px; font-weight: 800; color: #0f172a; }
-  .rate-card-item .price span { color: #10b981; font-size: 14px; }
-  .rate-card-item .fee-badge { background: #f1f5f9; color: #475569; padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 700; }
+  
+  .rate-card-item .icon { font-size: 28px; margin: 0 10px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+  .rate-card-item .rate-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .rate-card-item .title { font-size: 12px; font-weight: 700; color: #64748b; margin-bottom: 2px; }
+  .rate-card-item .price { font-size: 17px; font-weight: 800; color: #0f172a; }
+  .rate-card-item .price span { color: #10b981; }
+  
+  .rate-card-item .fee-badge { background: #ecfdf5; color: #10b981; padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 700; border: 1px solid #d1fae5; white-space: nowrap;}
+  .rate-card-item.afn .fee-badge { background: #fffbeb; color: #f59e0b; border-color: #fef3c7; }
+  .rate-card-item.topup .fee-badge { background: #eff6ff; color: #3b82f6; border-color: #dbeafe; }
 
   .orders-list { display: flex; flex-direction: column; gap: 12px; }
   .order-card { background: #fff; border-radius: 16px; padding: 16px; display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); position: relative; }
@@ -176,6 +183,7 @@ if (window.matchMedia('(display-mode: standalone)').matches) {
 
 const db = supabase.createClient(window.APP_CONFIG.SUPABASE_URL, window.APP_CONFIG.SUPABASE_ANON_KEY);
 
+// ✅ د ژباړو برخه (د نرخونو ژباړې هم پکې اضافه شوې)
 const L = {
   en: {
     welcome: "Welcome", welcomeSub: "Trade smarter. A more open financial world awaits.",
@@ -185,6 +193,7 @@ const L = {
     home: "Home", price: "Price", profile: "Profile",
     market: "Market & History", marketSub: "Track your trades and check market rate",
     currentRate: "Market Rates", serviceFee: "Service Fee", yourOrders: "Your Orders",
+    buyUsdtRate: "Buy USDT Rate", buyAfnRate: "Buy AFN Rate", topupRate: "Topup Rate", feeLabel: "Fee",
     amount: "Amount", total: "Total", date: "Date", completed: "Completed", rejected: "Rejected", pending: "Pending",
     noOrders: "No orders found.",
     myProfile: "My Profile", logout: "Logout", changePhoto: "Change Photo",
@@ -216,6 +225,7 @@ const L = {
     home: "کور", price: "بیه", profile: "پروفایل",
     market: "بازار او تاریخچه", marketSub: "خپلې سوداګرۍ تعقیب کړئ او د بازار بیه وګورئ",
     currentRate: "د بازار نرخونه", serviceFee: "د خدمت فیس", yourOrders: "ستاسو فرمایشونه",
+    buyUsdtRate: "د USDT پیرودلو نرخ", buyAfnRate: "د AFN پیرودلو نرخ", topupRate: "د ټاپ اپ نرخ", feeLabel: "فیس",
     amount: "مقدار", total: "ټولټال", date: "نیټه", completed: "بشپړ شوی", rejected: "رد شوی", pending: "په تمه",
     noOrders: "هیڅ فرمایش ونه موندل شو.",
     myProfile: "زما پروفایل", logout: "وتل", changePhoto: "عکس بدل کړئ",
@@ -247,6 +257,7 @@ const L = {
     home: "خانه", price: "قیمت", profile: "پروفایل",
     market: "بازار و تاریخچه", marketSub: "معاملات خود را دنبال کنید و نرخ بازار را ببینید",
     currentRate: "نرخ‌های بازار", serviceFee: "کمیشن خدمات", yourOrders: "سفارشات شما",
+    buyUsdtRate: "نرخ خرید USDT", buyAfnRate: "نرخ خرید AFN", topupRate: "نرخ شارژ موبایل", feeLabel: "کمیشن",
     amount: "مقدار", total: "مجموع", date: "تاریخ", completed: "تکمیل شده", rejected: "رد شده", pending: "در انتظار",
     noOrders: "هیچ سفارشی یافت نشد.",
     myProfile: "پروفایل من", logout: "خروج", changePhoto: "تغییر عکس",
@@ -570,33 +581,35 @@ function viewPriceHistory(t){
     </div>
   </div>
 
-  <!-- ✅ دا نوی ښکلی د نرخونو ډیزاین دی -->
   <div class="rates-container">
+    <!-- د USDT پیرودلو نرخ -->
     <div class="rate-card-item">
       <div class="icon">🛒</div>
-      <div class="info">
-        <div class="title">Buy USDT Rate</div>
-        <div class="price">1 USDT = <span>${s.rate_usdt || 64} AFN</span></div>
+      <div class="rate-info">
+        <div class="title">${t.buyUsdtRate}</div>
+        <div class="price" dir="ltr">1 USDT = <span>${s.rate_usdt || 64} AFN</span></div>
       </div>
-      <div class="fee-badge">Fee: ${s.fee_usdt || 3}%</div>
+      <div class="fee-badge" dir="ltr">${t.feeLabel}: ${s.fee_usdt || 3}%</div>
     </div>
 
+    <!-- د AFN پیرودلو نرخ -->
     <div class="rate-card-item afn">
       <div class="icon">💵</div>
-      <div class="info">
-        <div class="title">Buy AFN Rate</div>
-        <div class="price">1 AFN = <span>${s.rate_afn || 0.0154} $</span></div>
+      <div class="rate-info">
+        <div class="title">${t.buyAfnRate}</div>
+        <div class="price" dir="ltr">1 AFN = <span>$${s.rate_afn || 0.0154}</span></div>
       </div>
-      <div class="fee-badge">Fee: ${s.fee_afn || 3}%</div>
+      <div class="fee-badge" dir="ltr">${t.feeLabel}: ${s.fee_afn || 3}%</div>
     </div>
 
+    <!-- د ټاپ اپ نرخ -->
     <div class="rate-card-item topup">
       <div class="icon">📱</div>
-      <div class="info">
-        <div class="title">Topup Rate</div>
-        <div class="price">1 USDT = <span>${s.rate_topup || 66} AFN</span></div>
+      <div class="rate-info">
+        <div class="title">${t.topupRate}</div>
+        <div class="price" dir="ltr">1 USDT = <span>${s.rate_topup || 66} AFN</span></div>
       </div>
-      <div class="fee-badge">Fee: ${s.fee_topup || 3}%</div>
+      <div class="fee-badge" dir="ltr">${t.feeLabel}: ${s.fee_topup || 3}%</div>
     </div>
   </div>
 
@@ -881,7 +894,6 @@ async function submitForm(){
     f.payment = $('f_payment').value;
   }
 
-  // ✅ دا نوی کوډ دی: د تکراري امر مخنیوی
   showMsg('formMsg', '⏳ Checking previous orders...', false); 
   const { data: existingOrders } = await db.from('orders').select('id').eq('user_id', S.user.id).eq('status', 'Payment Submitted');
   
@@ -890,7 +902,6 @@ async function submitForm(){
     return;
   }
 
-  // د تازه نرخ راوړل
   const { data: latestSettings, error } = await db.from('settings').select('*');
   if (error) {
     showMsg('formMsg', '❌ Connection error. Please try again.', true);
