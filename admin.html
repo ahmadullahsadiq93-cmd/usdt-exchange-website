@@ -6,60 +6,74 @@
 <title>Admin Panel - USDT Exchange</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
-  body{background:#f4fbf7;color:#1e293b;padding:16px;min-height:100vh;}
+  body{background:#0f172a;color:#e2e8f0;padding:16px;min-height:100vh;}
   .wrap{max-width:800px;margin:0 auto}
   
-  .admin-header { background: linear-gradient(135deg, #10b981, #047857); color: white; border-radius: 24px; padding: 24px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(16,185,129,0.2); position: relative; overflow: hidden;}
-  .admin-header::after { content: '🛡️'; position: absolute; right: -10px; bottom: -20px; font-size: 100px; opacity: 0.1; }
-  .admin-header h1 { font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
-  .admin-header p { font-size: 13px; color: #a7f3d0; margin-top: 6px; font-weight: 600; }
+  /* Header */
+  .admin-header { background: linear-gradient(135deg, #1e293b, #0f172a); color: white; border-radius: 20px; padding: 24px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.5); border: 1px solid #334155; position: relative; overflow: hidden;}
+  .admin-header::after { content: '🛡️'; position: absolute; right: -10px; bottom: -20px; font-size: 100px; opacity: 0.05; }
+  .admin-header h1 { font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 10px; color: #fff;}
+  .admin-header p { font-size: 13px; color: #94a3b8; margin-top: 6px; font-weight: 600; }
   
+  /* Tabs */
   .tabs-nav { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
   .tabs-nav::-webkit-scrollbar { display: none; }
-  .tab-btn { flex: 1; padding: 14px 20px; border: 1px solid #e2e8f0; border-radius: 16px; background: #ffffff; color: #64748b; font-weight: 800; cursor: pointer; font-size: 14px; transition: all 0.2s; white-space: nowrap; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-  .tab-btn.active { background: #10b981; color: #fff; border-color: #10b981; box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
-
-  .card { background: #ffffff; border-radius: 24px; padding: 24px; margin-bottom: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #d1fae5; }
-  .card h2 { font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 14px; }
+  .tab-btn { flex: 1; padding: 14px 20px; border: 1px solid #334155; border-radius: 14px; background: #1e293b; color: #94a3b8; font-weight: 700; cursor: pointer; font-size: 14px; transition: all 0.2s; white-space: nowrap; display: flex; align-items: center; justify-content: center; gap: 8px; position: relative;}
+  .tab-btn.active { background: #3b82f6; color: #fff; border-color: #3b82f6; box-shadow: 0 4px 15px rgba(59,130,246,0.3); }
   
+  /* Cards */
+  .card { background: #1e293b; border-radius: 20px; padding: 24px; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); border: 1px solid #334155; }
+  .card h2 { font-size: 18px; font-weight: 800; color: #f8fafc; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #334155; padding-bottom: 14px; }
+  
+  /* Forms */
   .field { margin-bottom: 14px; }
-  .field label { display: block; font-size: 13px; color: #64748b; margin-bottom: 6px; font-weight: 700; }
-  .field input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #cbd5e1; background: #f8fafc; color: #0f172a; font-size: 15px; outline: none; transition: 0.2s; }
-  .field input:focus { border-color: #10b981; background: #fff; box-shadow: 0 0 0 3px rgba(16,185,129,0.1); }
+  .field label { display: block; font-size: 13px; color: #cbd5e1; margin-bottom: 6px; font-weight: 600; }
+  .field input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #475569; background: #0f172a; color: #f8fafc; font-size: 15px; outline: none; transition: 0.2s; }
+  .field input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.2); }
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   
-  .btn { padding: 14px 20px; border: none; border-radius: 12px; cursor: pointer; font-weight: 800; color: #fff; font-size: 15px; margin-top: 8px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+  /* Buttons */
+  .btn { padding: 12px 20px; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; color: #fff; font-size: 14px; margin-top: 8px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
   .btn:active { transform: scale(0.97); }
-  .btn-primary { background: #10b981; box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
-  .btn-blue { background: #3b82f6; box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
-  .btn-red { background: #ef4444; box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
-  .btn-dark { background: #0f172a; box-shadow: 0 4px 12px rgba(15,23,42,0.3); }
-  .btn-outline { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: #fff; box-shadow: none; }
+  .btn-primary { background: #10b981; box-shadow: 0 4px 12px rgba(16,185,129,0.2); }
+  .btn-primary:hover { background: #059669; }
+  .btn-blue { background: #3b82f6; box-shadow: 0 4px 12px rgba(59,130,246,0.2); }
+  .btn-blue:hover { background: #2563eb; }
+  .btn-red { background: #ef4444; box-shadow: 0 4px 12px rgba(239,68,68,0.2); }
+  .btn-red:hover { background: #dc2626; }
+  .btn-dark { background: #334155; color: #e2e8f0; }
+  .btn-dark:hover { background: #475569; }
+  .btn-outline { background: rgba(255,255,255,0.05); border: 1px solid #475569; color: #cbd5e1; box-shadow: none; }
   
-  .order { background: #f8fafc; border-radius: 16px; padding: 18px; margin-bottom: 14px; border-left: 5px solid #3b82f6; border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; }
-  .order.pending { border-left-color: #f59e0b; background: #fffbeb; }
-  .order.completed { border-left-color: #10b981; background: #f0fdf4; }
-  .order.rejected { border-left-color: #ef4444; background: #fef2f2; }
+  /* Orders */
+  .order { background: #0f172a; border-radius: 14px; padding: 18px; margin-bottom: 14px; border-left: 4px solid #f59e0b; border-top: 1px solid #334155; border-right: 1px solid #334155; border-bottom: 1px solid #334155; }
+  .order.completed { border-left-color: #10b981; opacity: 0.8; }
+  .order.rejected { border-left-color: #ef4444; opacity: 0.8; }
   
-  .row { display: flex; justify-content: space-between; font-size: 14px; padding: 8px 0; gap: 10px; border-bottom: 1px dashed #cbd5e1; }
+  .row { display: flex; justify-content: space-between; font-size: 14px; padding: 8px 0; gap: 10px; border-bottom: 1px dashed #334155; }
   .row:last-child { border-bottom: none; }
-  .row strong { color: #64748b; font-weight: 600; flex-shrink: 0; }
-  .row span { word-break: break-all; text-align: right; color: #0f172a; font-weight: 700; }
+  .row strong { color: #94a3b8; font-weight: 600; flex-shrink: 0; }
+  .row span { word-break: break-all; text-align: right; color: #f8fafc; font-weight: 600; }
   
-  .status { display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; text-transform: uppercase; background: #fef3c7; color: #b45309; }
-  .st-Completed { background: #d1fae5; color: #047857; }
-  .st-Rejected { background: #fee2e2; color: #b91c1c; }
-  .actions { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+  .status { display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; background: #fef3c7; color: #b45309; }
+  .st-Completed { background: rgba(16,185,129,0.2); color: #34d399; }
+  .st-Rejected { background: rgba(239,68,68,0.2); color: #f87171; }
   
-  .msg-item { background: #f8fafc; border-radius: 16px; padding: 18px; margin-bottom: 14px; border: 1px solid #e2e8f0; border-left: 5px solid #3b82f6; }
+  /* Sub Tabs for Orders */
+  .order-tabs { display: flex; gap: 10px; margin-bottom: 15px; }
+  .order-tab { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: #94a3b8; font-weight: 700; cursor: pointer; position: relative;}
+  .order-tab.active { background: #334155; color: #fff; border-color: #475569; }
+  .badge { position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; font-size: 11px; font-weight: 800; padding: 2px 6px; border-radius: 10px; box-shadow: 0 2px 5px rgba(239,68,68,0.5);}
   
-  .msg { padding: 14px 16px; border-radius: 12px; font-size: 14px; margin: 12px 0; font-weight: 700; }
-  .msg.error { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
-  .msg.ok { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+  /* Messages */
+  .msg-item { background: #0f172a; border-radius: 14px; padding: 18px; margin-bottom: 14px; border: 1px solid #334155; border-left: 4px solid #3b82f6; }
+  .msg { padding: 14px 16px; border-radius: 12px; font-size: 14px; margin: 12px 0; font-weight: 600; }
+  .msg.error { background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+  .msg.ok { background: rgba(16,185,129,0.1); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
 
   .login-wrapper { max-width: 400px; margin: 50px auto; text-align: center; }
   .login-icon { font-size: 60px; margin-bottom: 15px; }
-  .login-title { font-size: 26px; font-weight: 800; color: #0f172a; margin-bottom: 20px;}
+  .login-title { font-size: 26px; font-weight: 800; color: #f8fafc; margin-bottom: 20px;}
 
   @media (max-width: 480px) {
     .grid { grid-template-columns: 1fr; }
@@ -74,7 +88,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.js"></script>
 <script>
 const db = supabase.createClient(window.APP_CONFIG.SUPABASE_URL, window.APP_CONFIG.SUPABASE_ANON_KEY);
-const S = { user:null, view:'loading', settings:{}, orders:[], searchUser:null, searchOrders:[], searchId:'', adminTab: 'settings', notifications: [] };
+// د S په متغیر کې موږ orderTab اضافه کړ چې کنټرول کړو کوم ټب ښکاره شي (new یا history)
+const S = { user:null, view:'loading', settings:{}, orders:[], searchUser:null, searchOrders:[], searchId:'', adminTab: 'settings', orderTab: 'new', notifications: [] };
 const $ = id => document.getElementById(id);
 const showMsg = (id, t, isErr) => { const el=$(id); if(el) el.innerHTML=`<div class="msg ${isErr?'error':'ok'}">${t}</div>`; };
 
@@ -94,7 +109,7 @@ async function loadAll(){
   if(se){ alert('Settings load error: '+se.message); return; }
   S.settings = Object.fromEntries((sd||[]).map(r=>[r.key,r.value]));
   
-  const { data:od } = await db.from('orders').select('*').order('created_at',{ascending:false}).limit(200);
+  const { data:od } = await db.from('orders').select('*').order('created_at',{ascending:false}).limit(300);
   S.orders = od || [];
 
   const { data:notifData } = await db.from('notifications').select('*').order('created_at',{ascending:false});
@@ -117,7 +132,7 @@ function viewLogin(){
       <div class="field"><label>Email Address</label><input id="f_email" type="email" placeholder="admin@example.com"></div>
       <div class="field"><label>Password</label><input id="f_pass" type="password" placeholder="••••••••"></div>
       <div id="msg"></div>
-      <button class="btn btn-primary" style="width:100%; margin-top:15px;" onclick="doLogin()">🔓 Login to Dashboard</button>
+      <button class="btn btn-blue" style="width:100%; margin-top:15px;" onclick="doLogin()">🔓 Login to Dashboard</button>
     </div>
   </div>`;
 }
@@ -126,12 +141,15 @@ function viewDenied(){
   return `<div class="card" style="text-align:center; margin-top:50px;">
     <div style="font-size:60px; margin-bottom:10px;">⛔</div>
     <h1 style="color:#ef4444; font-size:22px;">Access Denied</h1>
-    <p style="color:#64748b;font-size:14px;margin-top:8px">This account does not have administrator privileges.</p>
+    <p style="color:#94a3b8;font-size:14px;margin-top:8px">This account does not have administrator privileges.</p>
     <button class="btn btn-dark" onclick="doLogout()" style="margin-top:20px; width:100%;">Logout</button>
   </div>`;
 }
 
 function viewDash(){
+  // د نویو امرونو شمېرل ترڅو بیج پرې وښیو
+  const newOrdersCount = S.orders.filter(o => o.status === 'Payment Submitted').length;
+
   return `<div class="admin-header">
     <div>
       <h1>🛡️ Admin Dashboard</h1>
@@ -142,7 +160,10 @@ function viewDash(){
   
   <div class="tabs-nav">
     <button class="tab-btn ${S.adminTab==='settings'?'active':''}" onclick="S.adminTab='settings'; render()">⚙️ Settings</button>
-    <button class="tab-btn ${S.adminTab==='orders'?'active':''}" onclick="S.adminTab='orders'; render()">📦 Orders</button>
+    <button class="tab-btn ${S.adminTab==='orders'?'active':''}" onclick="S.adminTab='orders'; render()">
+      📦 Orders 
+      ${newOrdersCount > 0 && S.adminTab !== 'orders' ? `<span class="badge" style="top:5px; right:5px;">${newOrdersCount}</span>` : ''}
+    </button>
     <button class="tab-btn ${S.adminTab==='announcement'?'active':''}" onclick="S.adminTab='announcement'; render()">📢 Message</button>
     <button class="tab-btn ${S.adminTab==='users'?'active':''}" onclick="S.adminTab='users'; render()">👥 Users</button>
   </div>
@@ -207,20 +228,31 @@ function viewAdminSettings(){
 }
 
 function viewAdminOrders() {
-  const sortedOrders = [...S.orders].sort((a, b) => {
-    if (a.status === 'Payment Submitted' && b.status !== 'Payment Submitted') return -1;
-    if (a.status !== 'Payment Submitted' && b.status === 'Payment Submitted') return 1;
-    return new Date(b.created_at) - new Date(a.created_at);
-  });
+  // دلته امرونه جلا کوو
+  const newOrders = S.orders.filter(o => o.status === 'Payment Submitted');
+  const oldOrders = S.orders.filter(o => o.status !== 'Payment Submitted');
+  
+  // کوم ټب چې فعال دی هغه ښیو
+  const displayOrders = S.orderTab === 'new' ? newOrders : oldOrders;
 
   return `<div class="card">
     <h2 style="justify-content:space-between; border-bottom:none; margin-bottom:0; padding-bottom:0;">
-      <span>📦 Recent Orders (${sortedOrders.length})</span>
-      <button class="btn btn-blue" style="padding:8px 14px; margin:0; font-size:13px;" onclick="refreshOrders()">🔄 Refresh</button>
+      <span>📦 Orders</span>
+      <button class="btn btn-dark" style="padding:8px 14px; margin:0; font-size:13px;" onclick="refreshOrders()">🔄 Refresh</button>
     </h2>
     
+    <div class="order-tabs" style="margin-top:20px;">
+      <button class="order-tab ${S.orderTab==='new'?'active':''}" onclick="S.orderTab='new'; render()">
+        🔔 New Orders
+        ${newOrders.length > 0 ? `<span class="badge">${newOrders.length}</span>` : ''}
+      </button>
+      <button class="order-tab ${S.orderTab==='history'?'active':''}" onclick="S.orderTab='history'; render()">
+        📜 Old Orders (${oldOrders.length})
+      </button>
+    </div>
+
     <div style="margin-top:20px;">
-      ${sortedOrders.length ? sortedOrders.map(viewOrder).join('') : '<p style="color:#64748b;font-size:14px;text-align:center;padding:20px;">No orders yet</p>'}
+      ${displayOrders.length ? displayOrders.map(viewOrder).join('') : `<p style="color:#94a3b8;font-size:14px;text-align:center;padding:30px;">No ${S.orderTab} orders found.</p>`}
     </div>
   </div>`;
 }
@@ -228,7 +260,7 @@ function viewAdminOrders() {
 function viewAdminAnnouncement(){
   return `<div class="card">
     <h2>📢 Send Announcement</h2>
-    <p style="font-size:14px; color:#64748b; margin-bottom:16px; font-weight:600;">This message will be sent to all users instantly.</p>
+    <p style="font-size:14px; color:#94a3b8; margin-bottom:16px; font-weight:600;">This message will be sent to all users instantly.</p>
     <div class="field"><label>Message Title</label><input id="n_title" placeholder="e.g., New Rate Update!"></div>
     <div class="field"><label>Message Body</label><input id="n_msg" placeholder="Write your message here..."></div>
     <button class="btn btn-blue" style="width:100%" onclick="sendNotification()">🚀 Send Message</button>
@@ -239,14 +271,14 @@ function viewAdminAnnouncement(){
     <h2>📜 Sent History</h2>
     ${S.notifications.length ? S.notifications.map(n => `
       <div class="msg-item">
-        <div style="font-weight:800; color:#0f172a; font-size:16px; margin-bottom:6px;">${n.title}</div>
-        <div style="font-size:14px; color:#475569; margin-bottom:12px; line-height:1.6;">${n.message}</div>
+        <div style="font-weight:800; color:#f8fafc; font-size:16px; margin-bottom:6px;">${n.title}</div>
+        <div style="font-size:14px; color:#cbd5e1; margin-bottom:12px; line-height:1.6;">${n.message}</div>
         <div style="display:flex; justify-content:space-between; align-items:center;">
-          <span style="font-size:12px; color:#94a3b8; font-weight:600;">📅 ${new Date(n.created_at).toLocaleString()}</span>
+          <span style="font-size:12px; color:#64748b; font-weight:600;">📅 ${new Date(n.created_at).toLocaleString()}</span>
           <button class="btn btn-red" style="padding:8px 14px; margin:0; font-size:12px;" onclick="deleteNotification('${n.id}')">🗑️ Delete for All</button>
         </div>
       </div>
-    `).join('') : '<p style="color:#64748b;font-size:14px;text-align:center;padding:20px;">No messages sent yet.</p>'}
+    `).join('') : '<p style="color:#94a3b8;font-size:14px;text-align:center;padding:20px;">No messages sent yet.</p>'}
   </div>`;
 }
 
@@ -261,14 +293,14 @@ function viewAdminUsers() {
     </div>
     
     ${S.searchUser ? `
-      <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:20px; border-radius:16px; margin-top:24px;">
+      <div style="background:#0f172a; border:1px solid #334155; padding:20px; border-radius:16px; margin-top:24px;">
         <div class="row"><strong>Name</strong><span>${S.searchUser.full_name || 'N/A'}</span></div>
         <div class="row"><strong>User ID</strong><span style="color:#10b981">${S.searchUser.user_code}</span></div>
         <div class="row"><strong>Email</strong><span>${S.searchUser.email || S.searchUser.user_email || 'N/A'}</span></div>
         <div class="row"><strong>Balance</strong><span style="color:#3b82f6">${S.searchUser.balance || 0} USDT</span></div>
         
-        <div style="margin-top:24px; border-top:1px solid #cbd5e1; padding-top:20px;">
-          <h3 style="font-size:14px; color:#64748b; margin-bottom:16px; font-weight:800;">UPDATE CREDENTIALS</h3>
+        <div style="margin-top:24px; border-top:1px solid #334155; padding-top:20px;">
+          <h3 style="font-size:14px; color:#94a3b8; margin-bottom:16px; font-weight:800;">UPDATE CREDENTIALS</h3>
           <div class="field"><label>New Email</label><input id="u_email" value="${S.searchUser.email || ''}"></div>
           <div class="field"><label>New Password</label><input id="u_pass" type="text" placeholder="Leave empty to keep current"></div>
           <button class="btn btn-primary" style="width:100%" onclick="updateUserAuth('${S.searchUser.id}')">Update Email & Password</button>
@@ -277,7 +309,7 @@ function viewAdminUsers() {
       
       <h2 style="margin-top:30px; border-bottom:none; padding-bottom:0;">User Order History</h2>
       <div style="margin-top:16px;">
-        ${S.searchOrders.length ? S.searchOrders.map(viewOrder).join('') : '<p style="color:#64748b;font-size:14px;text-align:center;padding:20px;">No orders found for this user.</p>'}
+        ${S.searchOrders.length ? S.searchOrders.map(viewOrder).join('') : '<p style="color:#94a3b8;font-size:14px;text-align:center;padding:20px;">No orders found for this user.</p>'}
       </div>
     ` : ''}
   </div>`;
@@ -322,7 +354,7 @@ function viewOrder(o){
 
   return `<div class="order ${statusClass}">
     <div class="row" style="align-items:center; margin-bottom:8px; border-bottom:none;">
-      <strong style="font-size:16px; color:#0f172a;">${icon} ${o.order_type}</strong>
+      <strong style="font-size:16px; color:#f8fafc;">${icon} ${o.order_type}</strong>
       <span class="status st-${o.status==='Completed'?'Completed':o.status==='Rejected'?'Rejected':''}">${o.status}</span>
     </div>
     <div class="row"><strong>Amount</strong><span>${o.amount_input} ${o.currency_input}</span></div>
@@ -331,11 +363,11 @@ function viewOrder(o){
     ${o.wallet_address?`<div class="row"><strong>Wallet</strong><span>${o.wallet_address}</span></div>`:''}
     ${o.mobile_number?`<div class="row"><strong>Mobile</strong><span>${o.mobile_network} ${o.mobile_number}</span></div>`:''}
     <div class="row"><strong>TXID</strong><span>${o.txid||'-'}</span></div>
-    ${o.screenshot_url?`<div class="row"><strong>Proof</strong><button class="btn btn-blue" style="padding:6px 12px;font-size:12px;margin:0;" onclick="viewShot('${o.screenshot_url}')">📸 View Receipt</button></div>`:''}
+    ${o.screenshot_url?`<div class="row"><strong>Proof</strong><button class="btn btn-dark" style="padding:6px 12px;font-size:12px;margin:0;" onclick="viewShot('${o.screenshot_url}')">📸 View Receipt</button></div>`:''}
     
-    <div class="actions">
+    <div style="display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap;">
       ${isProcessed 
-        ? `<div style="width:100%; text-align:center; color:#10b981; font-weight:800; font-size:14px; padding:12px; background:#fff; border-radius:12px; border:1px solid #bbf7d0;">✅ Processed & Locked</div>` 
+        ? `<div style="width:100%; text-align:center; color:#10b981; font-weight:800; font-size:14px; padding:12px; background:#0f172a; border-radius:12px; border:1px solid #334155;">✅ Processed & Locked</div>` 
         : `
           <button class="btn btn-primary" style="flex:1;" onclick="setStatus('${o.id}','Completed')">Complete</button>
           <button class="btn btn-red" style="flex:1;" onclick="setStatus('${o.id}','Rejected')">Reject</button>
