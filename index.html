@@ -26,8 +26,8 @@
   [dir="rtl"] .field label { text-align: right; }
   [dir="rtl"] .row { flex-direction: row-reverse; }
   [dir="rtl"] .welcome-banner .flag-bg { right: auto; left: -10px; transform: rotate(-15deg); }
-  [dir="rtl"] .rate-card .coin-bg { right: auto; left: -10px; transform: rotate(15deg); }
   [dir="rtl"] .camera-btn { right: auto; left: 0; }
+  [dir="rtl"] .rate-card-item { flex-direction: row-reverse; }
 
   .wrap{max-width:480px;margin:0 auto;padding:16px}
   
@@ -78,10 +78,17 @@
   .wallet-text p { font-size: 12px; opacity: 0.9;}
   .wallet-banner .arrow { width: 35px; height: 35px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; z-index: 2;}
 
-  .rate-card { background: linear-gradient(135deg, #064e3b, #047857); border-radius: 20px; padding: 24px 20px; color: white; margin-bottom: 20px; position: relative; overflow: hidden; box-shadow: 0 8px 20px rgba(4,120,87,0.2); }
-  .rate-card h2 { font-size: 28px; font-weight: 800; color: #fff; margin: 6px 0; }
-  .rate-card h2 span { color: #34d399; }
-  .rate-card .coin-bg { position: absolute; right: -10px; bottom: -10px; font-size: 100px; opacity: 0.2; transform: rotate(-15deg); }
+  /* د نرخونو نوی ښکلی ډیزاین */
+  .rates-container { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+  .rate-card-item { background: #fff; border-radius: 16px; padding: 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-left: 5px solid #10b981; position: relative; overflow: hidden; }
+  .rate-card-item.afn { border-left-color: #f59e0b; }
+  .rate-card-item.topup { border-left-color: #3b82f6; }
+  .rate-card-item .icon { font-size: 32px; margin-right: 12px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+  .rate-card-item .info { flex: 1; }
+  .rate-card-item .title { font-size: 13px; font-weight: 700; color: #64748b; margin-bottom: 4px; }
+  .rate-card-item .price { font-size: 20px; font-weight: 800; color: #0f172a; }
+  .rate-card-item .price span { color: #10b981; font-size: 14px; }
+  .rate-card-item .fee-badge { background: #f1f5f9; color: #475569; padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 700; }
 
   .orders-list { display: flex; flex-direction: column; gap: 12px; }
   .order-card { background: #fff; border-radius: 16px; padding: 16px; display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); position: relative; }
@@ -177,7 +184,7 @@ const L = {
     wallet: "Wallet", walletSub: "Manage Your Balance Securely",
     home: "Home", price: "Price", profile: "Profile",
     market: "Market & History", marketSub: "Track your trades and check market rate",
-    currentRate: "Current Rate", serviceFee: "Service Fee", yourOrders: "Your Orders",
+    currentRate: "Market Rates", serviceFee: "Service Fee", yourOrders: "Your Orders",
     amount: "Amount", total: "Total", date: "Date", completed: "Completed", rejected: "Rejected", pending: "Pending",
     noOrders: "No orders found.",
     myProfile: "My Profile", logout: "Logout", changePhoto: "Change Photo",
@@ -198,7 +205,8 @@ const L = {
     minTopup: "Minimum Mobile Topup is 50 AFN.", minBuyAfn: "Minimum BUY AFN amount is 50 AFN.", minBuyUsdt: "Minimum BUY USDT amount is 1 USDT.",
     invalidPhone: "Invalid phone number. Must start with 07 and be 10 digits.", invalidTrc: "Invalid TRC20 address. Must start with 'T' and be 34 characters.",
     invalidEvm: "Invalid BEP20/ERC20 address. Must start with '0x' and be 42 characters.",
-    installTitle: "Download App", installFallback: "To install, tap the browser menu (⋮) and select 'Install App' or 'Add to Home Screen'."
+    installTitle: "Download App", installFallback: "To install, tap the browser menu (⋮) and select 'Install App' or 'Add to Home Screen'.",
+    pendingOrderError: "⚠️ You already have a pending order. Please wait for Admin to process it before creating a new one."
   },
   ps: {
     welcome: "ښه راغلاست", welcomeSub: "هوښیارانه تجارت وکړئ. یوه پراخه مالي نړۍ ستاسو په تمه ده.",
@@ -207,7 +215,7 @@ const L = {
     wallet: "والټ (Wallet)", walletSub: "خپل بیلانس په امن ډول اداره کړئ",
     home: "کور", price: "بیه", profile: "پروفایل",
     market: "بازار او تاریخچه", marketSub: "خپلې سوداګرۍ تعقیب کړئ او د بازار بیه وګورئ",
-    currentRate: "اوسنی نرخ", serviceFee: "د خدمت فیس", yourOrders: "ستاسو فرمایشونه",
+    currentRate: "د بازار نرخونه", serviceFee: "د خدمت فیس", yourOrders: "ستاسو فرمایشونه",
     amount: "مقدار", total: "ټولټال", date: "نیټه", completed: "بشپړ شوی", rejected: "رد شوی", pending: "په تمه",
     noOrders: "هیڅ فرمایش ونه موندل شو.",
     myProfile: "زما پروفایل", logout: "وتل", changePhoto: "عکس بدل کړئ",
@@ -228,7 +236,8 @@ const L = {
     minTopup: "لږ تر لږه د موبایل کریدت اندازه 50 افغانۍ ده.", minBuyAfn: "لږ تر لږه د AFN پیرودلو اندازه 50 افغانۍ ده.", minBuyUsdt: "لږ تر لږه د USDT پیرودلو اندازه 1 ډالر (USDT) ده.",
     invalidPhone: "ناسمه شمیره! باید د 07 سره پیل او ټولټال 10 عدده وي.", invalidTrc: "ناسم TRC20 آدرس! باید د 'T' سره پیل او 34 حرفه وي.",
     invalidEvm: "ناسم BEP20/ERC20 آدرس! باید د '0x' سره پیل او 42 حرفه وي.",
-    installTitle: "اپلیکیشن ډاونلوډ کړئ", installFallback: "د نصبولو لپاره، د براوزر مینو (⋮) ته لاړ شئ او 'Install App' یا 'Add to Home Screen' غوره کړئ."
+    installTitle: "اپلیکیشن ډاونلوډ کړئ", installFallback: "د نصبولو لپاره، د براوزر مینو (⋮) ته لاړ شئ او 'Install App' یا 'Add to Home Screen' غوره کړئ.",
+    pendingOrderError: "⚠️ تاسو لا دمخه یو په تمه فرمایش لرئ. مهرباني وکړئ د نوي فرمایش جوړولو دمخه د اډمین تایید ته انتظار وکړئ."
   },
   fa: {
     welcome: "خوش آمدید", welcomeSub: "هوشمندانه معامله کنید. دنیای مالی بازتر در انتظار شماست.",
@@ -237,7 +246,7 @@ const L = {
     wallet: "کیف پول", walletSub: "مدیریت امن موجودی",
     home: "خانه", price: "قیمت", profile: "پروفایل",
     market: "بازار و تاریخچه", marketSub: "معاملات خود را دنبال کنید و نرخ بازار را ببینید",
-    currentRate: "نرخ فعلی", serviceFee: "کمیشن خدمات", yourOrders: "سفارشات شما",
+    currentRate: "نرخ‌های بازار", serviceFee: "کمیشن خدمات", yourOrders: "سفارشات شما",
     amount: "مقدار", total: "مجموع", date: "تاریخ", completed: "تکمیل شده", rejected: "رد شده", pending: "در انتظار",
     noOrders: "هیچ سفارشی یافت نشد.",
     myProfile: "پروفایل من", logout: "خروج", changePhoto: "تغییر عکس",
@@ -258,7 +267,8 @@ const L = {
     minTopup: "حداقل شارژ موبایل 50 افغانی است.", minBuyAfn: "حداقل خرید AFN 50 افغانی است.", minBuyUsdt: "حداقل خرید USDT 1 دالر (USDT) است.",
     invalidPhone: "شماره نامعتبر است! باید با 07 شروع شده و 10 رقم باشد.", invalidTrc: "آدرس TRC20 نامعتبر است! باید با 'T' شروع شده و 34 کاراکتر باشد.",
     invalidEvm: "آدرس BEP20/ERC20 نامعتبر است! باید با '0x' شروع شده و 42 کاراکتر باشد.",
-    installTitle: "دانلود اپلیکیشن", installFallback: "برای نصب، منوی مرورگر (⋮) را باز کرده و 'Install App' یا 'Add to Home Screen' را انتخاب کنید."
+    installTitle: "دانلود اپلیکیشن", installFallback: "برای نصب، منوی مرورگر (⋮) را باز کرده و 'Install App' یا 'Add to Home Screen' را انتخاب کنید.",
+    pendingOrderError: "⚠️ شما در حال حاضر یک سفارش در انتظار دارید. لطفاً قبل از ایجاد سفارش جدید، منتظر تایید مدیر باشید."
   }
 };
 
@@ -560,11 +570,34 @@ function viewPriceHistory(t){
     </div>
   </div>
 
-  <div class="rate-card">
-    <div style="font-size:13px; font-weight:700; color:#a7f3d0; display:flex; align-items:center; gap:6px;">📈 ${t.currentRate}</div>
-    <h2>1 USDT = <span>${s.rate_usdt || s.rate || 64} AFN</span></h2>
-    <div style="font-size:13px; font-weight:600; color:#a7f3d0;">⚙️ ${t.serviceFee}: ${s.fee_usdt || s.fee_percent || 3}%</div>
-    <div class="coin-bg">🪙</div>
+  <!-- ✅ دا نوی ښکلی د نرخونو ډیزاین دی -->
+  <div class="rates-container">
+    <div class="rate-card-item">
+      <div class="icon">🛒</div>
+      <div class="info">
+        <div class="title">Buy USDT Rate</div>
+        <div class="price">1 USDT = <span>${s.rate_usdt || 64} AFN</span></div>
+      </div>
+      <div class="fee-badge">Fee: ${s.fee_usdt || 3}%</div>
+    </div>
+
+    <div class="rate-card-item afn">
+      <div class="icon">💵</div>
+      <div class="info">
+        <div class="title">Buy AFN Rate</div>
+        <div class="price">1 AFN = <span>${s.rate_afn || 0.0154} $</span></div>
+      </div>
+      <div class="fee-badge">Fee: ${s.fee_afn || 3}%</div>
+    </div>
+
+    <div class="rate-card-item topup">
+      <div class="icon">📱</div>
+      <div class="info">
+        <div class="title">Topup Rate</div>
+        <div class="price">1 USDT = <span>${s.rate_topup || 66} AFN</span></div>
+      </div>
+      <div class="fee-badge">Fee: ${s.fee_topup || 3}%</div>
+    </div>
   </div>
 
   <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
@@ -848,9 +881,17 @@ async function submitForm(){
     f.payment = $('f_payment').value;
   }
 
-  showMsg('formMsg', '⏳ Checking current rate...', false); 
-  const { data: latestSettings, error } = await db.from('settings').select('*');
+  // ✅ دا نوی کوډ دی: د تکراري امر مخنیوی
+  showMsg('formMsg', '⏳ Checking previous orders...', false); 
+  const { data: existingOrders } = await db.from('orders').select('id').eq('user_id', S.user.id).eq('status', 'Payment Submitted');
   
+  if (existingOrders && existingOrders.length > 0) {
+    showMsg('formMsg', t.pendingOrderError, true);
+    return;
+  }
+
+  // د تازه نرخ راوړل
+  const { data: latestSettings, error } = await db.from('settings').select('*');
   if (error) {
     showMsg('formMsg', '❌ Connection error. Please try again.', true);
     return;
